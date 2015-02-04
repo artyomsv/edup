@@ -11,7 +11,7 @@ module.exports = function (grunt) {
         dist: 'dist',
         karmaConfig: 'karma.conf.js',
         dest: '<%= dist %>/<%= pkg.name %>',
-        banner: '/*! <%= pkg.description %>#<%= pkg.version %> Copyright ASV',
+        banner: '/*! <%= pkg.description %>#<%= pkg.version %> Copyright ASV*/\n',
 
         jshint: {
             options: {
@@ -136,7 +136,7 @@ module.exports = function (grunt) {
             }
         },
 
-        uglyfy: {
+        uglify: {
             options: {
                 banner: '<%= banner %>',
                 sourceMap: false
@@ -218,7 +218,7 @@ module.exports = function (grunt) {
         connect: {
             server: {
                 options: {
-                    port: 8080,
+                    port: 8088,
                     hostname: '127.0.0.1',
                     open: 'http://127.0.0.1:8088/standalone'
                 }
@@ -245,9 +245,9 @@ module.exports = function (grunt) {
     grunt.registerTask('test:run', ['karma:run']);
     grunt.registerTask('test:auto', ['karma:auto']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('dist:js', ['concat:js', 'ngAnnotate:src', 'ngtemlates', 'uglify:js']);
-    grunt.registerTask('dist:style', ['less:bootstrap', 'less:rih', 'cssmin']);
-    grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat.bundle', 'uglify:bundle', 'copy']);
+    grunt.registerTask('dist:js', ['concat:js', 'ngAnnotate:src', 'ngtemplates', 'uglify:js']);
+    grunt.registerTask('dist:style', ['less:bootstrap', 'less:edup', 'cssmin']);
+    grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
     grunt.registerTask('standalone', ['clean', 'dist', 'connect', 'watch']);
     grunt.registerTask('e2e', ['protractor:suite']);
 
