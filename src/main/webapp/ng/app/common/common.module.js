@@ -1,3 +1,6 @@
 'use strict';
 
-angular.module('edup.common', []);
+angular.module('edup.common', [
+        'edup'
+    ]
+);

@@ -1,3 +1,6 @@
 'use strict';
 
-angular.module('edup.login', []);
+angular.module('edup.login', [
+        'edup'
+    ]
+);
