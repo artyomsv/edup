@@ -22,25 +22,25 @@
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
                         <version>1.0.2.Final</version>
-                        <!--<executions>-->
-                            <!--<execution>-->
-                                <!--<phase>package</phase>-->
-                                <!--<goals>-->
-                                    <!--<goal>deploy</goal>-->
-                                <!--</goals>-->
-                            <!--</execution>-->
-                        <!--</executions>-->
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>deploy</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
 
-            <dependencies>
-                <dependency>
-                    <groupId>org.wildfly</groupId>
-                    <artifactId>wildfly-embedded</artifactId>
-                    <version>8.2.0.Final</version>
-                </dependency>
-            </dependencies>
+            <!--<dependencies>-->
+                <!--<dependency>-->
+                    <!--<groupId>org.wildfly</groupId>-->
+                    <!--<artifactId>wildfly-embedded</artifactId>-->
+                    <!--<version>8.2.0.Final</version>-->
+                <!--</dependency>-->
+            <!--</dependencies>-->
         </profile>
     </profiles>
 
@@ -50,9 +50,19 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.2</version>
+                <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>
+                        ng/.idea/,
+                        ng/app/,
+                        ng/assets/,
+                        ng/node_modules/,
+                        ng/standalone/,
+                        ng/test/,
+                        ng/vendor/,
+                        ng/*.*
+                    </packagingExcludes>
                 </configuration>
             </plugin>
 
@@ -102,6 +112,13 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4-1200-jdbc41</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

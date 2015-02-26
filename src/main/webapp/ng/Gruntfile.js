@@ -74,18 +74,19 @@ module.exports = function (grunt) {
             },
             bundle: {
                 src: [
-                    'vendor/bower_components/lodash/dist/lodash.js',
-
-                    'vendor/bower_components/bootstrap/js/tooltip.js',
-                    'vendor/bower_components/bootstrap/js/dropdown.js',
+                    'vendor/bower_components/jquery/dist/jquery.js',
                     'vendor/bower_components/jquery-placeholder/jquery.placeholder.js',
-
+                    'vendor/bower_components/lodash/dist/lodash.js',
                     'vendor/bower_components/angular/angular.js',
                     'vendor/bower_components/angular-sanitize/angular-sanitize.js',
-                    'vendor/bower_components/angular-ui-utils/highlight.js',
-                    'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
                     'vendor/bower_components/restangular/dist/restangular.js',
+                    'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
+
+                    'vendor/bower_components/bootstrap/js/tooltip.js',
                     'vendor/bower_components/ng-sortable/dist/ng-sortable.js',
+                    'vendor/bower_components/bootstrap/js/dropdown.js',
+
+                    //'vendor/bower_components/angular-ui-utils/highlight.js',
 
                     '<%= dest %>.js'
                 ],
