@@ -1,4 +1,7 @@
-<html ng-app="edup">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +10,27 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 
-    <title>Secured area</title>
+    <title>Educational planning application</title>
 
+    <script type="text/javascript" src="../ng/dist/edup-bundle.min.js"></script>
+    <script type="text/javascript" src="../ng/dist/edup.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../ng/dist/edup-bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../ng/dist/edup.min.css">
+    <title>Educational planning application</title>
 </head>
+
 <body>
 
-<div>Hello World!!!</div>
+Loggged
+
+<form method="POST" action="/edup/api/logout">
+    <button type="submit">Continue</button>
+</form>
+
 
 </body>
+
 </html>
+
+
