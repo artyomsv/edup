@@ -5,11 +5,11 @@
          version="3.0">
 
     <welcome-file-list>
-        <welcome-file>/app/index.html</welcome-file>
+        <welcome-file>/index.html</welcome-file>
     </welcome-file-list>
 
     <session-config>
-        <session-timeout>5</session-timeout>
+        <session-timeout>1</session-timeout>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
@@ -28,7 +28,7 @@
         <web-resource-collection>
             <web-resource-name>Protected Area</web-resource-name>
             <description/>
-            <url-pattern>/app/*</url-pattern>
+            <url-pattern>/index.html</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -95,4 +95,13 @@
         <role-name>USER</role-name>
     </security-role>
 
+    <!--<error-page>-->
+    <!--<error-code>401</error-code>-->
+    <!--<location>/</location>-->
+    <!--</error-page>-->
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/not_found.html</location>
+    </error-page>
 </web-app>

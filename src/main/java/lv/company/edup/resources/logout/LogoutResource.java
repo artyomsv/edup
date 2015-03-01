@@ -24,7 +24,7 @@ public class LogoutResource {
         request.logout();
         URI requestUri = uriInfo.getRequestUri();
         StringBuilder builder = new StringBuilder();
-        builder.append(request.getScheme()).append("://").append(requestUri.getAuthority()).append("/edup/app/index.html");
+        builder.append(request.getScheme()).append("://").append(requestUri.getAuthority()).append("/edup");
         return Response.seeOther(URI.create(builder.toString())).build();
     }
 

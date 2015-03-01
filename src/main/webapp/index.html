@@ -10,13 +10,20 @@
 
     <script type="text/javascript" src="ng/dist/edup-bundle.min.js"></script>
     <script type="text/javascript" src="ng/dist/edup.min.js"></script>
+
 </head>
 
-<body ng-app="edup">
+<body>
 
-<edup-login></edup-login>
+Loggged
+
+<form method="POST" action="/edup/api/logout">
+    <button type="submit">logout</button>
+</form>
+
 
 </body>
+
 </html>
 
 
