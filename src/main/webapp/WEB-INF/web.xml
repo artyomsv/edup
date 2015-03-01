@@ -10,7 +10,7 @@
 
     <session-config>
         <session-timeout>1</session-timeout>
-        <tracking-mode>COOKIE</tracking-mode>
+        <tracking-mode>SSL</tracking-mode>
     </session-config>
 
     <login-config>
@@ -44,7 +44,7 @@
         </auth-constraint>
 
         <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 
@@ -58,7 +58,7 @@
         </web-resource-collection>
 
         <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 
@@ -83,7 +83,7 @@
         </auth-constraint>
 
         <user-data-constraint>
-            <transport-guarantee>NONE</transport-guarantee>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
 

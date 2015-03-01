@@ -1,0 +1,16 @@
+$>keytool -genkey -alias mycert -keyalg RSA -sigalg MD5withRSA -keystore my.jks -storepass secret  -keypass secret -validity 9999
+
+What is your first and last name?
+[Unknown]:  localhost
+What is the name of your organizational unit?
+[Unknown]:  myfear
+What is the name of your organization?
+[Unknown]:  eisele.net
+What is the name of your City or Locality?
+[Unknown]:  Grasbrun
+What is the name of your State or Province?
+[Unknown]:  Bavaria
+What is the two-letter country code for this unit?
+[Unknown]:  ME
+Is CN=localhost, OU=myfear, O=eisele.net, L=Grasbrun, ST=Bavaria, C=ME correct?
+[no]:  yes
