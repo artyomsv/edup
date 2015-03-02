@@ -14,3 +14,26 @@ What is the two-letter country code for this unit?
 [Unknown]:  ME
 Is CN=localhost, OU=myfear, O=eisele.net, L=Grasbrun, ST=Bavaria, C=ME correct?
 [no]:  yes
+
+
+<security-realms>
+            <!--SSL support-->
+            <security-realm name="UndertowRealm">
+                <server-identities>
+                    <ssl>
+                        <keystore path="my.jks" relative-to="jboss.server.config.dir" keystore-password="secret"
+                                  alias="mycert" key-password="secret"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
+
+            ...
+
+ <subsystem xmlns="urn:jboss:domain:undertow:1.2">
+            <buffer-cache name="default"/>
+            <server name="default-server">
+                <!--SSL support-->
+                <https-listener name="https" socket-binding="https" security-realm="UndertowRealm"/>
+                <http-listener name="default" socket-binding="http"/>
+
+                ...
