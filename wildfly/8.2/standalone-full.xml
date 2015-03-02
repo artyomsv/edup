@@ -482,9 +482,9 @@
                         <login-module code="Database" flag="required">
                             <module-option name="dsJndiName" value="java:jboss/datasources/EDUP_DataSource_Ref"/>
                             <module-option name="principalsQuery"
-                                           value="SELECT password FROM credentials where status = 'ACTIVE' and account_id = (select account_id from account_version where username = ?)"/>
+                                           value="SELECT credential_version.password FROM credential_version INNER JOIN account ON account.account_id = credential_version.account_fk WHERE account.status = 'APPROVED' AND account.username = ?"/>
                             <module-option name="rolesQuery"
-                                           value="select role.role, 'Roles' from user_role INNER JOIN role on user_role.ROLE_ID = role.id where account_id = (select account_id from account_version where username = ?)"/>
+                                           value="SELECT user_role.role, 'Roles' FROM user_role INNER JOIN account ON account.account_id = user_role.account_fk WHERE account.status = 'APPROVED' AND account.username = ?"/>
                             <module-option name="hashAlgorithm" value="SHA-256"/>
                             <module-option name="hashEncoding" value="base64"/>
                         </login-module>
