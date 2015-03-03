@@ -1,4 +1,4 @@
-package lv.company.edup.resources.ping;
+package lv.company.edup.resources.exposed.ping;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

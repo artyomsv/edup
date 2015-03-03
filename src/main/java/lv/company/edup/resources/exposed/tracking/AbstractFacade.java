@@ -1,4 +1,4 @@
-package lv.company.edup.resources;
+package lv.company.edup.resources.exposed.tracking;
 
 import org.apache.commons.collections4.CollectionUtils;
 

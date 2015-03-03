@@ -53,7 +53,7 @@
 
         <web-resource-collection>
             <web-resource-name>None Protected User Area</web-resource-name>
-            <url-pattern>/api/ping/*</url-pattern>
+            <url-pattern>/api/exposed/*</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
 
@@ -67,7 +67,7 @@
 
         <web-resource-collection>
             <web-resource-name>Protected API root</web-resource-name>
-            <url-pattern>/api/*</url-pattern>
+            <url-pattern>/api/secure/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -94,11 +94,6 @@
     <security-role>
         <role-name>USER</role-name>
     </security-role>
-
-    <!--<error-page>-->
-    <!--<error-code>401</error-code>-->
-    <!--<location>/</location>-->
-    <!--</error-page>-->
 
     <error-page>
         <error-code>404</error-code>

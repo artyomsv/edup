@@ -1,4 +1,4 @@
-package lv.company.edup.resources.logout;
+package lv.company.edup.resources.secure.logout;
 
 import javax.ejb.Stateless;
 import javax.servlet.ServletException;

@@ -1,4 +1,4 @@
-package lv.company.edup.resources.tracking;
+package lv.company.edup.resources.exposed.tracking;
 
 import javax.ws.rs.Path;
 

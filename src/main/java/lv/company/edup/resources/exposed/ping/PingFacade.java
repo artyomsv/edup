@@ -1,6 +1,6 @@
-package lv.company.edup.resources.ping;
+package lv.company.edup.resources.exposed.ping;
 
-import lv.company.edup.resources.AbstractFacade;
+import lv.company.edup.resources.exposed.tracking.AbstractFacade;
 import lv.company.edup.services.ping.PingService;
 
 import javax.enterprise.context.ApplicationScoped;
