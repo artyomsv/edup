@@ -2,8 +2,9 @@ package lv.company.edup.common.configuration;
 
 public interface PropertiesMapping {
 
-    interface Version {
+    interface Application {
         String VERSION = "version";
+        String NAME = "name";
     }
 
 }

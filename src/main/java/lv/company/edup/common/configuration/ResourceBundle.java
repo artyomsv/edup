@@ -11,9 +11,6 @@ public class ResourceBundle {
 
     private Properties properties = new Properties();
 
-    public ResourceBundle() {
-    }
-
     public ResourceBundle(ResourceProducer producer) {
         Collection<String> resources = producer.getResources();
         for (String resource : resources) {
@@ -22,7 +19,7 @@ public class ResourceBundle {
         }
     }
 
-    private void loadProperties(InputStream stream) {
+    protected void loadProperties(InputStream stream) {
         if (stream != null) {
             try {
                 properties.load(stream);

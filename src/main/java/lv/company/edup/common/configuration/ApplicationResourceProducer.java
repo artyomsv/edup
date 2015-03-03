@@ -4,13 +4,13 @@ import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;
 import java.util.Collections;
 
-@Bundle("version")
+@Bundle("application")
 @ApplicationScoped
-class VersionResourceProducer implements ResourceProducer {
+class ApplicationResourceProducer implements ResourceProducer {
 
     @Override
     public Collection<String> getResources() {
-        return Collections.singleton("version.properties");
+        return Collections.singleton("application.properties");
     }
 
 }
