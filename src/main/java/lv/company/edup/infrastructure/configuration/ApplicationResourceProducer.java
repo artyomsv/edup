@@ -1,4 +1,4 @@
-package lv.company.edup.common.configuration;
+package lv.company.edup.infrastructure.configuration;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Collection;

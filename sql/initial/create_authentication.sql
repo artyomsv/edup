@@ -51,6 +51,7 @@ CREATE TABLE ACCOUNT_ACTION (
 );
 
 -- admin SHA-512-> 'x61Ey612Kl2gpFL56FT9weDnpSo4AV8j8+qx2AuTHdRyY036xxzTTrw10Wq3+4qQyB+XURPWx1ONxp3Y3pB37A=='
+
 -- admin SHA-256-> 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg='
 
 -- Generate 'admin' SH256 password hash

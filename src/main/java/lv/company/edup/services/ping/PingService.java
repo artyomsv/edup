@@ -1,7 +1,7 @@
 package lv.company.edup.services.ping;
 
-import lv.company.edup.common.configuration.ApplicationProperties;
-import lv.company.edup.common.configuration.PropertiesMapping;
+import lv.company.edup.infrastructure.configuration.ApplicationProperties;
+import lv.company.edup.infrastructure.configuration.PropertiesMapping;
 import lv.company.edup.services.ping.dto.PingDto;
 
 import javax.enterprise.context.ApplicationScoped;

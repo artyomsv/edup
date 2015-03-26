@@ -1,3 +1,5 @@
+CREATE USER postgres WITH PASSWORD 'postgres';
+
 CREATE DATABASE EDUP
 WITH OWNER = postgres
 ENCODING = 'UTF8'
