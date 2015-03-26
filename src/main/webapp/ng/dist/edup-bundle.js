@@ -48493,11 +48493,11 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 }]);
 
 /* ========================================================================
- * Bootstrap: tooltip.js v3.2.0
+ * Bootstrap: tooltip.js v3.3.4
  * http://getbootstrap.com/javascript/#tooltip
  * Inspired by the original jQuery.tipsy by Jason Frame
  * ========================================================================
- * Copyright 2011-2014 Twitter, Inc.
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -48509,17 +48509,19 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
   // ===============================
 
   var Tooltip = function (element, options) {
-    this.type       =
-    this.options    =
-    this.enabled    =
-    this.timeout    =
-    this.hoverState =
+    this.type       = null
+    this.options    = null
+    this.enabled    = null
+    this.timeout    = null
+    this.hoverState = null
     this.$element   = null
 
     this.init('tooltip', element, options)
   }
 
-  Tooltip.VERSION  = '3.2.0'
+  Tooltip.VERSION  = '3.3.4'
+
+  Tooltip.TRANSITION_DURATION = 150
 
   Tooltip.DEFAULTS = {
     animation: true,
@@ -48543,6 +48545,10 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     this.$element  = $(element)
     this.options   = this.getOptions(options)
     this.$viewport = this.options.viewport && $(this.options.viewport.selector || this.options.viewport)
+
+    if (this.$element[0] instanceof document.constructor && !this.options.selector) {
+      throw new Error('`selector` option must be specified when initializing ' + this.type + ' on the window.document object!')
+    }
 
     var triggers = this.options.trigger.split(' ')
 
@@ -48597,6 +48603,11 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     var self = obj instanceof this.constructor ?
       obj : $(obj.currentTarget).data('bs.' + this.type)
 
+    if (self && self.$tip && self.$tip.is(':visible')) {
+      self.hoverState = 'in'
+      return
+    }
+
     if (!self) {
       self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
       $(obj.currentTarget).data('bs.' + this.type, self)
@@ -48639,7 +48650,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     if (this.hasContent() && this.enabled) {
       this.$element.trigger(e)
 
-      var inDom = $.contains(document.documentElement, this.$element[0])
+      var inDom = $.contains(this.$element[0].ownerDocument.documentElement, this.$element[0])
       if (e.isDefaultPrevented() || !inDom) return
       var that = this
 
@@ -48675,13 +48686,13 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
       if (autoPlace) {
         var orgPlacement = placement
-        var $parent      = this.$element.parent()
-        var parentDim    = this.getPosition($parent)
+        var $container   = this.options.container ? $(this.options.container) : this.$element.parent()
+        var containerDim = this.getPosition($container)
 
-        placement = placement == 'bottom' && pos.top   + pos.height       + actualHeight - parentDim.scroll > parentDim.height ? 'top'    :
-                    placement == 'top'    && pos.top   - parentDim.scroll - actualHeight < 0                                   ? 'bottom' :
-                    placement == 'right'  && pos.right + actualWidth      > parentDim.width                                    ? 'left'   :
-                    placement == 'left'   && pos.left  - actualWidth      < parentDim.left                                     ? 'right'  :
+        placement = placement == 'bottom' && pos.bottom + actualHeight > containerDim.bottom ? 'top'    :
+                    placement == 'top'    && pos.top    - actualHeight < containerDim.top    ? 'bottom' :
+                    placement == 'right'  && pos.right  + actualWidth  > containerDim.width  ? 'left'   :
+                    placement == 'left'   && pos.left   - actualWidth  < containerDim.left   ? 'right'  :
                     placement
 
         $tip
@@ -48694,14 +48705,17 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
       this.applyPlacement(calculatedOffset, placement)
 
       var complete = function () {
+        var prevHoverState = that.hoverState
         that.$element.trigger('shown.bs.' + that.type)
         that.hoverState = null
+
+        if (prevHoverState == 'out') that.leave(that)
       }
 
       $.support.transition && this.$tip.hasClass('fade') ?
         $tip
           .one('bsTransitionEnd', complete)
-          .emulateTransitionEnd(150) :
+          .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
         complete()
     }
   }
@@ -48748,16 +48762,18 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     if (delta.left) offset.left += delta.left
     else offset.top += delta.top
 
-    var arrowDelta          = delta.left ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
-    var arrowPosition       = delta.left ? 'left'        : 'top'
-    var arrowOffsetPosition = delta.left ? 'offsetWidth' : 'offsetHeight'
+    var isVertical          = /top|bottom/.test(placement)
+    var arrowDelta          = isVertical ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
+    var arrowOffsetPosition = isVertical ? 'offsetWidth' : 'offsetHeight'
 
     $tip.offset(offset)
-    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], arrowPosition)
+    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], isVertical)
   }
 
-  Tooltip.prototype.replaceArrow = function (delta, dimension, position) {
-    this.arrow().css(position, delta ? (50 * (1 - delta / dimension) + '%') : '')
+  Tooltip.prototype.replaceArrow = function (delta, dimension, isVertical) {
+    this.arrow()
+      .css(isVertical ? 'left' : 'top', 50 * (1 - delta / dimension) + '%')
+      .css(isVertical ? 'top' : 'left', '')
   }
 
   Tooltip.prototype.setContent = function () {
@@ -48768,16 +48784,17 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     $tip.removeClass('fade in top bottom left right')
   }
 
-  Tooltip.prototype.hide = function () {
+  Tooltip.prototype.hide = function (callback) {
     var that = this
-    var $tip = this.tip()
+    var $tip = $(this.$tip)
     var e    = $.Event('hide.bs.' + this.type)
-
-    this.$element.removeAttr('aria-describedby')
 
     function complete() {
       if (that.hoverState != 'in') $tip.detach()
-      that.$element.trigger('hidden.bs.' + that.type)
+      that.$element
+        .removeAttr('aria-describedby')
+        .trigger('hidden.bs.' + that.type)
+      callback && callback()
     }
 
     this.$element.trigger(e)
@@ -48786,10 +48803,10 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
     $tip.removeClass('in')
 
-    $.support.transition && this.$tip.hasClass('fade') ?
+    $.support.transition && $tip.hasClass('fade') ?
       $tip
         .one('bsTransitionEnd', complete)
-        .emulateTransitionEnd(150) :
+        .emulateTransitionEnd(Tooltip.TRANSITION_DURATION) :
       complete()
 
     this.hoverState = null
@@ -48810,20 +48827,27 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
   Tooltip.prototype.getPosition = function ($element) {
     $element   = $element || this.$element
+
     var el     = $element[0]
     var isBody = el.tagName == 'BODY'
-    return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : null, {
-      scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop(),
-      width:  isBody ? $(window).width()  : $element.outerWidth(),
-      height: isBody ? $(window).height() : $element.outerHeight()
-    }, isBody ? { top: 0, left: 0 } : $element.offset())
+
+    var elRect    = el.getBoundingClientRect()
+    if (elRect.width == null) {
+      // width and height are missing in IE8, so compute them manually; see https://github.com/twbs/bootstrap/issues/14093
+      elRect = $.extend({}, elRect, { width: elRect.right - elRect.left, height: elRect.bottom - elRect.top })
+    }
+    var elOffset  = isBody ? { top: 0, left: 0 } : $element.offset()
+    var scroll    = { scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop() }
+    var outerDims = isBody ? { width: $(window).width(), height: $(window).height() } : null
+
+    return $.extend({}, elRect, scroll, outerDims, elOffset)
   }
 
   Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
-    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2  } :
-           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2  } :
+    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
+           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
            placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
-        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width   }
+        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width }
 
   }
 
@@ -48880,14 +48904,6 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
   }
 
-  Tooltip.prototype.validate = function () {
-    if (!this.$element[0].parentNode) {
-      this.hide()
-      this.$element = null
-      this.options  = null
-    }
-  }
-
   Tooltip.prototype.enable = function () {
     this.enabled = true
   }
@@ -48914,8 +48930,11 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
   }
 
   Tooltip.prototype.destroy = function () {
+    var that = this
     clearTimeout(this.timeout)
-    this.hide().$element.off('.' + this.type).removeData('bs.' + this.type)
+    this.hide(function () {
+      that.$element.off('.' + that.type).removeData('bs.' + that.type)
+    })
   }
 
 
@@ -48928,7 +48947,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
       var data    = $this.data('bs.tooltip')
       var options = typeof option == 'object' && option
 
-      if (!data && option == 'destroy') return
+      if (!data && /destroy|hide/.test(option)) return
       if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
       if (typeof option == 'string') data[option]()
     })
@@ -49997,10 +50016,10 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
 }());
 /* ========================================================================
- * Bootstrap: dropdown.js v3.2.0
+ * Bootstrap: dropdown.js v3.3.4
  * http://getbootstrap.com/javascript/#dropdowns
  * ========================================================================
- * Copyright 2011-2014 Twitter, Inc.
+ * Copyright 2011-2015 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
@@ -50017,7 +50036,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     $(element).on('click.bs.dropdown', this.toggle)
   }
 
-  Dropdown.VERSION = '3.2.0'
+  Dropdown.VERSION = '3.3.4'
 
   Dropdown.prototype.toggle = function (e) {
     var $this = $(this)
@@ -50040,7 +50059,9 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
 
       if (e.isDefaultPrevented()) return
 
-      $this.trigger('focus')
+      $this
+        .trigger('focus')
+        .attr('aria-expanded', 'true')
 
       $parent
         .toggleClass('open')
@@ -50051,7 +50072,7 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
   }
 
   Dropdown.prototype.keydown = function (e) {
-    if (!/(38|40|27)/.test(e.keyCode)) return
+    if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) return
 
     var $this = $(this)
 
@@ -50063,20 +50084,20 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     var $parent  = getParent($this)
     var isActive = $parent.hasClass('open')
 
-    if (!isActive || (isActive && e.keyCode == 27)) {
+    if ((!isActive && e.which != 27) || (isActive && e.which == 27)) {
       if (e.which == 27) $parent.find(toggle).trigger('focus')
       return $this.trigger('click')
     }
 
-    var desc = ' li:not(.divider):visible a'
+    var desc = ' li:not(.disabled):visible a'
     var $items = $parent.find('[role="menu"]' + desc + ', [role="listbox"]' + desc)
 
     if (!$items.length) return
 
-    var index = $items.index($items.filter(':focus'))
+    var index = $items.index(e.target)
 
-    if (e.keyCode == 38 && index > 0)                 index--                        // up
-    if (e.keyCode == 40 && index < $items.length - 1) index++                        // down
+    if (e.which == 38 && index > 0)                 index--                        // up
+    if (e.which == 40 && index < $items.length - 1) index++                        // down
     if (!~index)                                      index = 0
 
     $items.eq(index).trigger('focus')
@@ -50086,11 +50107,17 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     if (e && e.which === 3) return
     $(backdrop).remove()
     $(toggle).each(function () {
-      var $parent = getParent($(this))
+      var $this         = $(this)
+      var $parent       = getParent($this)
       var relatedTarget = { relatedTarget: this }
+
       if (!$parent.hasClass('open')) return
+
       $parent.trigger(e = $.Event('hide.bs.dropdown', relatedTarget))
+
       if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
       $parent.removeClass('open').trigger('hidden.bs.dropdown', relatedTarget)
     })
   }
@@ -50144,22 +50171,45 @@ angular.module("template/typeahead/typeahead-popup.html", []).run(["$templateCac
     .on('click.bs.dropdown.data-api', clearMenus)
     .on('click.bs.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() })
     .on('click.bs.dropdown.data-api', toggle, Dropdown.prototype.toggle)
-    .on('keydown.bs.dropdown.data-api', toggle + ', [role="menu"], [role="listbox"]', Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', toggle, Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '[role="menu"]', Dropdown.prototype.keydown)
+    .on('keydown.bs.dropdown.data-api', '[role="listbox"]', Dropdown.prototype.keydown)
 
 }(jQuery);
 
 'use strict';
 
-angular.module('edup.common', [
-        'edup'
-    ]
+angular.module('edup.common', ['restangular']);
+'use strict';
+
+angular.module('edup.common')
+
+    .config(['RestangularProvider', function (RestangularProvider) {
+
+        RestangularProvider.setBaseUrl('https://localhost:8443/edup/api');
+        //RestangularProvider.setBaseUrl('https://192.168.1.104:8443/edup/api');
+
+        RestangularProvider.setErrorInterceptor(function (resp) {
+            console.log(angular.toJson(resp, true));
+            return false;
+        });
+
+    }]
 );
 'use strict';
 
-angular.module('edup.login', [
-        'edup'
-    ]
+angular.module('edup.common')
+
+    .service('RestService', ['Restangular', function (Restangular) {
+
+        Restangular.one();
+
+    }]
+
 );
+'use strict';
+
+angular.module('edup.login', []);
 'use strict';
 
 angular.module('edup.login')
@@ -50168,8 +50218,8 @@ angular.module('edup.login')
         return {
             restrict: 'E',
             templateUrl: 'edup-login',
-            link: function (scope) {
-                scope.test = 'test';
+            link: function () {
+
             }
         };
     }
@@ -50177,17 +50227,53 @@ angular.module('edup.login')
 
 'use strict';
 
+angular.module('edup.header', []);
+'use strict';
+
+angular.module('edup.header')
+
+    .controller('HeaderController', ['$scope', 'Restangular', function ($scope, Restangular) {
+        Restangular.one('ping').get().then(function (result) {
+            $scope.appName = result.app;
+            $scope.appVersion = result.version;
+        });
+    }]
+);
+'use strict';
+
+angular.module('edup.header')
+
+    .directive('edupHeader', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'edup-header',
+            link: function () {
+
+            }
+
+        };
+    }
+);
+'use strict';
+
 angular.module('edup',
     [
         'edup.common',
-        'edup.login'
+        'edup.login',
+        'edup.header',
+        'restangular'
     ]
 );
 angular.module('edup').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('edup-header',
+    "<div ng-controller=HeaderController>{{ appName }} : {{ appVersion }}</div>"
+  );
+
+
   $templateCache.put('edup-login',
-    "<form class=form-login name=form ng-submit=login() action=j_security_check method=post><div><label for=username>Username</label><input name=j_username id=username class=form-control ng-model=username required></div><div><label for=password>Password</label><input type=password name=j_password id=password class=form-control ng-model=password required></div><div><button type=submit ng-disabled=\"form.$invalid || dataLoading\" class=\"btn btn-danger\">Login</button> <img ng-if=dataLoading src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\"></div></form>"
+    "<div class=container><div class=login-container><div id=output></div><div class=avatar></div><div class=form-box><form action=j_security_check method=post ng-submit=login(event)><input name=j_username placeholder=username ng-model=username required> <input type=j_password placeholder=password id=password ng-model=password required> <button class=\"btn btn-info btn-block login\" type=submit>Login</button></form></div></div></div>"
   );
 
 }]);

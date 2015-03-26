@@ -1,6 +1,3 @@
 'use strict';
 
-angular.module('edup.common', [
-        'edup'
-    ]
-);
+angular.module('edup.common', ['restangular']);

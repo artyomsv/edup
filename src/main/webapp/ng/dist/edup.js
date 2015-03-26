@@ -1,15 +1,36 @@
 'use strict';
 
-angular.module('edup.common', [
-        'edup'
-    ]
+angular.module('edup.common', ['restangular']);
+'use strict';
+
+angular.module('edup.common')
+
+    .config(['RestangularProvider', function (RestangularProvider) {
+
+        RestangularProvider.setBaseUrl('https://localhost:8443/edup/api');
+        //RestangularProvider.setBaseUrl('https://192.168.1.104:8443/edup/api');
+
+        RestangularProvider.setErrorInterceptor(function (resp) {
+            console.log(angular.toJson(resp, true));
+            return false;
+        });
+
+    }]
 );
 'use strict';
 
-angular.module('edup.login', [
-        'edup'
-    ]
+angular.module('edup.common')
+
+    .service('RestService', ['Restangular', function (Restangular) {
+
+        Restangular.one();
+
+    }]
+
 );
+'use strict';
+
+angular.module('edup.login', []);
 'use strict';
 
 angular.module('edup.login')
@@ -18,8 +39,8 @@ angular.module('edup.login')
         return {
             restrict: 'E',
             templateUrl: 'edup-login',
-            link: function (scope) {
-                scope.test = 'test';
+            link: function () {
+
             }
         };
     }
@@ -27,17 +48,53 @@ angular.module('edup.login')
 
 'use strict';
 
+angular.module('edup.header', []);
+'use strict';
+
+angular.module('edup.header')
+
+    .controller('HeaderController', ['$scope', 'Restangular', function ($scope, Restangular) {
+        Restangular.one('ping').get().then(function (result) {
+            $scope.appName = result.app;
+            $scope.appVersion = result.version;
+        });
+    }]
+);
+'use strict';
+
+angular.module('edup.header')
+
+    .directive('edupHeader', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'edup-header',
+            link: function () {
+
+            }
+
+        };
+    }
+);
+'use strict';
+
 angular.module('edup',
     [
         'edup.common',
-        'edup.login'
+        'edup.login',
+        'edup.header',
+        'restangular'
     ]
 );
 angular.module('edup').run(['$templateCache', function($templateCache) {
   'use strict';
 
+  $templateCache.put('edup-header',
+    "<div ng-controller=HeaderController>{{ appName }} : {{ appVersion }}</div>"
+  );
+
+
   $templateCache.put('edup-login',
-    "<form class=form-login name=form ng-submit=login() action=j_security_check method=post><div><label for=username>Username</label><input name=j_username id=username class=form-control ng-model=username required></div><div><label for=password>Password</label><input type=password name=j_password id=password class=form-control ng-model=password required></div><div><button type=submit ng-disabled=\"form.$invalid || dataLoading\" class=\"btn btn-danger\">Login</button> <img ng-if=dataLoading src=\"data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==\"></div></form>"
+    "<div class=container><div class=login-container><div id=output></div><div class=avatar></div><div class=form-box><form action=j_security_check method=post ng-submit=login(event)><input name=j_username placeholder=username ng-model=username required> <input type=j_password placeholder=password id=password ng-model=password required> <button class=\"btn btn-info btn-block login\" type=submit>Login</button></form></div></div></div>"
   );
 
 }]);

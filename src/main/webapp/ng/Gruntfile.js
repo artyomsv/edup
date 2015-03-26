@@ -65,6 +65,9 @@ module.exports = function (grunt) {
                     'app/login/login.module.js',
                     'app/login/**/*.js',
 
+                    'app/header/header.module.js',
+                    'app/header/**/*.js',
+
                     'app/app.module.js',
 
                     '!app/**/*.spec.js'

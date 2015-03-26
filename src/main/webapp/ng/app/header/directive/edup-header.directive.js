@@ -1,14 +1,15 @@
 'use strict';
 
-angular.module('edup.login')
+angular.module('edup.header')
 
-    .directive('edupLogin', function () {
+    .directive('edupHeader', function () {
         return {
             restrict: 'E',
-            templateUrl: 'edup-login',
+            templateUrl: 'edup-header',
             link: function () {
 
             }
+
         };
     }
 );

@@ -3,6 +3,8 @@
 angular.module('edup',
     [
         'edup.common',
-        'edup.login'
+        'edup.login',
+        'edup.header',
+        'restangular'
     ]
 );
