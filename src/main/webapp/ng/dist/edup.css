@@ -72,75 +72,8 @@
 .modal-footer:after {
   clear: both;
 }
-.form-login-logo,
-.form-login {
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  margin: auto;
-  width: 400px;
-}
-.form-login-logo {
-  padding-top: 50px;
-  padding-bottom: 50px;
-  text-align: center;
-}
-.form-login {
-  top: 162px;
-  bottom: 162px;
-  height: 334px;
-}
-.form-login .tabs {
-  font-size: 0.9em;
-}
-.form-login .tabs li {
-  height: 40px;
-  display: table-cell;
-}
-.form-login .tabs a {
-  display: block;
-  color: #FFFFFF;
-  padding-left: 32px;
-  padding-right: 32px;
-  line-height: 40px;
-}
-.form-login .tabs a:hover {
-  background-color: #0c8ee6;
-}
-.form-login .tabs ul {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-}
-.form-login .content {
-  padding: 30px;
-}
-.form-login .content .title {
-  font-size: 1.3em;
-}
-.form-login .content .hint {
-  font-size: 0.8em;
-  padding-top: 10px;
-  padding-bottom: 18px;
-}
-.form-login .content button {
-  background-color: #2e6cff;
-}
-.form-login .content input,
-.form-login .content button {
-  height: 42px;
-  margin-bottom: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  box-sizing: border-box;
-  border: 0px;
-}
+html,
 body {
-  background: #eeeeee url(http://subtlepatterns.com/patterns/sativa.png);
-  position: relative;
-  height: 100%;
-}
-html {
   position: relative;
   height: 100%;
 }
@@ -150,15 +83,15 @@ html {
   margin: 80px auto;
   padding: 20px 40px 40px;
   text-align: center;
-  background: #ffffff;
-  border: 1px solid #cccccc;
+  background: #fff;
+  border: 1px solid #ccc;
 }
 #output {
   position: absolute;
   width: 300px;
   top: -75px;
   left: 0;
-  color: #ffffff;
+  color: #fff;
 }
 #output.alert-success {
   background: #19cc19;
@@ -166,45 +99,34 @@ html {
 #output.alert-danger {
   background: #e46969;
 }
-.login-container::before {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 3.5px;
-  left: 0;
-  background: #ffffff;
-  z-index: -1;
-  -webkit-transform: rotateZ(4deg);
-  -moz-transform: rotateZ(4deg);
-  -ms-transform: rotateZ(4deg);
-  border: 1px solid #cccccc;
-}
+.login-container::before,
 .login-container::after {
   content: "";
   position: absolute;
   width: 100%;
   height: 100%;
   top: 3.5px;
-  top: 5px;
   left: 0;
-  background: #ffffff;
+  background: #fff;
   z-index: -1;
-  z-index: -2;
   -webkit-transform: rotateZ(4deg);
-  -webkit-transform: rotateZ(-2deg);
   -moz-transform: rotateZ(4deg);
-  -moz-transform: rotateZ(-2deg);
   -ms-transform: rotateZ(4deg);
+  border: 1px solid #ccc;
+}
+.login-container::after {
+  top: 5px;
+  z-index: -2;
+  -webkit-transform: rotateZ(-2deg);
+  -moz-transform: rotateZ(-2deg);
   -ms-transform: rotateZ(-2deg);
-  border: 1px solid #cccccc;
 }
 .avatar {
   width: 100px;
   height: 100px;
   margin: 10px auto 30px;
   border-radius: 100%;
-  border: 2px solid #aaaaaa;
+  border: 2px solid #aaa;
   background-size: cover;
 }
 .form-box input {
@@ -212,13 +134,13 @@ html {
   padding: 10px;
   text-align: center;
   height: 40px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   background: #fafafa;
   transition: 0.2s ease-in-out;
 }
 .form-box input:focus {
   outline: 0;
-  background: #eeeeee;
+  background: #eee;
 }
 .form-box input[type="text"] {
   border-radius: 5px 5px 0 0;
@@ -238,7 +160,53 @@ html {
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
+@-webkit-keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(20px);
+    -ms-transform: translateY(20px);
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
 .fadeInUp {
   -webkit-animation-name: fadeInUp;
   animation-name: fadeInUp;
+}
+fieldset.scheduler-border {
+  border: 2px groove #ddd !important;
+  border-radius: 10px;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  -webkit-box-shadow: 0px 0px 0px 0px #000;
+  box-shadow: 0px 0px 0px 0px #000;
+}
+legend.scheduler-border {
+  width: inherit;
+  /* Or auto */
+  padding: 0 10px;
+  /* To give a bit of padding on the left and right */
+  border-bottom: none;
+}
+body {
+  background: #eeeeee url(http://subtlepatterns.com/patterns/sativa.png);
+  position: relative;
+  height: 100%;
 }
