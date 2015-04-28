@@ -4,7 +4,7 @@ angular.module('edup.client')
 
     .controller('ClientAttendanceController', function ($scope) {
         $scope.student = 'Taisija Polakova';
-        $scope.balance = 25;
+        $scope.balance = 25;//Math.floor((Math.random() * 100) - 50);
 
         $scope.attendanceHistory = [
             {

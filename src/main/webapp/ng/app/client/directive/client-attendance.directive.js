@@ -7,7 +7,7 @@ angular.module('edup.client')
             restrict: 'E',
             templateUrl: 'client-attendance',
             link : function ($scope) {
-                $scope.directiveTest = 'Client tabbed pane directive';
+                $scope.directiveTest = 'Client attendance tabbed pane directive';
             }
         };
     }
