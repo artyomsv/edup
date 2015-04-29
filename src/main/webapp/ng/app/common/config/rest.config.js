@@ -4,13 +4,19 @@ angular.module('edup.common')
 
     .config(function (RestangularProvider) {
 
-        var baseUrl = window.location.host + '/edup/api';
+        var location = window.location.host;
 
-        if (baseUrl.indexOf('http://127.0.0.1:8088/') > -1) {
-            RestangularProvider.setBaseUrl('https://192.168.1.104:8443/edup/api');
+        var baseUrl;
+
+        if (location.indexOf('127.0.0.1') > -1) {
+            baseUrl = 'https://localhost:8443/edup/api';
         } else {
-            RestangularProvider.setBaseUrl(baseUrl);
+            baseUrl = 'https://' + location + '/edup/api';
         }
+
+        console.log(baseUrl);
+
+        RestangularProvider.setBaseUrl(baseUrl);
 
         RestangularProvider.setErrorInterceptor(function (resp) {
             console.log(angular.toJson(resp, true));

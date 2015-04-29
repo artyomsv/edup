@@ -92,6 +92,9 @@ module.exports = function (grunt) {
                     'vendor/bower_components/ng-sortable/dist/ng-sortable.js',
                     'vendor/bower_components/bootstrap/js/dropdown.js',
 
+                    'vendor/bower_components/moment/min/moment.min.js',
+                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 
                     '<%= dest %>.js'
@@ -226,7 +229,7 @@ module.exports = function (grunt) {
             server: {
                 options: {
                     port: 8088,
-                    hostname: '127.0.0.1',
+                    hostname: '0.0.0.0',
                     open: 'http://127.0.0.1:8088/standalone'
                 }
             }

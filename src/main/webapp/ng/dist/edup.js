@@ -7,13 +7,19 @@ angular.module('edup.common')
 
     .config(['RestangularProvider', function (RestangularProvider) {
 
-        var baseUrl = window.location.host + '/edup/api';
+        var location = window.location.host;
 
-        if (baseUrl.indexOf('http://127.0.0.1:8088/') > -1) {
-            RestangularProvider.setBaseUrl('https://192.168.1.104:8443/edup/api');
+        var baseUrl;
+
+        if (location.indexOf('127.0.0.1') > -1) {
+            baseUrl = 'https://localhost:8443/edup/api';
         } else {
-            RestangularProvider.setBaseUrl(baseUrl);
+            baseUrl = 'https://' + location + '/edup/api';
         }
+
+        console.log(baseUrl);
+
+        RestangularProvider.setBaseUrl(baseUrl);
 
         RestangularProvider.setErrorInterceptor(function (resp) {
             console.log(angular.toJson(resp, true));
@@ -238,7 +244,9 @@ angular.module('edup').run(['$templateCache', function($templateCache) {
 
 
   $templateCache.put('client-balance',
-    "<div class=container style=\"background-color: #f4f4f4; padding-bottom: 20px; padding-top: 20px\" ng-controller=ClientBalanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>Add money to account</legend><div class=row><div class=col-xs-4 style=\"border: solid\">1</div><div class=col-xs-8 style=\"border: solid\">2</div><div class=col-xs-12 style=\"border: solid\"><button type=button class=\"btn btn-success pull-right\">Add to balance</button></div></div></fieldset><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>Make payment</legend><div class=row><div class=col-xs-4>1</div><div class=col-xs-8>2</div><div class=col-xs-4>3</div><div class=col-xs-8>4</div><div class=col-xs-12><button type=button class=\"btn btn-success pull-right\">Pay</button></div></div></fieldset></div>"
+    "<div class=container style=\"background-color: #f4f4f4; padding-bottom: 20px; padding-top: 20px\" ng-controller=ClientBalanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><form class=form-horizontal><fieldset><legend>Add money to account</legend><div class=form-group><label class=\"col-md-4 control-label\" for=amountTextInput>Amount</label><div class=col-md-4><input id=amountTextInput name=textinput placeholder=amount class=\"form-control input-md\"></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=addToBalanceButton></label><div class=col-md-4><button id=addToBalanceButton name=payButton class=\"btn btn-success pull-right\">Add to balance</button></div></div></fieldset></form><form class=form-horizontal><fieldset><legend>Form Name</legend><div class=form-group><label class=\"col-md-4 control-label\" for=subjectList>Subject</label><div class=col-md-4><select id=subjectList name=subjectList class=form-control><option value=1>History</option><option value=2>English</option><option value=3>Math</option><option value=4>Biology</option></select></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=datePicketLabel>Date</label><div class=col-md-4><div class=\"input-group date\" id=datetimepicker1><input id=datePicketLabel class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div><script>$(function () {\n" +
+    "                        $('#datetimepicker1').datetimepicker();\n" +
+    "                    });</script></div><div class=form-group><label class=\"col-md-4 control-label\" for=payButton></label><div class=col-md-4><button id=payButton name=payButton class=\"btn btn-success pull-right\">Pay</button></div></div></fieldset></form></div>"
   );
 
 

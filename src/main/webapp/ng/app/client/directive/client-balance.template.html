@@ -22,32 +22,87 @@
         </div>
     </div>
 
-    <fieldset class="row clearfix scheduler-border">
-        <legend class="scheduler-border">Add money to account</legend>
+    <form class="form-horizontal">
+        <fieldset>
 
-        <div class="row">
-            <div class="col-xs-4" style="border: solid">1</div>
-            <div class="col-xs-8" style="border: solid">2</div>
-            <div class="col-xs-12" style="border: solid">
-                <button type="button" class="btn btn-success pull-right">Add to balance</button>
+            <!-- Form Name -->
+            <legend>Add money to account</legend>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="amountTextInput">Amount</label>
+
+                <div class="col-md-4">
+                    <input id="amountTextInput" name="textinput" type="text" placeholder="amount" class="form-control input-md">
+                </div>
             </div>
-        </div>
 
-    </fieldset>
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="addToBalanceButton"></label>
 
-    <fieldset class="row clearfix scheduler-border">
-        <legend class="scheduler-border">Make payment</legend>
-
-        <div class="row">
-            <div class="col-xs-4">1</div>
-            <div class="col-xs-8">2</div>
-            <div class="col-xs-4">3</div>
-            <div class="col-xs-8">4</div>
-            <div class="col-xs-12">
-                <button type="button" class="btn btn-success pull-right">Pay</button>
+                <div class="col-md-4">
+                    <button id="addToBalanceButton" name="payButton" class="btn btn-success pull-right">Add to balance</button>
+                </div>
             </div>
-        </div>
 
-    </fieldset>
+        </fieldset>
+    </form>
+
+
+    <form class="form-horizontal">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Form Name</legend>
+
+            <!-- Select Basic -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="subjectList">Subject</label>
+
+                <div class="col-md-4">
+                    <select id="subjectList" name="subjectList" class="form-control">
+                        <option value="1">History</option>
+                        <option value="2">English</option>
+                        <option value="3">Math</option>
+                        <option value="4">Biology</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="datePicketLabel">Date</label>
+
+                <div class="col-md-4">
+                    <div class='input-group date' id='datetimepicker1'>
+                        <input id="datePicketLabel" type='text' class="form-control"/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker1').datetimepicker();
+                    });
+                </script>
+
+
+                <!--<div class="col-md-4">-->
+                <!--<input id="datePicketLabel" name="datePicketLabel" type="text" placeholder="placeholder" class="form-control input-md" required="">-->
+                <!--</div>-->
+            </div>
+
+            <!-- Button -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="payButton"></label>
+
+                <div class="col-md-4">
+                    <button id="payButton" name="payButton" class="btn btn-success pull-right">Pay</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
 
 </div>
