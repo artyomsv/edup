@@ -190,6 +190,20 @@ body {
   -webkit-animation-name: fadeInUp;
   animation-name: fadeInUp;
 }
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+.fixedTextArea {
+  resize: none;
+  height: 100px !important;
+}
+.mainForm {
+  background-color: #f4f4f4;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
 fieldset.scheduler-border {
   border: 2px groove #ddd !important;
   border-radius: 10px;
