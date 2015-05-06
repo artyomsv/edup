@@ -197,12 +197,29 @@ body {
 }
 .fixedTextArea {
   resize: none;
-  height: 100px !important;
+  height: 110px !important;
 }
 .mainForm {
   background-color: #f4f4f4;
   padding-bottom: 20px;
   padding-top: 20px;
+}
+.child {
+  display: inline-block;
+  *display: inline;
+  /* for IE7*/
+  *zoom: 1;
+  /* for IE7*/
+  min-width: 100px;
+  min-height: 50px;
+  margin-right: 10px;
+  white-space: normal;
+}
+.parent {
+  white-space: nowrap;
+}
+td.identification-card {
+  border-top: none;
 }
 fieldset.scheduler-border {
   border: 2px groove #ddd !important;

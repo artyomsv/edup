@@ -71,6 +71,10 @@ module.exports = function (grunt) {
                     'app/client/client.module.js',
                     'app/client/**/*.js',
 
+                    'app/tabs/tabs.module.js',
+                    'app/tabs/**/*.js',
+
+
                     'app/app.module.js',
 
                     '!app/**/*.spec.js'
@@ -122,7 +126,7 @@ module.exports = function (grunt) {
                     errorsOnly: false,
                     cyclomatic: [3, 7, 12],
                     halstead: [9, 10, 20],
-                    maintainability: 90,
+                    maintainability: 80,
                     hideComplexFunctions: false,
                     broadcast: false
                 }

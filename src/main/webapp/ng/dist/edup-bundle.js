@@ -48409,6 +48409,16 @@ angular.module('edup.client')
 
 angular.module('edup.client')
 
+    .controller('ClientFormController', ['$scope', function ($scope) {
+        $scope.student = 'Taisija Polakova';
+    }]
+);
+
+
+'use strict';
+
+angular.module('edup.client')
+
     .directive('clientAttendance', function () {
         return {
             restrict: 'E',
@@ -48449,12 +48459,97 @@ angular.module('edup.client')
 );
 'use strict';
 
+angular.module('edup.client')
+
+    .directive('clientForm', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'client-form',
+            link : function ($scope) {
+                $scope.directiveTest = 'Client Form tabbed pane directive';
+            }
+        };
+    }
+);
+'use strict';
+
+angular.module('edup.tabs', []);
+'use strict';
+
+angular.module('edup.tabs')
+
+    .controller('ClientTabController', ['$scope', function ($scope) {
+        $scope.student = 'Taisija Polakova';
+        $scope.balance = 25;//Math.floor((Math.random() * 100) - 50);
+
+        $scope.clients = [
+            {
+                'name': 'Artyom',
+                'lastName' : 'Stukans',
+                'age' : 33,
+                'id' : '281281-10562',
+                'phone' : '28 61 81 25',
+                'active' : true,
+                'details' : 'details',
+                'balance' : 35,
+                'parentsInfo' : 'Information about Artyom parents',
+                'essentialInformation' : 'Some essential information about student'
+            },
+            {
+                'name': 'Julija',
+                'lastName' : 'Avdejeva',
+                'age' : 30,
+                'id' : '220484-12345',
+                'phone' : '28 78 45 90',
+                'active' : false,
+                'details' : 'details',
+                'balance' : 25,
+                'parentsInfo' : 'Information about Yuliya parents',
+                'essentialInformation' : 'Some essential information about student'
+            },
+            {
+                'name': 'Taisija',
+                'lastName' : 'Polakova',
+                'age' : 3,
+                'id' : '231111-12345',
+                'phone' : '28 89 00 12',
+                'active' : true,
+                'details' : 'details',
+                'balance' : 15,
+                'parentsInfo' : 'Information about Taisija parents',
+                'essentialInformation' : 'Some essential information about student'
+            }
+
+        ];
+
+        $scope.selectedClient = $scope.clients[2];
+    }]
+);
+
+
+'use strict';
+
+angular.module('edup.tabs')
+
+    .directive('tabsClient', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'tabs-client',
+            link : function ($scope) {
+                $scope.directiveTest = 'Client tab directive';
+            }
+        };
+    }
+);
+'use strict';
+
 angular.module('edup',
     [
         'edup.common',
         'edup.login',
         'edup.header',
         'edup.client',
+        'edup.tabs',
         'restangular'
     ]
 );
@@ -48462,19 +48557,24 @@ angular.module('edup').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('client-attendance',
-    "<div class=container style=\"background-color: #f4f4f4; padding-bottom: 20px; padding-top: 20px\" ng-controller=ClientAttendanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>History of attendances</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Subject name</th><th>Date</th><th>Amount</th></tr></thead><tbody><tr ng-repeat=\"event in attendanceHistory\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ event.subject }}</td><td>{{ event.date }}</td><td>{{ event.amount }} EUR</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new attendance</button></div></div></div>"
+    "<div class=\"container mainForm\" ng-controller=ClientAttendanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>History of attendances</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Subject name</th><th>Date</th><th>Amount</th></tr></thead><tbody><tr ng-repeat=\"event in attendanceHistory\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ event.subject }}</td><td>{{ event.date }}</td><td>{{ event.amount }} EUR</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new attendance</button></div></div></div>"
   );
 
 
   $templateCache.put('client-balance',
-    "<div class=container style=\"background-color: #f4f4f4; padding-bottom: 20px; padding-top: 20px\" ng-controller=ClientBalanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><form class=form-horizontal><fieldset><legend>Add money to account</legend><div class=form-group><label class=\"col-md-4 control-label\" for=amountTextInput>Amount</label><div class=col-md-4><input id=amountTextInput name=textinput placeholder=amount class=\"form-control input-md\"></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=addToBalanceButton></label><div class=col-md-4><button id=addToBalanceButton name=payButton class=\"btn btn-success pull-right\">Add to balance</button></div></div></fieldset></form><form class=form-horizontal><fieldset><legend>Form Name</legend><div class=form-group><label class=\"col-md-4 control-label\" for=subjectList>Subject</label><div class=col-md-4><select id=subjectList name=subjectList class=form-control><option value=1>History</option><option value=2>English</option><option value=3>Math</option><option value=4>Biology</option></select></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=datePicketLabel>Date</label><div class=col-md-4><div class=\"input-group date\" id=datetimepicker1><input id=datePicketLabel class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div><script>$(function () {\n" +
+    "<div class=\"container mainForm\" ng-controller=ClientBalanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}\">{{ balance }} EUR</span></h3></td></tr></table></div></div><form class=form-horizontal><fieldset><legend>Add money to account</legend><div class=form-group><label class=\"col-md-4 control-label\" for=amountTextInput>Amount</label><div class=col-md-4><input id=amountTextInput name=textinput placeholder=amount class=\"form-control input-md\"></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=addToBalanceButton></label><div class=col-md-4><button id=addToBalanceButton name=payButton class=\"btn btn-success pull-right\">Add to balance</button></div></div></fieldset></form><form class=form-horizontal><fieldset><legend>Form Name</legend><div class=form-group><label class=\"col-md-4 control-label\" for=subjectList>Subject</label><div class=col-md-4><select id=subjectList name=subjectList class=form-control><option value=1>History</option><option value=2>English</option><option value=3>Math</option><option value=4>Biology</option></select></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=datePicketLabel>Date</label><div class=col-md-4><div class=\"input-group date\" id=datetimepicker1><input id=datePicketLabel class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div><script>$(function () {\n" +
     "                        $('#datetimepicker1').datetimepicker();\n" +
     "                    });</script></div><div class=form-group><label class=\"col-md-4 control-label\" for=payButton></label><div class=col-md-4><button id=payButton name=payButton class=\"btn btn-success pull-right\">Pay</button></div></div></fieldset></form></div>"
   );
 
 
   $templateCache.put('client-documents',
-    "<div class=container style=\"background-color: #f4f4f4; padding-bottom: 20px; padding-top: 20px\" ng-controller=ClientDocumentsController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>List of documents</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Document name</th><th>Date loaded</th></tr></thead><tbody><tr ng-repeat=\"document in documents\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ document.name }}</td><td>{{ document.date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new document</button></div></div></div>"
+    "<div class=\"container mainForm\" ng-controller=ClientDocumentsController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ student }}</span></h3></td><td style=\"border-top: none\" width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>List of documents</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Document name</th><th>Date loaded</th></tr></thead><tbody><tr ng-repeat=\"document in documents\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ document.name }}</td><td>{{ document.date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new document</button></div></div></div>"
+  );
+
+
+  $templateCache.put('client-form',
+    "<div class=\"container mainForm\" ng-controller=ClientFormController><div class=\"row clearfix\"><div class=\"col-md-6 column\"><form class=form-horizontal><fieldset><div class=form-group><label class=\"col-md-4 control-label\" for=nameInput>Name</label><div class=col-md-4><input id=nameInput name=nameInput placeholder=\"\" class=\"form-control input-md\" required></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=lastNameInput>Last name</label><div class=col-md-4><input id=lastNameInput name=lastNameInput placeholder=\"\" class=\"form-control input-md\" required></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=personalNumberInput>Personal number</label><div class=col-md-4><input id=personalNumberInput name=personalNumberInput placeholder=\"\" class=\"form-control input-md\" required></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=phoneInput>Mob. phone</label><div class=col-md-4><input id=phoneInput name=phoneInput placeholder=\"\" class=\"form-control input-md\" required></div></div><div class=form-group><label class=\"col-md-4 control-label\" for=birthDateInput>Birth date</label><div class=col-md-4><input id=birthDateInput name=birthDateInput placeholder=DD/MM/YYYY class=\"form-control input-md\" required></div></div></fieldset></form></div><div class=\"col-md-6 column vcenter\"><img alt=280x280 src=./../images/taja.png class=\"img-rounded pull-right\"></div></div><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form class=form-horizontal><fieldset><legend>Parents information</legend><div class=col-md-12><textarea class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div></fieldset></form></div></div><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form class=form-horizontal><fieldset><legend>Characteristics</legend><div class=col-md-12><textarea class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></fieldset></form></div></div></div>"
   );
 
 
@@ -48485,6 +48585,11 @@ angular.module('edup').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('edup-login',
     "<div class=container><div class=login-container><div id=output></div><div class=avatar></div><div class=form-box><form name=form action=j_security_check method=post ng-submit=login(event)><input name=j_username placeholder=username id=text ng-model=username required> <input type=password name=j_password placeholder=password id=password ng-model=password required> <button class=\"btn btn-info btn-block login\" type=submit>Login</button></form></div></div></div>"
+  );
+
+
+  $templateCache.put('tabs-client',
+    "<div class=\"container mainForm\" ng-controller=ClientTabController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=parent><div class=\"child pull=left\"><input id=searchinput name=searchinput type=search placeholder=search class=\"form-control input-md\"></div><div class=\"child pull-right\"><h4><span class=\"glyphicon glyphicon-user pull-right\"></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th>Active</th><th>Details</th></tr></thead><tbody><tr ng-repeat=\"client in clients\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ client.name }}</td><td>{{ client.lastName }}</td><td>{{ client.age }}</td><td>{{ client.id }}</td><td>{{ client.phone }}</td><td><input type=checkbox name=checkboxes id=checkboxes-1 ng-disabled=true ng-checked=client.active></td><td>{{ client.details }}</td></tr></tbody></table></div><div class=\"col-md-5 column\"><form class=form-horizontal style=\"border: 2px solid; border-radius: 5px; padding: 10px\"><fieldset><legend>Identification card</legend><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedClient.name }} {{ selectedClient.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedClient.id }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedClient.phone }}</td></tr><tr><td>Current balance:</td><td>{{ selectedClient.balance }} EUR</td><td><button type=button class=\"btn btn-success pull-right\">Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-info\" style=\"width: 100%\">Attendance history</button></div><div class=\"col-md-12 column\" style=\"padding-top: 10px; width: 100%\"><label for=parentInformation>Text Area</label><textarea class=\"form-control fixedTextArea\" id=parentInformation name=textarea>default text</textarea></div></fieldset></form></div></div></div>"
   );
 
 }]);

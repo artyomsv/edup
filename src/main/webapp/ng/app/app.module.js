@@ -6,6 +6,7 @@ angular.module('edup',
         'edup.login',
         'edup.header',
         'edup.client',
+        'edup.tabs',
         'restangular'
     ]
 );

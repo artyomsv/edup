@@ -250,12 +250,83 @@ angular.module('edup.client')
 );
 'use strict';
 
+angular.module('edup.tabs', []);
+'use strict';
+
+angular.module('edup.tabs')
+
+    .controller('ClientTabController', ['$scope', function ($scope) {
+        $scope.student = 'Taisija Polakova';
+        $scope.balance = 25;//Math.floor((Math.random() * 100) - 50);
+
+        $scope.clients = [
+            {
+                'name': 'Artyom',
+                'lastName' : 'Stukans',
+                'age' : 33,
+                'id' : '281281-10562',
+                'phone' : '28 61 81 25',
+                'active' : true,
+                'details' : 'details',
+                'balance' : 35,
+                'parentsInfo' : 'Information about Artyom parents',
+                'essentialInformation' : 'Some essential information about student'
+            },
+            {
+                'name': 'Julija',
+                'lastName' : 'Avdejeva',
+                'age' : 30,
+                'id' : '220484-12345',
+                'phone' : '28 78 45 90',
+                'active' : false,
+                'details' : 'details',
+                'balance' : 25,
+                'parentsInfo' : 'Information about Yuliya parents',
+                'essentialInformation' : 'Some essential information about student'
+            },
+            {
+                'name': 'Taisija',
+                'lastName' : 'Polakova',
+                'age' : 3,
+                'id' : '231111-12345',
+                'phone' : '28 89 00 12',
+                'active' : true,
+                'details' : 'details',
+                'balance' : 15,
+                'parentsInfo' : 'Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents ',
+                'essentialInformation' : 'Some essential information about student'
+            }
+
+        ];
+
+        $scope.selectedClient = $scope.clients[2];
+    }]
+);
+
+
+'use strict';
+
+angular.module('edup.tabs')
+
+    .directive('tabsClient', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'tabs-client',
+            link : function ($scope) {
+                $scope.directiveTest = 'Client tab directive';
+            }
+        };
+    }
+);
+'use strict';
+
 angular.module('edup',
     [
         'edup.common',
         'edup.login',
         'edup.header',
         'edup.client',
+        'edup.tabs',
         'restangular'
     ]
 );
@@ -291,6 +362,11 @@ angular.module('edup').run(['$templateCache', function($templateCache) {
 
   $templateCache.put('edup-login',
     "<div class=container><div class=login-container><div id=output></div><div class=avatar></div><div class=form-box><form name=form action=j_security_check method=post ng-submit=login(event)><input name=j_username placeholder=username id=text ng-model=username required> <input type=password name=j_password placeholder=password id=password ng-model=password required> <button class=\"btn btn-info btn-block login\" type=submit>Login</button></form></div></div></div>"
+  );
+
+
+  $templateCache.put('tabs-client',
+    "<div class=\"container mainForm\" ng-controller=ClientTabController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=parent><div class=\"child pull=left\"><input id=searchinput name=searchinput type=search placeholder=search class=\"form-control input-md\"></div><div class=\"child pull-right\"><h4><span class=\"glyphicon glyphicon-user pull-right\"></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th>Active</th><th>Details</th></tr></thead><tbody><tr ng-repeat=\"client in clients\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ client.name }}</td><td>{{ client.lastName }}</td><td>{{ client.age }}</td><td>{{ client.id }}</td><td>{{ client.phone }}</td><td><input type=checkbox name=checkboxes id=checkboxes-1 ng-disabled=true ng-checked=client.active></td><td>{{ client.details }}</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div><div class=\"col-md-5 column\"><form class=form-horizontal style=\"border: 2px solid; border-radius: 5px; padding: 10px\"><fieldset><legend>Identification card</legend><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedClient.name }} {{ selectedClient.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src=./../images/taja.png class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedClient.id }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedClient.phone }}</td></tr><tr><td>Current balance:</td><td>{{ selectedClient.balance }} EUR</td><td><button type=button class=\"btn btn-success pull-right\">Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-info\" style=\"width: 100%\">Attendance history</button></div><div class=\"col-md-12 column\" style=\"padding-top: 30px\"><label for=parentInformation>Information about parents</label><textarea readonly class=\"form-control fixedTextArea\" id=parentInformation name=textarea>{{ selectedClient.parentsInfo }}</textarea></div><div class=\"col-md-12 column\" style=\"padding-top: 30px; padding-bottom: 20px\"><label for=essentialInformation>Essential information</label><textarea readonly class=\"form-control fixedTextArea\" id=essentialInformation name=textarea>{{ selectedClient.essentialInformation }}</textarea></div></fieldset></form></div></div></div>"
   );
 
 }]);
