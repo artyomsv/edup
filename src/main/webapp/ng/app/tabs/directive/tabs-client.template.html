@@ -1,6 +1,6 @@
-<div class="container mainForm" ng-controller="ClientTabController">
+<div class="mainForm" ng-controller="ClientTabController">
 
-    <div class="row clearfix">
+    <div class="row clearfix scrollbar-container">
 
         <div class="col-md-7 column">
 
@@ -18,19 +18,19 @@
                     <th>ID</th>
                     <th>Phone</th>
                     <th>Active</th>
-                    <th>Details</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
 
-                <tr ng-repeat="client in clients" ng-class-odd="'success'" ng-class-even="'active'">
+                <tr ng-repeat="client in clients" ng-class-odd="'success'" ng-class-even="'active'" ng-click="setSelected(client.id)" ng-class="{selected: client.id === selectedClient.id}">
                     <td>{{ client.name }}</td>
                     <td>{{ client.lastName }}</td>
                     <td>{{ client.age }}</td>
-                    <td>{{ client.id }}</td>
+                    <td>{{ client.personalId }}</td>
                     <td>{{ client.phone }}</td>
                     <td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="client.active"></td>
-                    <td>{{ client.details }}</td>
+                    <td><a href="#">{{ client.details }}</a> </td>
                 </tr>
                 </tbody>
             </table>
@@ -49,7 +49,7 @@
         </div>
 
         <div class="col-md-5 column">
-            <form class="form-horizontal" style="border: 2px solid; border-radius: 5px; padding: 10px">
+            <form class="form-horizontal" style="border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px">
                 <fieldset>
 
                     <!-- Form Name -->
@@ -67,7 +67,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <h4>{{ selectedClient.id }}</h4>
+                                    <h4>{{ selectedClient.personalId }}</h4>
                                 </td>
                             </tr>
                         </table>

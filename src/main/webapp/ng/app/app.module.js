@@ -2,11 +2,12 @@
 
 angular.module('edup',
     [
-        'edup.common',
+        'edup.navbar',
+        'edup.tabs',
+        'edup.client',
         'edup.login',
         'edup.header',
-        'edup.client',
-        'edup.tabs',
-        'restangular'
+        'edup.footer',
+        'edup.common'
     ]
 );

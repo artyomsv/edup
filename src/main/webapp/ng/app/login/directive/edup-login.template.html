@@ -1,13 +1,11 @@
-<div class="container">
-    <div class="login-container">
-        <div id="output"></div>
-        <div class="avatar"></div>
-        <div class="form-box">
-            <form name="form"  action="j_security_check" method="post" ng-submit="login(event)">
-                <input name="j_username" type="text" placeholder="username" id="text" ng-model="username" required/>
-                <input type="password" name="j_password" placeholder="password" id="password" ng-model="password" required/>
-                <button class="btn btn-info btn-block login" type="submit">Login</button>
-            </form>
-        </div>
+<div class="login-container">
+    <div id="output"></div>
+    <div class="avatar"></div>
+    <div class="form-box">
+        <form name="form" action="j_security_check" method="post" ng-submit="login(event)">
+            <input name="j_username" type="text" placeholder="username" id="text" ng-model="username" required/>
+            <input type="password" name="j_password" placeholder="password" id="password" ng-model="password" required/>
+            <button class="btn btn-info btn-block login" type="submit">Login</button>
+        </form>
     </div>
 </div>

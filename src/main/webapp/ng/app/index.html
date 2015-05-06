@@ -9,20 +9,30 @@
     <script type="text/javascript" src="../vendor/bower_components/jquery/dist/jquery.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/lodash/dist/lodash.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/angular/angular.js"></script>
+    <script type="text/javascript" src="../vendor/bower_components/ui-router/release/angular-ui-router.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/restangular/dist/restangular.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/ng-sortable/dist/ng-sortable.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/moment/min/moment.min.js"></script>
     <script type="text/javascript" src="../vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="../vendor/bower_components/ui-router/release/angular-ui-router.js"></script>
 
     <script type="text/javascript" src="../dist/edup.js"></script>
 
 </head>
 <body ng-app="edup">
 
-<edup-header></edup-header>
+<div ng-controller="NavbarController" id="edupHeader">
+    <edup-header></edup-header>
+</div>
 
+<div class="container"
+     ui-view
+     style="width: 80%;border: 1px solid #d3d3d3;border-radius: 10px;background-color: rgba(244, 244, 244, 0.7);margin-bottom: 20px">
+</div>
+
+<div>
+    <edup-footer></edup-footer>
+</div>
 </body>
 </html>

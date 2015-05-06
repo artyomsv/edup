@@ -8,37 +8,40 @@ angular.module('edup.tabs')
 
         $scope.clients = [
             {
+                "id" : 1,
                 'name': 'Artyom',
                 'lastName' : 'Stukans',
                 'age' : 33,
-                'id' : '281281-10562',
+                'personalId' : '281281-10562',
                 'phone' : '28 61 81 25',
                 'active' : true,
-                'details' : 'details',
+                'details' : 'Details',
                 'balance' : 35,
                 'parentsInfo' : 'Information about Artyom parents',
                 'essentialInformation' : 'Some essential information about student'
             },
             {
+                "id" : 2,
                 'name': 'Julija',
                 'lastName' : 'Avdejeva',
-                'age' : 30,
-                'id' : '220484-12345',
+                'age' : 18,
+                'personalId' : '220497-12345',
                 'phone' : '28 78 45 90',
                 'active' : false,
-                'details' : 'details',
+                'details' : 'Details',
                 'balance' : 25,
                 'parentsInfo' : 'Information about Yuliya parents',
                 'essentialInformation' : 'Some essential information about student'
             },
             {
+                "id" : 3,
                 'name': 'Taisija',
                 'lastName' : 'Polakova',
                 'age' : 3,
-                'id' : '231111-12345',
+                'personalId' : '231111-12345',
                 'phone' : '28 89 00 12',
                 'active' : true,
-                'details' : 'details',
+                'details' : 'Details',
                 'balance' : 15,
                 'parentsInfo' : 'Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents ',
                 'essentialInformation' : 'Some essential information about student'
@@ -47,6 +50,12 @@ angular.module('edup.tabs')
         ];
 
         $scope.selectedClient = $scope.clients[2];
+
+        $scope.setSelected = function (clientId) {
+            $scope.selectedClient = _.find($scope.clients, function(client) {
+                return clientId === client.id;
+            });
+        };
     }
 );
 

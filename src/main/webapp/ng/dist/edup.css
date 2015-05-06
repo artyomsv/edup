@@ -191,16 +191,14 @@ body {
   animation-name: fadeInUp;
 }
 .vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
+  display: flex;
+  flex-direction: row;
 }
 .fixedTextArea {
   resize: none;
   height: 110px !important;
 }
 .mainForm {
-  background-color: #f4f4f4;
   padding-bottom: 20px;
   padding-top: 20px;
 }
@@ -220,6 +218,16 @@ body {
 }
 td.identification-card {
   border-top: none;
+}
+.scrollbar-container {
+  scrollbar-face-color: #ddd;
+  scrollbar-shadow-color: #fff;
+  scrollbar-highlight-color: #fff;
+  scrollbar-3dlight-color: #fff;
+  scrollbar-darkshadow-color: #fff;
+  scrollbar-track-color: #fff;
+  scrollbar-arrow-color: #fff;
+  overflow: auto;
 }
 fieldset.scheduler-border {
   border: 2px groove #ddd !important;

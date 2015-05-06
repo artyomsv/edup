@@ -68,14 +68,21 @@ module.exports = function (grunt) {
                     'app/header/header.module.js',
                     'app/header/**/*.js',
 
+                    'app/footer/footer.module.js',
+                    'app/footer/**/*.js',
+
                     'app/client/client.module.js',
                     'app/client/**/*.js',
 
                     'app/tabs/tabs.module.js',
                     'app/tabs/**/*.js',
 
+                    'app/navbar/navbar.module.js',
+                    'app/navbar/**/*.js',
 
                     'app/app.module.js',
+
+                    'app/app.config.js',
 
                     '!app/**/*.spec.js'
 
@@ -88,6 +95,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/jquery-placeholder/jquery.placeholder.js',
                     'vendor/bower_components/lodash/dist/lodash.js',
                     'vendor/bower_components/angular/angular.js',
+                    'vendor/bower_components/ui-router/release/angular-ui-router.min.js',
                     'vendor/bower_components/angular-sanitize/angular-sanitize.js',
                     'vendor/bower_components/restangular/dist/restangular.js',
                     'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -98,6 +106,7 @@ module.exports = function (grunt) {
 
                     'vendor/bower_components/moment/min/moment.min.js',
                     'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 
