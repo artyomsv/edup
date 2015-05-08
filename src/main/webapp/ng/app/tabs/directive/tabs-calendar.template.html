@@ -3,48 +3,58 @@
     <div class="col-md-12 column">
         <div class="col-md-3 form-inline">
             <div class="btn-group pull-left">
-                <button class="btn btn-primary" data-calendar-nav="prev">&lt;&lt; Prev</button>
-                <button class="btn" data-calendar-nav="today">Today</button>
-                <button class="btn btn-primary" data-calendar-nav="next">Next &gt;&gt;</button>
+                <button class="btn btn-primary" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" decrement="calendarView">&lt;&lt; Prev</button>
+                <button class="btn" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" set-to-today> Today</button>
+                <button class="btn btn-primary" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" increment="calendarView"> Next &gt;&gt; </button>
             </div>
         </div>
 
-        <div class="col-md-2 form-inline">
-            <div class="text-center">
-                {{dateTitle}}
+        <div class="col-md-2">
+            <div class="btn-group text-center">
+                <h4> {{ currentDay }} </h4>
             </div>
+
         </div>
 
         <div class="col-md-3 form-inline">
             <div class="btn-group pull-right">
-                <button class="btn btn-warning" data-calendar-view="year">Year</button>
-                <button class="btn btn-warning" data-calendar-view="month">Month</button>
-                <button class="btn btn-warning" data-calendar-view="week">Week</button>
-                <button class="btn btn-warning" data-calendar-view="day">Day</button>
+                <button class="btn btn-warning" ng-click="setCalendarView('year')">Year</button>
+                <button class="btn btn-warning" ng-click="setCalendarView('month')">Month</button>
+                <button class="btn btn-warning" ng-click="setCalendarView('week')">Week</button>
+                <button class="btn btn-warning" ng-click="setCalendarView('day')">Day</button>
             </div>
         </div>
         <div class="col-md-4 form-inline">
-            <h4>Events</h4>
         </div>
     </div>
 
-    <div class="col-md-12 column">
+    <div class="col-md-12 column" style="padding-top: 20px">
         <div class="col-md-8 column">
-            <div id="calendar" class="cal-context" style="width: 60%;"></div>
+            <!--<div id="calendar" class="cal-context" style="width: 60%;"></div>-->
+
+            <mwl-calendar
+                    events="events"
+                    view="calendarView"
+                    view-title="calendarTitle"
+                    current-day="calendarDay"
+                    on-event-click="eventClicked(calendarEvent)"
+                    edit-event-html="'<i class=\'glyphicon glyphicon-pencil\'></i>'"
+                    delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
+                    on-edit-event-click="eventEdited(calendarEvent)"
+                    on-delete-event-click="eventDeleted(calendarEvent)"
+                    auto-open="true">
+            </mwl-calendar>
+
         </div>
 
         <div class="col-md-4 column">
-            <ul class="nav nav-list">
-                <li><a href="http://www.example.com/">This is warning class event with very long title to check how it fits to evet in day view</a></li>
-                <li><a href="http://www.example.com/">This is information class </a></li>
-                <li><a href="http://www.example.com/">Event that ends on timeline</a></li>
-                <li><a href="http://www.example.com/">This is special event</a></li>
-                <li><a href="http://www.example.com/">This is success event</a></li>
-                <li><a href="http://www.example.com/">Short day event</a></li>
-                <li><a href="http://www.example.com/">This is simple event</a></li>
-                <li><a href="http://www.example.com/">Event 3</a></li>
-                <li><a href="http://www.example.com/">This is inverse event</a></li>
-            </ul>
+            <h4>Today events:</h4>
+
+            <div ng-repeat="event in events">
+                <h4>
+                    <div class="label" ng-class="{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}">{{event.title}}</div>
+                </h4>
+            </div>
         </div>
     </div>
 

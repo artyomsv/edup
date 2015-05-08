@@ -106,7 +106,9 @@ module.exports = function (grunt) {
 
                     'vendor/bower_components/moment/min/moment.min.js',
                     'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
-                    'vendor/bower_components/bootstrap-calendar/js/calendar.min.js',
+                    'vendor/bower_components/angular-animate/angular-animate.min.js',
+                    'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
+                    'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar.min.js',
 
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
@@ -135,7 +137,7 @@ module.exports = function (grunt) {
                     breakOnErrors: true,
                     errorsOnly: false,
                     cyclomatic: [3, 7, 12],
-                    halstead: [9, 10, 20],
+                    halstead: [7, 10, 20],
                     maintainability: 80,
                     hideComplexFunctions: false,
                     broadcast: false
@@ -271,7 +273,8 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('dist:js', ['concat:js', 'ngAnnotate:src', 'ngtemplates', 'uglify:js']);
     grunt.registerTask('dist:style', ['less:bootstrap', 'less:edup', 'cssmin']);
-    grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
+    grunt.registerTask('dist', ['lint', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
+    //grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
     grunt.registerTask('standalone', ['clean', 'dist', 'connect', 'watch']);
     grunt.registerTask('e2e', ['protractor:suite']);
 
