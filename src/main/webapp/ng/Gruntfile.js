@@ -106,6 +106,7 @@ module.exports = function (grunt) {
 
                     'vendor/bower_components/moment/min/moment.min.js',
                     'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+                    'vendor/bower_components/bootstrap-calendar/js/calendar.min.js',
 
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',

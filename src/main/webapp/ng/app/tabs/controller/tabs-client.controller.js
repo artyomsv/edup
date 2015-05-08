@@ -8,7 +8,7 @@ angular.module('edup.tabs')
 
         $scope.clients = [
             {
-                "id" : 1,
+                'id' : 1,
                 'name': 'Artyom',
                 'lastName' : 'Stukans',
                 'age' : 33,
@@ -21,7 +21,7 @@ angular.module('edup.tabs')
                 'essentialInformation' : 'Some essential information about student'
             },
             {
-                "id" : 2,
+                'id' : 2,
                 'name': 'Julija',
                 'lastName' : 'Avdejeva',
                 'age' : 18,
@@ -34,7 +34,7 @@ angular.module('edup.tabs')
                 'essentialInformation' : 'Some essential information about student'
             },
             {
-                "id" : 3,
+                'id' : 3,
                 'name': 'Taisija',
                 'lastName' : 'Polakova',
                 'age' : 3,

@@ -1,3 +1,51 @@
 <div class="mainForm" ng-controller="CalendarTabController">
-    {{ statusTab }}
+
+    <div class="col-md-12 column">
+        <div class="col-md-3 form-inline">
+            <div class="btn-group pull-left">
+                <button class="btn btn-primary" data-calendar-nav="prev">&lt;&lt; Prev</button>
+                <button class="btn" data-calendar-nav="today">Today</button>
+                <button class="btn btn-primary" data-calendar-nav="next">Next &gt;&gt;</button>
+            </div>
+        </div>
+
+        <div class="col-md-2 form-inline">
+            <div class="text-center">
+                {{dateTitle}}
+            </div>
+        </div>
+
+        <div class="col-md-3 form-inline">
+            <div class="btn-group pull-right">
+                <button class="btn btn-warning" data-calendar-view="year">Year</button>
+                <button class="btn btn-warning" data-calendar-view="month">Month</button>
+                <button class="btn btn-warning" data-calendar-view="week">Week</button>
+                <button class="btn btn-warning" data-calendar-view="day">Day</button>
+            </div>
+        </div>
+        <div class="col-md-4 form-inline">
+            <h4>Events</h4>
+        </div>
+    </div>
+
+    <div class="col-md-12 column">
+        <div class="col-md-8 column">
+            <div id="calendar" class="cal-context" style="width: 60%;"></div>
+        </div>
+
+        <div class="col-md-4 column">
+            <ul class="nav nav-list">
+                <li><a href="http://www.example.com/">This is warning class event with very long title to check how it fits to evet in day view</a></li>
+                <li><a href="http://www.example.com/">This is information class </a></li>
+                <li><a href="http://www.example.com/">Event that ends on timeline</a></li>
+                <li><a href="http://www.example.com/">This is special event</a></li>
+                <li><a href="http://www.example.com/">This is success event</a></li>
+                <li><a href="http://www.example.com/">Short day event</a></li>
+                <li><a href="http://www.example.com/">This is simple event</a></li>
+                <li><a href="http://www.example.com/">Event 3</a></li>
+                <li><a href="http://www.example.com/">This is inverse event</a></li>
+            </ul>
+        </div>
+    </div>
+
 </div>

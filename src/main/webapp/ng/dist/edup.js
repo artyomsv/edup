@@ -81,7 +81,7 @@ angular.module('edup.header', []);
 
 angular.module('edup.header')
 
-    .controller('HeaderController', ['$scope', '$location', 'Restangular', function ($scope, $location, Restangular) {
+    .controller('HeaderController', ['$scope', '$location', function ($scope, $location) {
         $scope.isActive = function (viewLocation) {
             return viewLocation === $location.path();
         };
@@ -313,7 +313,7 @@ angular.module('edup.tabs')
 
         $scope.clients = [
             {
-                "id" : 1,
+                'id' : 1,
                 'name': 'Artyom',
                 'lastName' : 'Stukans',
                 'age' : 33,
@@ -326,7 +326,7 @@ angular.module('edup.tabs')
                 'essentialInformation' : 'Some essential information about student'
             },
             {
-                "id" : 2,
+                'id' : 2,
                 'name': 'Julija',
                 'lastName' : 'Avdejeva',
                 'age' : 18,
@@ -339,7 +339,7 @@ angular.module('edup.tabs')
                 'essentialInformation' : 'Some essential information about student'
             },
             {
-                "id" : 3,
+                'id' : 3,
                 'name': 'Taisija',
                 'lastName' : 'Polakova',
                 'age' : 3,
@@ -373,8 +373,163 @@ angular.module('edup.tabs')
         return {
             restrict: 'E',
             templateUrl: 'tabs-calendar',
-            link : function ($scope) {
-                $scope.directiveTest = 'Calendar tab directive';
+            link: function ($scope) {
+                $scope.dateTitle = 'Calendar tab directive';
+
+                var options = {
+                    events_source: function () {
+                        return [
+                            {
+                                "success": 1,
+                                "result": [
+                                    {
+                                        "id": "293",
+                                        "title": "This is warning class event with very long title to check how it fits to evet in day view",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-warning",
+                                        "start": "1362938400000",
+                                        "end":   "1363197686300"
+                                    },
+                                    {
+                                        "id": "256",
+                                        "title": "Event that ends on timeline",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-warning",
+                                        "start": "1363155300000",
+                                        "end":   "1363227600000"
+                                    },
+                                    {
+                                        "id": "276",
+                                        "title": "Short day event",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-success",
+                                        "start": "1363245600000",
+                                        "end":   "1363252200000"
+                                    },
+                                    {
+                                        "id": "294",
+                                        "title": "This is information class ",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-info",
+                                        "start": "1363111200000",
+                                        "end":   "1363284086400"
+                                    },
+                                    {
+                                        "id": "297",
+                                        "title": "This is success event",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-success",
+                                        "start": "1363234500000",
+                                        "end":   "1363284062400"
+                                    },
+                                    {
+                                        "id": "54",
+                                        "title": "This is simple event",
+                                        "url": "http://www.example.com/",
+                                        "class": "",
+                                        "start": "1363712400000",
+                                        "end":   "1363716086400"
+                                    },
+                                    {
+                                        "id": "532",
+                                        "title": "This is inverse event",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-inverse",
+                                        "start": "1364407200000",
+                                        "end":   "1364493686400"
+                                    },
+                                    {
+                                        "id": "548",
+                                        "title": "This is special event",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-special",
+                                        "start": "1363197600000",
+                                        "end":   "1363629686400"
+                                    },
+                                    {
+                                        "id": "295",
+                                        "title": "Event 3",
+                                        "url": "http://www.example.com/",
+                                        "class": "event-important",
+                                        "start": "1364320800000",
+                                        "end":   "1364407286400"
+                                    }
+                                ]
+                            }
+
+                        ];
+                    },
+                    view: 'month',
+                    tmpl_path: '/vendor/bower_components/bootstrap-calendar/tmpls/',
+                    tmpl_cache: false,
+                    day: '2013-03-12',
+                    onAfterEventsLoad: function(events) {
+                        if(!events) {
+                            return;
+                        }
+                        var list = $('#eventlist');
+                        list.html('');
+
+                        $.each(events, function(key, val) {
+                            $(document.createElement('li'))
+                                .html('<a href="' + val.url + '">' + val.title + '</a>')
+                                .appendTo(list);
+                        });
+                    },
+                    onAfterViewLoad: function(view) {
+                        $('.page-header h3').text(this.getTitle());
+                        $('.btn-group button').removeClass('active');
+                        $('button[data-calendar-view="' + view + '"]').addClass('active');
+                    },
+                    classes: {
+                        months: {
+                            general: 'label'
+                        }
+                    }
+                };
+
+                var calendar = $('#calendar').calendar(options);
+
+                $('.btn-group button[data-calendar-nav]').each(function() {
+                    var $this = $(this);
+                    $this.click(function() {
+                        calendar.navigate($this.data('calendar-nav'));
+                    });
+                });
+
+                $('.btn-group button[data-calendar-view]').each(function() {
+                    var $this = $(this);
+                    $this.click(function() {
+                        calendar.view($this.data('calendar-view'));
+                    });
+                });
+
+                $('#first_day').change(function(){
+                    var value = $(this).val();
+                    value = value.length ? parseInt(value) : null;
+                    calendar.setOptions({first_day: value});
+                    calendar.view();
+                });
+
+                $('#language').change(function(){
+                    calendar.setLanguage($(this).val());
+                    calendar.view();
+                });
+
+                $('#events-in-modal').change(function(){
+                    var val = $(this).is(':checked') ? $(this).val() : null;
+                    calendar.setOptions({modal: val});
+                });
+                $('#events-modal .modal-header, #events-modal .modal-footer').click(function(e){
+                    //e.preventDefault();
+                    //e.stopPropagation();
+                });
+
+                var $this = $(this);
+                $this.click(function() {
+                    console.log(Calendar.getTitle());
+                    $scope.dateTitle = Calendar.getTitle();
+                });
             }
         };
     }
@@ -401,17 +556,18 @@ angular.module('edup.navbar', ['ui.router']);
 angular.module('edup.navbar')
 
     .controller('NavbarController', ['$scope', '$state', function ($scope, $state) {
-        $scope.menuModel = {
+        $scope.calendarModel = {
             items: ['Clients', 'Calendar'],
             states: ['clients', 'calendar'],
             current: 0
         };
 
         $scope.$watch(function () {
-            return $scope.menuModel.current;
+            return $scope.calendarModel.current;
         }, function (index) {
-            $state.go($scope.menuModel.states[index]);
+            $state.go($scope.calendarModel.states[index]);
         });
+
     }]
 );
 'use strict';
@@ -430,19 +586,25 @@ angular.module('edup',
 
 'use strict';
 
-angular.module('edup').config(['$stateProvider', function ($stateProvider) {
-    $stateProvider
-        .state('clients', {
-            templateUrl: 'tabs-client',
-            url: '/clients',
-            controller: 'ClientTabController'
-        })
-        .state('calendar', {
-            templateUrl: 'tabs-calendar',
-            url: '/calendar',
-            controller: 'CalendarTabController'
-        });
-}]);angular.module('edup').run(['$templateCache', function($templateCache) {
+angular.module('edup')
+
+    .config(['$stateProvider', function ($stateProvider) {
+
+        $stateProvider
+            .state('clients', {
+                templateUrl: 'tabs-client',
+                url: '/clients',
+                controller: 'ClientTabController'
+            })
+            .state('calendar', {
+                templateUrl: 'tabs-calendar',
+                url: '/calendar',
+                controller: 'CalendarTabController'
+            }
+        );
+
+    }]
+);angular.module('edup').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('client-attendance',
@@ -478,7 +640,7 @@ angular.module('edup').config(['$stateProvider', function ($stateProvider) {
 
 
   $templateCache.put('app/',
-    "<!DOCTYPE html><html><head><title>Login standalone</title><link rel=stylesheet href=../dist/edup-bootstrap.css><link rel=stylesheet href=../dist/edup.css><script src=../vendor/bower_components/jquery/dist/jquery.js></script><script src=../vendor/bower_components/lodash/dist/lodash.js></script><script src=../vendor/bower_components/angular/angular.js></script><script src=../vendor/bower_components/ui-router/release/angular-ui-router.js></script><script src=../vendor/bower_components/angular-sanitize/angular-sanitize.js></script><script src=../vendor/bower_components/restangular/dist/restangular.js></script><script src=../vendor/bower_components/bootstrap/dist/js/bootstrap.js></script><script src=../vendor/bower_components/ng-sortable/dist/ng-sortable.js></script><script src=../vendor/bower_components/moment/min/moment.min.js></script><script src=../vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js></script><script src=../dist/edup.js></script></head><body ng-app=edup><div ng-controller=NavbarController id=edupHeader><edup-header></edup-header></div><div class=container ui-view style=\"width: 80%;border: 1px solid #d3d3d3;border-radius: 10px;background-color: rgba(244, 244, 244, 0.7);margin-bottom: 20px\"></div><div><edup-footer></edup-footer></div></body></html>"
+    "<!DOCTYPE html><html><head><title>Login standalone</title><link rel=stylesheet href=../dist/edup-bootstrap.css><link rel=stylesheet href=../dist/edup.css><link rel=stylesheet href=../vendor/bower_components/bootstrap-calendar/css/calendar.min.css><script src=../vendor/bower_components/jquery/dist/jquery.js></script><script src=../vendor/bower_components/lodash/dist/lodash.js></script><script src=../vendor/bower_components/angular/angular.js></script><script src=../vendor/bower_components/ui-router/release/angular-ui-router.js></script><script src=../vendor/bower_components/angular-sanitize/angular-sanitize.js></script><script src=../vendor/bower_components/restangular/dist/restangular.js></script><script src=../vendor/bower_components/bootstrap/dist/js/bootstrap.js></script><script src=../vendor/bower_components/bootstrap-calendar/js/calendar.js></script><script src=../vendor/bower_components/ng-sortable/dist/ng-sortable.js></script><script src=../vendor/bower_components/moment/min/moment.min.js></script><script src=../vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js></script><script src=../dist/edup.js></script></head><body ng-app=edup><div ng-controller=NavbarController id=edupHeader><edup-header></edup-header></div><div class=container ui-view window-size=\"\" style=\"width: 80%;border: 1px solid #d3d3d3;border-radius: 10px;background-color: rgba(244, 244, 244, 0.7);margin-bottom: 20px\"></div></body></html>"
   );
 
 
@@ -488,7 +650,7 @@ angular.module('edup').config(['$stateProvider', function ($stateProvider) {
 
 
   $templateCache.put('tabs-calendar',
-    "<div class=mainForm ng-controller=CalendarTabController>{{ statusTab }}</div>"
+    "<div class=mainForm ng-controller=CalendarTabController><div class=\"col-md-12 column\"><div class=\"col-md-3 form-inline\"><div class=\"btn-group pull-left\"><button class=\"btn btn-primary\" data-calendar-nav=prev>&lt;&lt; Prev</button> <button class=btn data-calendar-nav=today>Today</button> <button class=\"btn btn-primary\" data-calendar-nav=next>Next &gt;&gt;</button></div></div><div class=\"col-md-2 form-inline\"><div class=text-center>{{dateTitle}}</div></div><div class=\"col-md-3 form-inline\"><div class=\"btn-group pull-right\"><button class=\"btn btn-warning\" data-calendar-view=year>Year</button> <button class=\"btn btn-warning\" data-calendar-view=month>Month</button> <button class=\"btn btn-warning\" data-calendar-view=week>Week</button> <button class=\"btn btn-warning\" data-calendar-view=day>Day</button></div></div><div class=\"col-md-4 form-inline\"><h4>Events</h4></div></div><div class=\"col-md-12 column\"><div class=\"col-md-8 column\"><div id=calendar class=cal-context style=\"width: 60%\"></div></div><div class=\"col-md-4 column\"><ul class=\"nav nav-list\"><li><a href=\"http://www.example.com/\">This is warning class event with very long title to check how it fits to evet in day view</a></li><li><a href=\"http://www.example.com/\">This is information class</a></li><li><a href=\"http://www.example.com/\">Event that ends on timeline</a></li><li><a href=\"http://www.example.com/\">This is special event</a></li><li><a href=\"http://www.example.com/\">This is success event</a></li><li><a href=\"http://www.example.com/\">Short day event</a></li><li><a href=\"http://www.example.com/\">This is simple event</a></li><li><a href=\"http://www.example.com/\">Event 3</a></li><li><a href=\"http://www.example.com/\">This is inverse event</a></li></ul></div></div></div>"
   );
 
 
