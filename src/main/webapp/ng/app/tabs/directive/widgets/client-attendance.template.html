@@ -6,15 +6,15 @@
             <table class="pull-right" width="400px">
                 <tr>
                     <td style="border-top: none">
-                        <h3><span class="label label-info pull-right">{{ student }}</span></h3>
+                        <h3><span class="label label-info pull-right">{{ selectedClient.fullName }}</span></h3>
                     </td>
                     <td rowspan="2" style="border-top: none" width="180px">
-                        <img alt="140x140" src="../../../../images/taja.png" class="img-rounded pull-right"/>
+                        <img alt="140x140" src="{{selectedClient.photo}}" class="img-rounded pull-right"/>
                     </td>
                 </tr>
                 <tr class="active">
                     <td style="border-top: none">
-                        <h3><span class="label pull-right" ng-class="{'label-danger' :  balance < 0, 'label-success' :  balance > 0, 'label-primary' :  balance == 0}">{{ balance }} EUR</span></h3>
+                        <h3><span class="label pull-right" ng-class="{'label-danger' :  selectedClient.balance < 0, 'label-success' :  selectedClient.balance > 0, 'label-primary' :  selectedClient.balance == 0}">{{ selectedClient.balance }} EUR</span></h3>
                     </td>
                 </tr>
             </table>

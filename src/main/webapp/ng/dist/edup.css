@@ -229,6 +229,9 @@ td.identification-card {
   scrollbar-arrow-color: #fff;
   overflow: auto;
 }
+.modalViewPadding {
+  padding: 10px 20px 10px 20px;
+}
 fieldset.scheduler-border {
   border: 2px groove #ddd !important;
   border-radius: 10px;
@@ -245,7 +248,7 @@ legend.scheduler-border {
   border-bottom: none;
 }
 body {
-  background: #eeeeee url(http://subtlepatterns.com/patterns/sativa.png);
+  background: #eeeeee url('/images/sativa.png');
   position: relative;
   height: 100%;
 }

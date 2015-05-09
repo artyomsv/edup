@@ -7,7 +7,7 @@ angular.module('edup.tabs')
             restrict: 'E',
             templateUrl: 'identification-card',
             link : function ($scope) {
-                $scope.directiveTest = 'Identification card';
+                $scope.newBalanceValue = '';
             }
         };
     }

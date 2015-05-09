@@ -13,17 +13,24 @@
 
 </head>
 
-<body>
+<body ng-app="edup">
 
-Loggged
+<div ng-controller="NavbarController" id="edupHeader">
+    <!--<div ng-controller="NavbarController" id="edupHeader" style="position: fixed;top: 0;width: 100%;">-->
+    <edup-header></edup-header>
+</div>
 
 <form method="POST" action="/edup/api/logout">
     <button type="submit">logout</button>
 </form>
 
+<div class="container"
+     ui-view
+     style="width: 80%;border: 1px solid #d3d3d3;border-radius: 10px;background-color: rgba(244, 244, 244, 0.7);margin-bottom: 20px">
+</div>
+
 
 </body>
-
 </html>
 
 

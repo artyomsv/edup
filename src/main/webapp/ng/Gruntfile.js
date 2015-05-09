@@ -85,25 +85,20 @@ module.exports = function (grunt) {
             },
             bundle: {
                 src: [
+
                     'vendor/bower_components/jquery/dist/jquery.js',
-                    'vendor/bower_components/jquery-placeholder/jquery.placeholder.js',
                     'vendor/bower_components/lodash/dist/lodash.js',
                     'vendor/bower_components/angular/angular.js',
-                    'vendor/bower_components/ui-router/release/angular-ui-router.min.js',
+                    'vendor/bower_components/ui-router/release/angular-ui-router.js',
                     'vendor/bower_components/angular-sanitize/angular-sanitize.js',
                     'vendor/bower_components/restangular/dist/restangular.js',
-                    'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
-
-                    'vendor/bower_components/bootstrap/js/tooltip.js',
+                    'vendor/bower_components/bootstrap/dist/js/bootstrap.js',
                     'vendor/bower_components/ng-sortable/dist/ng-sortable.js',
-                    'vendor/bower_components/bootstrap/js/dropdown.js',
-
                     'vendor/bower_components/moment/min/moment.min.js',
-                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
                     'vendor/bower_components/angular-animate/angular-animate.min.js',
                     'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
-                    'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar.min.js',
-
+                    'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js',
+                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

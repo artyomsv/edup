@@ -13,7 +13,7 @@
                             <h4><b>{{ selectedClient.name }} {{ selectedClient.lastName}}</b></h4>
                         </td>
                         <td rowspan="2" width="180px">
-                            <img alt="140x140" src="../../../../images/taja.png" class="img-rounded pull-right"/>
+                            <img alt="140x140" src="{{selectedClient.photo}}" class="img-rounded pull-right"/>
                         </td>
                     </tr>
                     <tr>
@@ -34,7 +34,9 @@
                         <td>Current balance:</td>
                         <td>{{ selectedClient.balance }} EUR</td>
                         <td>
-                            <button type="button" class="btn btn-success pull-right">Add to balance</button>
+                            <button type="button" class="btn btn-success pull-right" data-toggle="modal"
+                                    data-target="#addToBalanceModalView">Add to balance
+                            </button>
                         </td>
                     </tr>
                 </table>
@@ -56,4 +58,41 @@
             </div>
         </fieldset>
     </form>
+
+    <div id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content modalViewPadding">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <!-- Form Name -->
+                        <legend>Add money to account</legend>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="amountTextInput">Amount</label>
+
+                            <div class="col-md-8">
+                                <input ng-model="newBalanceValue" id="amountTextInput" name="textinput" type="text" placeholder="amount" class="form-control input-md">
+                            </div>
+                        </div>
+
+                        <!-- Button -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="addToBalanceButton"></label>
+
+                            <div class="col-md-4">
+                                <button ng-click="addToBalance(newBalanceValue)"
+                                        id="addToBalanceButton"
+                                        name="payButton"
+                                        class="btn btn-success pull-right"
+                                        data-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+

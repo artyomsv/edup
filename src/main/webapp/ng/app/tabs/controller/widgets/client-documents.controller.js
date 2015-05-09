@@ -3,7 +3,6 @@
 angular.module('edup.tabs')
 
     .controller('ClientDocumentsController', function ($scope) {
-        $scope.student = 'Taisija Polakova';
 
         $scope.documents = [
             {

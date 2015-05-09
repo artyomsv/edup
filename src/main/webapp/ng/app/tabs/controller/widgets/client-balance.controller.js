@@ -3,8 +3,10 @@
 angular.module('edup.tabs')
 
     .controller('ClientBalanceController', function ($scope) {
-        $scope.student = 'Taisija Polakova';
-        $scope.balance = Math.floor((Math.random() * 100) - 50);
+        $scope.addToBalance = function (value) {
+            $scope.selectedClient.balance = $scope.selectedClient.balance + parseInt(value);
+        };
+
     }
 );
 

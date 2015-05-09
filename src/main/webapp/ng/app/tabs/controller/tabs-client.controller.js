@@ -3,14 +3,13 @@
 angular.module('edup.tabs')
 
     .controller('ClientTabController', function ($scope) {
-        $scope.student = 'Taisija Polakova';
-        $scope.balance = 25;//Math.floor((Math.random() * 100) - 50);
 
         $scope.clients = [
             {
                 'id' : 1,
                 'name': 'Artyom',
                 'lastName' : 'Stukans',
+                'fullName' : 'Artjom Stukans',
                 'age' : 33,
                 'birthDay' : '28/12/1981',
                 'personalId' : '281281-10562',
@@ -19,12 +18,14 @@ angular.module('edup.tabs')
                 'details' : 'Details',
                 'balance' : 35,
                 'parentsInfo' : 'Information about Artyom parents',
-                'essentialInformation' : 'Some essential information about student'
+                'essentialInformation' : 'Some essential information about student',
+                'photo' : '/images/artyom.jpg'
             },
             {
                 'id' : 2,
                 'name': 'Julija',
                 'lastName' : 'Avdejeva',
+                'fullName' : 'Julija Avdejeva',
                 'age' : 18,
                 'birthDay' : '22/04/1997',
                 'personalId' : '220497-12345',
@@ -33,12 +34,14 @@ angular.module('edup.tabs')
                 'details' : 'Details',
                 'balance' : 25,
                 'parentsInfo' : 'Information about Yuliya parents',
-                'essentialInformation' : 'Some essential information about student'
+                'essentialInformation' : 'Some essential information about student',
+                'photo' : '/images/julija.jpg'
             },
             {
                 'id' : 3,
                 'name': 'Taisija',
                 'lastName' : 'Polakova',
+                'fullName' : 'Taisija Polakova',
                 'age' : 3,
                 'birthDay' : '23/11/2011',
                 'personalId' : '231111-12345',
@@ -47,7 +50,8 @@ angular.module('edup.tabs')
                 'details' : 'Details',
                 'balance' : 15,
                 'parentsInfo' : 'Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents ',
-                'essentialInformation' : 'Some essential information about student'
+                'essentialInformation' : 'Some essential information about student',
+                'photo' : '/images/taja.jpg'
             }
 
         ];

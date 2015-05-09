@@ -57,24 +57,6 @@
         </resources>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>
-                        ng/.idea/,
-                        ng/app/,
-                        ng/assets/,
-                        ng/node_modules/,
-                        ng/standalone/,
-                        ng/test/,
-                        ng/vendor/,
-                        ng/*.*
-                    </packagingExcludes>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -84,6 +66,46 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>
+                        ng/.idea/,
+                        ng/app/,
+                        ng/node_modules/,
+                        ng/standalone/,
+                        ng/test/,
+                        ng/vendor/,
+                        ng/*.*,
+                        ng/dist/edup-bootstrap.css,
+                        ng/dist/edup-bundle.js,
+                        ng/dist/edup.css,
+                        ng/dist/edup.js
+                    </packagingExcludes>
+                </configuration>
+            </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>org.jboss.tattletale</groupId>-->
+                <!--<artifactId>tattletale-maven</artifactId>-->
+                <!--<version>1.1.2.Final</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>report</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<source>./target/edup/WEB-INF/lib</source>-->
+                    <!--<destination>./target/reports</destination>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
 
     </build>

@@ -3,8 +3,6 @@
 angular.module('edup.tabs')
 
     .controller('ClientAttendanceController', function ($scope) {
-        $scope.student = 'Taisija Polakova';
-        $scope.balance = 25;//Math.floor((Math.random() * 100) - 50);
 
         $scope.attendanceHistory = [
             {
