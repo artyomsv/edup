@@ -8,7 +8,6 @@ angular.module('edup.tabs')
             templateUrl: 'client-form',
             link : function ($scope) {
                 $scope.directiveTest = 'Client Form tabbed pane directive';
-                console.log(angular.toJson($scope.selectedClient, true))
             }
         };
     }

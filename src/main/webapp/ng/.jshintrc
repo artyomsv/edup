@@ -19,7 +19,7 @@
   "trailing"      : true,     // Prohibit trailing whitespaces.
   "globalstrict"  : true,     // Allow global "use strict" (also enables 'strict').
   "nonew"         : true,     // Prohibit use of constructors for side-effects.
-  "camelcase"     : false,     // This option allows you to force all variable names to use either camelCase style or UPPER_CASE with underscores.
+  "camelcase"     : true,     // This option allows you to force all variable names to use either camelCase style or UPPER_CASE with underscores.
   "freeze"        : true,     // This options prohibits overwriting prototypes of native objects such as Array, Date and so on.
   "quotmark"      : "single", // This option enforces the consistency of quotation marks used throughout your code. It accepts three values: true if you don't want to enforce one particular style but want some consistency, "single" if you want to allow only single quotes and "double" if you want to allow only double quotes.
 

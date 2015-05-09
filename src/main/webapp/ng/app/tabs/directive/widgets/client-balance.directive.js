@@ -11,7 +11,7 @@ angular.module('edup.tabs')
 
                 $scope.openDatePicker = function() {
                     $('#datetimepicker').datetimepicker();
-                }
+                };
             }
         };
     }
