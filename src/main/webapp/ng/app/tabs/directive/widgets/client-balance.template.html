@@ -74,18 +74,11 @@
                 <label class="col-md-4 control-label" for="datePicketLabel">Date</label>
 
                 <div class="col-md-4">
-                    <div class='input-group date' id='datetimepicker1'>
+                    <div class='input-group date' id='datetimepicker'>
                         <input id="datePicketLabel" type='text' class="form-control"/>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <span ng-click="openDatePicker()" class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
-
-                <script type="text/javascript">
-                    $(function () {
-                        $('#datetimepicker1').datetimepicker();
-                    });
-                </script>
-
             </div>
 
             <!-- Button -->

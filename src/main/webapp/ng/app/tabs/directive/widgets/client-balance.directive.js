@@ -8,6 +8,10 @@ angular.module('edup.tabs')
             templateUrl: 'client-balance',
             link : function ($scope) {
                 $scope.directiveTest = 'Client balance tabbed pane directive';
+
+                $scope.openDatePicker = function() {
+                    $('#datetimepicker').datetimepicker();
+                }
             }
         };
     }

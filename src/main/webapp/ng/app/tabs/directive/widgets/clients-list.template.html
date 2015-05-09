@@ -1,8 +1,12 @@
 <div ng-controller="ClientsListController">
 
     <div class="parent">
-        <div class="child pull=left"><input id="searchinput" name="searchinput" type="search" placeholder="search" class="form-control input-md"></div>
-        <div class="child pull-right"><h4><span class="glyphicon glyphicon-user pull-right"></span></h4></div>
+        <div class="child pull=left">
+            <input id="searchinput" name="searchinput" type="search" placeholder="search" class="form-control input-md">
+        </div>
+        <div class="child pull-right">
+            <h4><span class="glyphicon glyphicon-user pull-right"></span></h4>
+        </div>
     </div>
 
     <table class="table table-hover">
@@ -26,7 +30,9 @@
             <td>{{ client.personalId }}</td>
             <td>{{ client.phone }}</td>
             <td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="client.active"></td>
-            <td><a href="#">{{ client.details }}</a></td>
+            <td>
+                <button type="button" class="btn btn-primary btn-small" data-toggle="modal" data-target="#input-forms-modal-view">Details</button>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -41,5 +47,14 @@
             <li><a href="#">5</a></li>
             <li><a href="#">Next</a></li>
         </ul>
+    </div>
+</div>
+
+
+<div id="input-forms-modal-view" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="padding: 10px 20px 10px 20px">
+            <client-input-forms></client-input-forms>
+        </div>
     </div>
 </div>
