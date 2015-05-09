@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('edup.header', []);
+angular.module('edup.header', ['ui.router']);

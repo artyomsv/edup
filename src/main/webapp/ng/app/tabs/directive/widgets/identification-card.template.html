@@ -1,0 +1,59 @@
+<div ng-controller="IdentificationCardController">
+
+    <form class="form-horizontal" style="border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px">
+        <fieldset>
+
+            <!-- Form Name -->
+            <legend>Identification card</legend>
+
+            <div class="col-md-12 column">
+                <table class="identification-card" width="100%">
+                    <tr>
+                        <td>
+                            <h4><b>{{ selectedClient.name }} {{ selectedClient.lastName}}</b></h4>
+                        </td>
+                        <td rowspan="2" width="180px">
+                            <img alt="140x140" src="../../../../images/taja.png" class="img-rounded pull-right"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>{{ selectedClient.personalId }}</h4>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="col-md-12 column" style="padding-top: 20px">
+                <table class="identification-card" width="100%">
+                    <tr>
+                        <td>Phone number:</td>
+                        <td>{{ selectedClient.phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Current balance:</td>
+                        <td>{{ selectedClient.balance }} EUR</td>
+                        <td>
+                            <button type="button" class="btn btn-success pull-right">Add to balance</button>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="col-md-12 column" style="padding-top: 10px;">
+                <button type="button" class="btn btn-info" style="width: 100%">Attendance history</button>
+            </div>
+
+            <div class="col-md-12 column" style="padding-top: 30px;">
+                <label for="parentInformation">Information about parents</label>
+                <textarea readonly class="form-control fixedTextArea" id="parentInformation" name="textarea">{{ selectedClient.parentsInfo }}</textarea>
+            </div>
+
+            <div class="col-md-12 column" style="padding-top: 30px; padding-bottom: 20px">
+                <label for="essentialInformation">Essential information</label>
+                <textarea readonly class="form-control fixedTextArea" id="essentialInformation" name="textarea">{{ selectedClient.essentialInformation }}</textarea>
+            </div>
+        </fieldset>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+<div ng-controller="ClientsListController">
+
+    <div class="parent">
+        <div class="child pull=left"><input id="searchinput" name="searchinput" type="search" placeholder="search" class="form-control input-md"></div>
+        <div class="child pull-right"><h4><span class="glyphicon glyphicon-user pull-right"></span></h4></div>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Last name</th>
+            <th>Age</th>
+            <th>ID</th>
+            <th>Phone</th>
+            <th>Active</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr ng-repeat="client in clients" ng-class-odd="'success'" ng-class-even="'active'" ng-click="setSelected(client.id)" ng-class="{selected: client.id === selectedClient.id}">
+            <td>{{ client.name }}</td>
+            <td>{{ client.lastName }}</td>
+            <td>{{ client.age }}</td>
+            <td>{{ client.personalId }}</td>
+            <td>{{ client.phone }}</td>
+            <td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="client.active"></td>
+            <td><a href="#">{{ client.details }}</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="text-center">
+        <ul class="pagination pagination-sm">
+            <li><a href="#">Prev</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">Next</a></li>
+        </ul>
+    </div>
+</div>

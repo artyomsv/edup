@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('edup.client')
+angular.module('edup.tabs')
 
     .directive('clientForm', function () {
         return {

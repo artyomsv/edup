@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('edup.navbar')
+angular.module('edup.header')
 
     .controller('NavbarController', function ($scope, $state) {
         $scope.calendarModel = {

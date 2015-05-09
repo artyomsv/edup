@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('edup.client')
+angular.module('edup.tabs')
 
     .controller('ClientBalanceController', function ($scope) {
         $scope.student = 'Taisija Polakova';

@@ -71,14 +71,8 @@ module.exports = function (grunt) {
                     'app/footer/footer.module.js',
                     'app/footer/**/*.js',
 
-                    'app/client/client.module.js',
-                    'app/client/**/*.js',
-
                     'app/tabs/tabs.module.js',
                     'app/tabs/**/*.js',
-
-                    'app/navbar/navbar.module.js',
-                    'app/navbar/**/*.js',
 
                     'app/app.module.js',
 
