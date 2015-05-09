@@ -159,14 +159,13 @@
                     </security>
                 </datasource>
                 <!--License platform data source-->
-                <datasource jta="true" jndi-name="java:jboss/datasources/LICENSE_PLATFORM_DataSource_Ref"
-                            pool-name="LICENSE_PLATFORM" enabled="true" use-ccm="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/LicenseRepository</connection-url>
+                <datasource jta="true" jndi-name="java:jboss/datasources/LICENSE_PLATFORM_DataSource_Ref" pool-name="LICENSE_PLATFORM" enabled="true" use-ccm="true">
+                    <connection-url>*</connection-url>
                     <driver-class>org.postgresql.Driver</driver-class>
                     <driver>postgresql-9.4-1200-jdbc41.jar</driver>
                     <security>
-                        <user-name>postgres</user-name>
-                        <password>postgres</password>
+                        <user-name>*</user-name>
+                        <password>*</password>
                     </security>
                     <validation>
                         <validate-on-match>false</validate-on-match>
@@ -186,14 +185,13 @@
                     </statement>
                 </datasource>
                 <!--Educational planning application data source-->
-                <datasource jta="true" jndi-name="java:jboss/datasources/EDUP_DataSource_Ref"
-                            pool-name="EDUP_DATASOURCE" enabled="true" use-ccm="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/edup</connection-url>
+                <datasource jta="true" jndi-name="java:jboss/datasources/EDUP_DataSource_Ref" pool-name="EDUP_DATASOURCE" enabled="true" use-ccm="true">
+                    <connection-url>*</connection-url>
                     <driver-class>org.postgresql.Driver</driver-class>
                     <driver>postgresql-9.4-1200-jdbc41.jar</driver>
                     <security>
-                        <user-name>postgres</user-name>
-                        <password>postgres</password>
+                        <user-name>*</user-name>
+                        <password>*</password>
                     </security>
                     <validation>
                         <validate-on-match>false</validate-on-match>
@@ -358,10 +356,8 @@
                 <smtp-server outbound-socket-binding-ref="mail-smtp"/>
             </mail-session>
             <!--GMAIL support-->
-            <mail-session name="java:jboss/mail/gmail" debug="true" jndi-name="java:jboss/mail/gmail"
-                          from="development@gmail.com">
-                <smtp-server outbound-socket-binding-ref="mail-smtp" ssl="true" username="development.eptron@gmail.com"
-                             password="687-unK-Y5M-WZg"/>
+            <mail-session name="java:jboss/mail/gmail" debug="true" jndi-name="java:jboss/mail/gmail" from="development@gmail.com">
+                <smtp-server outbound-socket-binding-ref="mail-smtp" ssl="true" username="development.eptron@gmail.com" password="*"/>
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:messaging:2.0">
