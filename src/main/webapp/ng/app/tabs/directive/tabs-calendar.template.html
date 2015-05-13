@@ -42,7 +42,7 @@
                     delete-event-html="'<i class=\'glyphicon glyphicon-remove\'></i>'"
                     on-edit-event-click="eventEdited(calendarEvent)"
                     on-delete-event-click="eventDeleted(calendarEvent)"
-                    auto-open="true">
+                    >
             </mwl-calendar>
 
         </div>
@@ -52,7 +52,8 @@
 
             <div ng-repeat="event in events">
                 <h4>
-                    <div class="label" ng-class="{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}">{{event.title}}</div>
+                    <div class="label"
+                         ng-class="{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}">{{event.title}} ({{event.startsAt | date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}})</div>
                 </h4>
             </div>
         </div>

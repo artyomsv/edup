@@ -19,7 +19,7 @@ angular.module('edup.tabs')
                 'balance' : 35,
                 'parentsInfo' : 'Information about Artyom parents',
                 'essentialInformation' : 'Some essential information about student',
-                'photo' : '/images/artyom.jpg'
+                'photo' : '/edup/images/artyom.jpg'
             },
             {
                 'id' : 2,
@@ -35,7 +35,7 @@ angular.module('edup.tabs')
                 'balance' : 25,
                 'parentsInfo' : 'Information about Yuliya parents',
                 'essentialInformation' : 'Some essential information about student',
-                'photo' : '/images/julija.jpg'
+                'photo' : '/edup/images/julija.jpg'
             },
             {
                 'id' : 3,
@@ -51,7 +51,7 @@ angular.module('edup.tabs')
                 'balance' : 15,
                 'parentsInfo' : 'Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents Information about Taisija parents ',
                 'essentialInformation' : 'Some essential information about student',
-                'photo' : '/images/taja.jpg'
+                'photo' : '/edup/images/taja.jpg'
             }
 
         ];
