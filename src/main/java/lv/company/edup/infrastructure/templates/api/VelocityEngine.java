@@ -1,4 +1,4 @@
-package lv.company.edup.infrastructure.logger;
+package lv.company.edup.infrastructure.templates.api;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.ElementType;
@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD, ElementType.TYPE, ElementType.METHOD})
-public @interface EdupLogger {
+@Target({ElementType.TYPE, ElementType.FIELD})
+public @interface VelocityEngine {
 }

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html [
+        <!ENTITY nbsp "&#160;">
+]>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+    <title>Документ без названия</title>
+    <style type="text/css" media="print">
+
+    </style>
+</head>
+
+<body style="width: 80%;background-color: rgba(244, 244, 244, 0.7);margin-bottom: auto;font-family: Arial Unicode MS, Lucida Sans Unicode, Arial, sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;">
+
+<div style="padding-bottom: 9px; margin: 40px 0 20px; border-bottom: 1px solid #eeeeee;">
+    <div>
+        <h1>APMEKLĒJUMU ŽURNĀLS</h1>
+    </div>
+    <div>
+        <h4>Interešu izglītības iestāde “Skola SoVa” reģ. Nr. 3951803045</h4>
+    </div>
+</div>
+
+<table style="width: 100%; border-collapse: collapse !important;">
+    <tr height="30">
+        <td width="100px" style="text-align: right;"><b>Nosaukums:&nbsp;&nbsp;</b></td>
+        <td style="text-align: left;">${journalSubject}</td>
+    </tr>
+    <tr height="30">
+        <td width="100px" style="text-align: right;"><b>Datums:&nbsp;&nbsp;</b></td>
+        <td style="text-align: left;">${journalDate}</td>
+    </tr>
+
+    <tr height="30">
+        <td width="100px" style="text-align: right;"><b>Laiks:&nbsp;&nbsp;</b></td>
+        <td style="text-align: left;">${journalTime}</td>
+    </tr>
+</table>
+
+<br></br>
+
+<table style="width: 100%; border-collapse: collapse !important;" border="1">
+    <thead>
+    <tr height="30">
+        <th>
+            #
+        </th>
+        <th>
+            Dalībnieka vārds, uzvārds
+        </th>
+        <th>
+            Apmaksāts
+        </th>
+        <th>
+            Paraksts
+        </th>
+    </tr>
+    </thead>
+
+    <tbody>
+        #foreach ($student in $journalStudents)
+        <tr height="30">
+            <td style="text-align: center;">
+                ${student.studentOrder}
+            </td>
+            <td style="text-align: center;">
+                ${student.studentName}
+            </td>
+            <td>
+
+            </td>
+            <td>
+
+            </td>
+        </tr>
+        #end
+    </tbody>
+</table>
+
+</body>
+</html>

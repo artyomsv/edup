@@ -89,23 +89,6 @@
                     </packagingExcludes>
                 </configuration>
             </plugin>
-
-            <!--<plugin>-->
-                <!--<groupId>org.jboss.tattletale</groupId>-->
-                <!--<artifactId>tattletale-maven</artifactId>-->
-                <!--<version>1.1.2.Final</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<goals>-->
-                            <!--<goal>report</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<source>./target/edup/WEB-INF/lib</source>-->
-                    <!--<destination>./target/reports</destination>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
         </plugins>
 
     </build>
@@ -118,56 +101,103 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--Data base start-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>4.3.8.Final</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4-1200-jdbc41</version>
             <scope>provided</scope>
         </dependency>
+        <!--Data base end-->
 
+        <!--Unit testing start-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.10.19</version>
+            <scope>test</scope>
+        </dependency>
+        <!--Unit testin end-->
+
+        <!-- Apache libraries start -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
             <version>1.3.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3.2</version>
+            <version>3.4</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-collections4</artifactId>
             <version>4.0</version>
         </dependency>
+        <!--Apache libraries end-->
 
+        <!--Logger start-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>2.2</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.2</version>
         </dependency>
+        <!--Logger end-->
+
+        <!--Template engine start-->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>org.antlr</groupId>-->
+        <!--<artifactId>ST4</artifactId>-->
+        <!--<version>4.0.8</version>-->
+        <!--</dependency>-->
+        <!--Template engine end-->
+
+        <!--File upload start-->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <!--File upload start-->
+
+        <!--Faker start-->
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>0.5</version>
+        </dependency>
+        <!--Faker end-->
+
+        <!--Flying saucer-->
+        <dependency>
+            <groupId>org.xhtmlrenderer</groupId>
+            <artifactId>flying-saucer-pdf</artifactId>
+            <version>9.0.7</version>
+        </dependency>
     </dependencies>
+
 
 </project>
