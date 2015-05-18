@@ -20,7 +20,7 @@
     <properties>
         <version.major>0</version.major>
         <version.minor>0</version.minor>
-        <version.tag>1</version.tag>
+        <version.tag>2</version.tag>
     </properties>
 
     <profiles>
@@ -197,6 +197,14 @@
             <artifactId>flying-saucer-pdf</artifactId>
             <version>9.0.7</version>
         </dependency>
+
+        <!--Orika-->
+        <dependency>
+            <groupId>ma.glasnost.orika</groupId>
+            <artifactId>orika-core</artifactId>
+            <version>1.4.5</version>
+        </dependency>
+
     </dependencies>
 
 

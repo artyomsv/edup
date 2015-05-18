@@ -2,43 +2,18 @@ package lv.company.edup.infrastructure.response;
 
 import lv.company.edup.infrastructure.exceptions.dto.ErrorData;
 import lv.company.edup.infrastructure.exceptions.dto.ErrorDto;
-import org.apache.commons.collections4.CollectionUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 
 @ApplicationScoped
-public class ResponseProvider {
+public class ErrorResponseProvider {
 
     @Inject UriUtils utils;
 
-
-    public Response ok() {
-        return prepare(Response.Status.OK);
-    }
-
-    public Response ok(Object o) {
-        if (o != null) {
-            return prepare(Response.Status.OK, o);
-        } else {
-            return notFound();
-        }
-    }
-
-    public Response ok(Collection c) {
-        if (CollectionUtils.isEmpty(c)) {
-            return notFound();
-        } else {
-            CommonResponse response = new CommonResponse();
-            response.setPayload(c);
-            return prepare(Response.Status.OK, response);
-        }
-    }
-
     public Response notFound() {
-        return prepare(Response.Status.NOT_FOUND);
+        return Response.noContent().build();
     }
 
     public Response error(Throwable e, ErrorCode code) {
@@ -73,10 +48,6 @@ public class ResponseProvider {
 
     public Response badRequest(ErrorData data) {
         return prepare(Response.Status.BAD_REQUEST, data);
-    }
-
-    private Response prepare(Response.Status status) {
-        return Response.status(status).build();
     }
 
     private Response prepare(Response.Status status, Object o) {

@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class EdupRepository<Entity> {
 
-    @Inject private EntityManager em;
+    @Inject protected EntityManager em;
 
     public abstract Class<Entity> getEntityClass();
 

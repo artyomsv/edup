@@ -1,7 +1,7 @@
 package lv.company.edup.infrastructure.exceptions.mappers;
 
 import lv.company.edup.infrastructure.exceptions.BadRequestException;
-import lv.company.edup.infrastructure.response.ResponseProvider;
+import lv.company.edup.infrastructure.response.ErrorResponseProvider;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,7 +13,7 @@ import javax.ws.rs.ext.Provider;
 @ApplicationScoped
 public class BadRequestExceptionMapper implements ExceptionMapper<BadRequestException> {
 
-    @Inject ResponseProvider provider;
+    @Inject ErrorResponseProvider provider;
 
     @Override
     public Response toResponse(BadRequestException exception) {

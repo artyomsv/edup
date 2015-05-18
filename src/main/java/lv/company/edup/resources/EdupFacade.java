@@ -1,36 +1,49 @@
 package lv.company.edup.resources;
 
+import lv.company.edup.infrastructure.response.CommonResponse;
+import lv.company.edup.infrastructure.response.UriUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 
+import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public abstract class AbstractFacade {
+public class EdupFacade {
 
-    @Context private UriInfo uriInfo;
+    @Inject UriUtils utils;
 
-    public Response ok(Collection coll) {
-        return CollectionUtils.isEmpty(coll) ? notFound() : Response.ok(coll).build();
+    public Response ok() {
+        return Response.ok().build();
     }
 
     public Response ok(Object o) {
-        return o == null ? notFound() : Response.ok(o).build();
+        if (o != null) {
+            return prepare(Response.Status.OK, o);
+        } else {
+            return notFound();
+        }
+    }
+
+    public Response ok(Collection c) {
+        if (CollectionUtils.isEmpty(c)) {
+            return notFound();
+        } else {
+            CommonResponse response = new CommonResponse();
+            response.setPayload(c);
+            return prepare(Response.Status.OK, response);
+        }
     }
 
     public Response created(Long id) {
-        URI created = uriInfo.getAbsolutePathBuilder().build(id);
-        return Response.created(created).build();
+        return Response.created(utils.buildCreated(id)).build();
     }
 
     public Response notFound() {
@@ -54,8 +67,14 @@ public abstract class AbstractFacade {
                             }
                         }
 
-                ).
+                ).build();
+    }
 
-                        build();
+    private Response prepare(Response.Status status) {
+        return Response.status(status).build();
+    }
+
+    private Response prepare(Response.Status status, Object o) {
+        return Response.status(status).entity(o).build();
     }
 }

@@ -4,7 +4,7 @@ import lv.company.edup.infrastructure.exceptions.EdupConstraintViolationExceptio
 import lv.company.edup.infrastructure.exceptions.dto.ErrorData;
 import lv.company.edup.infrastructure.exceptions.dto.ErrorDto;
 import lv.company.edup.infrastructure.response.ErrorCode;
-import lv.company.edup.infrastructure.response.ResponseProvider;
+import lv.company.edup.infrastructure.response.ErrorResponseProvider;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
 
@@ -22,7 +22,7 @@ import java.util.Set;
 @ApplicationScoped
 public class ConstraintsViolationExceptionMapper implements ExceptionMapper<EdupConstraintViolationException> {
 
-    @Inject ResponseProvider provider;
+    @Inject ErrorResponseProvider provider;
 
     @Override
     public Response toResponse(EdupConstraintViolationException exception) {

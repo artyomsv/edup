@@ -11,7 +11,7 @@ import lv.company.edup.infrastructure.templates.impl.TemplateCache;
 import lv.company.edup.infrastructure.templates.impl.templates.VisitorJournalContextCreator;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentDto;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.VisitingJournalDto;
-import lv.company.edup.resources.AbstractFacade;
+import lv.company.edup.resources.EdupFacade;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,14 +22,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class DocumentsFacade extends AbstractFacade {
+public class DocumentsFacade extends EdupFacade {
 
     private Logger logger = Logger.getLogger(DocumentsFacade.class.getSimpleName());
 
-    @Inject private TemplateCache cache;
-    @Inject private VisitorJournalContextCreator contextCreator;
-    @Inject @VelocityEngine private TemplateEngine engine;
-    @Inject private DocumentsGenerationService service;
+    @Inject TemplateCache cache;
+    @Inject VisitorJournalContextCreator contextCreator;
+    @Inject @VelocityEngine TemplateEngine engine;
+    @Inject DocumentsGenerationService service;
 
     public Response streamDocument() {
         Faker faker = new Faker();
