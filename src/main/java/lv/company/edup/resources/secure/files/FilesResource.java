@@ -1,4 +1,4 @@
-package lv.company.edup.resources.exposed.files;
+package lv.company.edup.resources.secure.files;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,7 +16,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.MULTIPART_FORM_DATA;
 import static javax.ws.rs.core.MediaType.TEXT_HTML;
 
-@Path("files")
+@Path("private/files")
 @ApplicationScoped
 public class FilesResource {
 

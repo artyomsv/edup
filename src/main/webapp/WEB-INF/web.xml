@@ -53,7 +53,7 @@
 
         <web-resource-collection>
             <web-resource-name>None Protected User Area</web-resource-name>
-            <url-pattern>/api/exposed/*</url-pattern>
+            <url-pattern>/api/*</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
 
@@ -67,7 +67,7 @@
 
         <web-resource-collection>
             <web-resource-name>Protected API root</web-resource-name>
-            <url-pattern>/api/secure/*</url-pattern>
+            <url-pattern>/api/private/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
