@@ -1,1 +1,1 @@
-curl -vS -F upload=@"The Definitive ANTLR 4 Reference.pdf" https://localhost:8443/edup/api/files/upload -o response.json
+curl -vS -F upload=@"The Definitive ANTLR 4 Reference.pdf" -H "Accept: application/json" https://localhost:8443/edup/api/files/upload -o response.json

@@ -52,6 +52,10 @@ public class FileFacade extends EdupFacade {
         return streamResponse(file.getData(), file.getContentType().getContentType());
     }
 
+    public Response getFilesInformation() {
+        return ok(service.findFiles());
+    }
+
     public Response getFileInformation(Long id) {
         FileEntity file = service.getFile(id);
         return ok(transformer.map(file, FileDto.class));

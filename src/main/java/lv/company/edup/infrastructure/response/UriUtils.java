@@ -3,8 +3,10 @@ package lv.company.edup.infrastructure.response;
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.ext.Provider;
 import java.net.URI;
 
+@Provider
 @RequestScoped
 public class UriUtils {
 

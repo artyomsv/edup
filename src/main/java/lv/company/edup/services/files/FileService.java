@@ -16,6 +16,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.CRC32;
@@ -65,5 +66,10 @@ public class FileService {
             throw new NotFoundException();
         }
         return file;
+    }
+
+    public Collection<FileDto> findFiles() {
+        List<FileEntity> files = repository.findAll();
+        return transformer.map(files, FileDto.class);
     }
 }

@@ -23,6 +23,12 @@ public class FilesResource {
     @Inject FileFacade facade;
 
     @GET
+    @Produces(APPLICATION_JSON)
+    public Response getFilesInformation() {
+        return facade.getFilesInformation();
+    }
+
+    @GET
     @Path("{id}")
     @Produces(APPLICATION_JSON)
     public Response getFileInformation(@PathParam("id") Long id) {
