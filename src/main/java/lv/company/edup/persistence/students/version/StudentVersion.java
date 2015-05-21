@@ -1,4 +1,7 @@
-package lv.company.edup.persistence.students;
+package lv.company.edup.persistence.students.version;
+
+import lv.company.edup.persistence.students.Student;
+import lv.company.edup.persistence.students.StudentProperty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -8,15 +11,35 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.List;
 
+@NamedStoredProcedureQuery(name = StudentVersion.Procedure.GENERATE_USER_ID, procedureName = "getStudentId")
+
+@NamedQueries({
+        @NamedQuery(
+                name = StudentVersion.Query.FIND_VERSIONS,
+                query = " select sv from StudentVersion as sv where sv.id = :pId order by sv.created desc"
+        )
+})
+
 @Entity
 @Table(name = "STUDENTS")
 @SequenceGenerator(name = "sStudent", sequenceName = "STUDENT_VERSION_SEQUENCE", allocationSize = 1)
 public class StudentVersion extends Student {
+
+    public interface Query {
+        String FIND_VERSIONS = "StudentVersion:FindVersions";
+    }
+
+    public interface Procedure {
+        String GENERATE_USER_ID = "StudentVersion:GenerateStudentId";
+    }
 
     @Id
     @Column(name = "STUDENT_VERSION_ID")

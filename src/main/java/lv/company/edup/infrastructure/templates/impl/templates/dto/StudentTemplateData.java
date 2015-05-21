@@ -3,15 +3,15 @@ package lv.company.edup.infrastructure.templates.impl.templates.dto;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class StudentDto {
+public class StudentTemplateData {
 
     private String studentOrder;
     private String studentName;
 
-    public StudentDto() {
+    public StudentTemplateData() {
     }
 
-    public StudentDto(String studentOrder, String studentName) {
+    public StudentTemplateData(String studentOrder, String studentName) {
         this.studentOrder = studentOrder;
         this.studentName = studentName;
     }

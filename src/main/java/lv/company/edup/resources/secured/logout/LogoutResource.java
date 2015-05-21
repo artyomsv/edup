@@ -1,4 +1,4 @@
-package lv.company.edup.resources.secure.logout;
+package lv.company.edup.resources.secured.logout;
 
 import javax.ejb.Stateless;
 import javax.servlet.ServletException;
@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-@Path("private/logout")
+@Path("secured/logout")
 @Stateless
 public class LogoutResource {
 

@@ -1,4 +1,4 @@
-package lv.company.edup.resources.secure.files;
+package lv.company.edup.resources.secured.files;
 
 import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.mapping.ObjectTransformer;

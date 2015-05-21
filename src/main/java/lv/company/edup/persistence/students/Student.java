@@ -2,11 +2,16 @@ package lv.company.edup.persistence.students;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @MappedSuperclass
-public abstract class Student {
+public abstract class Student implements Serializable {
+
+    public interface Parameters {
+        String ID = "pId";
+    }
 
     @Column(name = "NAME")
     private String name;

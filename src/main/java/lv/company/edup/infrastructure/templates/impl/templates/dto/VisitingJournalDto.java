@@ -10,7 +10,7 @@ public class VisitingJournalDto {
     private String date;
     private String time;
     private String subject;
-    private List<StudentDto> students;
+    private List<StudentTemplateData> students;
 
     public String getDate() {
         return date;
@@ -36,14 +36,14 @@ public class VisitingJournalDto {
         this.subject = subject;
     }
 
-    public List<StudentDto> getStudents() {
+    public List<StudentTemplateData> getStudents() {
         if (students == null) {
             students = new ArrayList<>();
         }
         return students;
     }
 
-    public void setStudents(List<StudentDto> students) {
+    public void setStudents(List<StudentTemplateData> students) {
         this.students = students;
     }
 }

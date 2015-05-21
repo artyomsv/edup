@@ -68,3 +68,14 @@ CREATE TRIGGER update_student
 AFTER INSERT ON STUDENTS
 FOR EACH ROW
 EXECUTE PROCEDURE update_current_student_version();
+
+
+-- Generate student id --
+CREATE OR REPLACE FUNCTION getStudentId()
+  RETURNS BIGINT AS
+  $$
+  BEGIN
+    RETURN nextval('student_id_sequence');
+  END;
+  $$ LANGUAGE plpgsql;
+

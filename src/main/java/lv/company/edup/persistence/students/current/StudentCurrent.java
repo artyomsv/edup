@@ -1,4 +1,7 @@
-package lv.company.edup.persistence.students;
+package lv.company.edup.persistence.students.current;
+
+import lv.company.edup.persistence.students.Student;
+import lv.company.edup.persistence.students.StudentProperty;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

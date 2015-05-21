@@ -20,7 +20,7 @@
     <properties>
         <version.major>0</version.major>
         <version.minor>0</version.minor>
-        <version.tag>2</version.tag>
+        <version.tag>3</version.tag>
     </properties>
 
     <profiles>

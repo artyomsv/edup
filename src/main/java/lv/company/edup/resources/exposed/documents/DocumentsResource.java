@@ -10,7 +10,7 @@ import javax.ws.rs.core.Response;
 
 
 @ApplicationScoped
-@Path("documents")
+@Path("public/documents")
 public class DocumentsResource {
 
     @Inject DocumentsFacade facade;

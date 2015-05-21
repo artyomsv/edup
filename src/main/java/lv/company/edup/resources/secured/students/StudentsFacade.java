@@ -1,9 +1,12 @@
-package lv.company.edup.resources.secure.students;
+package lv.company.edup.resources.secured.students;
 
-import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentDto;
+import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentTemplateData;
 import lv.company.edup.resources.ApplicationFacade;
+import lv.company.edup.services.students.StudentDto;
+import lv.company.edup.services.students.StudentsService;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,33 +15,30 @@ import java.util.logging.Logger;
 public class StudentsFacade extends ApplicationFacade {
 
     private final Logger logger = Logger.getLogger(StudentsFacade.class.getSimpleName());
+    @Inject StudentsService service;
 
     public Response search() {
-        logger.info("search");
-        return ok();
+        return ok(service.findAll());
     }
 
     public Response findStudent(Long id) {
-        logger.log(Level.INFO, "get by id {0}", id);
-        return ok();
+        return ok(service.findStudent(id));
     }
 
     public Response findVersions(Long id) {
-        logger.log(Level.INFO, "get versions by id {0}", id);
-        return ok();
+        return ok(service.findVersions(id));
     }
 
     public Response findVersion(Long id, Long versionId) {
-        logger.log(Level.INFO, "get version by id {0} and versionId {1}", new String[]{String.valueOf(id), String.valueOf(versionId)});
-        return ok();
+        return ok(service.findVersion(id, versionId));
     }
 
     public Response createStudent(StudentDto dto) {
-        logger.log(Level.INFO, "post student");
-        return created(1L);
+        Long id = service.createdStudent(dto);
+        return created(id);
     }
 
-    public Response updateStudent(StudentDto dto, Long id) {
+    public Response updateStudent(StudentTemplateData dto, Long id) {
         logger.log(Level.INFO, "put student {0}", id);
         return ok();
     }

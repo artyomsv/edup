@@ -13,6 +13,10 @@ public abstract class EdupRepository<Entity> {
 
     public abstract Class<Entity> getEntityClass();
 
+    public <Entity> Entity find(Object primaryKey, Class<Entity> aClass) {
+        return em.find(aClass, primaryKey);
+    }
+
     public Entity find(Object primaryKey) {
         return em.find(getEntityClass(), primaryKey);
     }

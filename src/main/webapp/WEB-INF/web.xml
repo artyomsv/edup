@@ -53,7 +53,7 @@
 
         <web-resource-collection>
             <web-resource-name>None Protected User Area</web-resource-name>
-            <url-pattern>/api/*</url-pattern>
+            <url-pattern>/api/public/*</url-pattern>
             <http-method>GET</http-method>
         </web-resource-collection>
 
@@ -67,7 +67,7 @@
 
         <web-resource-collection>
             <web-resource-name>Protected API root</web-resource-name>
-            <url-pattern>/api/private/*</url-pattern>
+            <url-pattern>/api/secured/*</url-pattern>
             <http-method>GET</http-method>
             <http-method>POST</http-method>
             <http-method>HEAD</http-method>
@@ -98,5 +98,9 @@
     <error-page>
         <error-code>404</error-code>
         <location>/not_found.html</location>
+    </error-page>
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error.html</location>
     </error-page>
 </web-app>

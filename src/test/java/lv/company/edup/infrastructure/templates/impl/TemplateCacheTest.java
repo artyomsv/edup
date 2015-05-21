@@ -5,7 +5,7 @@ import lv.company.edup.infrastructure.pdf.impl.PDFDocumentsGenerationServiceImpl
 import lv.company.edup.infrastructure.templates.api.Template;
 import lv.company.edup.infrastructure.templates.api.TemplateName;
 import lv.company.edup.infrastructure.templates.impl.templates.VisitorJournalContextCreator;
-import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentDto;
+import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentTemplateData;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.VisitingJournalDto;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -42,7 +42,7 @@ public class TemplateCacheTest {
         from.setDate("22/01/2015");
         from.setTime("10:50");
         for (int i = 0; i < 25; i++) {
-            from.getStudents().add(new StudentDto(String.valueOf(i + 1), faker.name().fullName()));
+            from.getStudents().add(new StudentTemplateData(String.valueOf(i + 1), faker.name().fullName()));
         }
         Map<String, Object> context = contextCreator.create(from);
 
