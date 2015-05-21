@@ -11,7 +11,7 @@ import lv.company.edup.infrastructure.templates.impl.TemplateCache;
 import lv.company.edup.infrastructure.templates.impl.templates.VisitorJournalContextCreator;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentDto;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.VisitingJournalDto;
-import lv.company.edup.resources.EdupFacade;
+import lv.company.edup.resources.ApplicationFacade;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class DocumentsFacade extends EdupFacade {
+public class DocumentsFacade extends ApplicationFacade {
 
     private Logger logger = Logger.getLogger(DocumentsFacade.class.getSimpleName());
 

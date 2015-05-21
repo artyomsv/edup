@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class EdupFacade {
+public class ApplicationFacade {
 
     @Inject UriUtils utils;
 

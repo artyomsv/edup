@@ -4,7 +4,7 @@ import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.mapping.ObjectTransformer;
 import lv.company.edup.infrastructure.response.ErrorResponseProvider;
 import lv.company.edup.persistence.files.FileEntity;
-import lv.company.edup.resources.EdupFacade;
+import lv.company.edup.resources.ApplicationFacade;
 import lv.company.edup.services.files.EdupFileItemFactory;
 import lv.company.edup.services.files.FileService;
 import lv.company.edup.services.files.dto.FileDto;
@@ -22,7 +22,7 @@ import java.util.List;
 
 @Singleton
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class FileFacade extends EdupFacade {
+public class FileFacade extends ApplicationFacade {
 
     @Inject ErrorResponseProvider provider;
     @Inject EdupFileItemFactory factory;
