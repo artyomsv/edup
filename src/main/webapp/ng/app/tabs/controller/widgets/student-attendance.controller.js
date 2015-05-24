@@ -2,7 +2,7 @@
 
 angular.module('edup.tabs')
 
-    .controller('ClientAttendanceController', function ($scope) {
+    .controller('StudentAttendanceController', function ($scope) {
 
         $scope.attendanceHistory = [
             {

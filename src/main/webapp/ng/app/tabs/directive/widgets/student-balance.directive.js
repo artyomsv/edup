@@ -2,10 +2,10 @@
 
 angular.module('edup.tabs')
 
-    .directive('clientBalance', function () {
+    .directive('studentBalance', function () {
         return {
             restrict: 'E',
-            templateUrl: 'client-balance',
+            templateUrl: 'student-balance',
             link : function ($scope) {
                 $scope.newBalanceValue = '';
                 

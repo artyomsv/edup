@@ -2,12 +2,12 @@
 
 angular.module('edup.tabs')
 
-    .directive('clientForm', function () {
+    .directive('tabsStudents', function () {
         return {
             restrict: 'E',
-            templateUrl: 'client-form',
+            templateUrl: 'tabs-students',
             link : function ($scope) {
-                $scope.directiveTest = 'Client Form tabbed pane directive';
+                $scope.directiveTest = 'Students tab directive';
             }
         };
     }

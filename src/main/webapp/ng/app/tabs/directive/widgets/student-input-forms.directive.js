@@ -2,12 +2,12 @@
 
 angular.module('edup.tabs')
 
-    .directive('clientsList', function () {
+    .directive('studentInputForms', function () {
         return {
             restrict: 'E',
-            templateUrl: 'clients-list',
+            templateUrl: 'student-input-forms',
             link : function ($scope) {
-                $scope.directiveTest = 'Clients list';
+                $scope.directiveTest = 'Student input forms';
             }
         };
     }

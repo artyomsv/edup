@@ -10,15 +10,15 @@
                 <table class="identification-card" width="100%">
                     <tr>
                         <td>
-                            <h4><b>{{ selectedClient.name }} {{ selectedClient.lastName}}</b></h4>
+                            <h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4>
                         </td>
                         <td rowspan="2" width="180px">
-                            <img alt="140x140" src="{{selectedClient.photo}}" class="img-rounded pull-right"/>
+                            <img alt="140x140" src="{{selectedStudent.photo}}" class="img-rounded pull-right"/>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <h4>{{ selectedClient.personalId }}</h4>
+                            <h4>{{ selectedStudent.personalId }}</h4>
                         </td>
                     </tr>
                 </table>
@@ -28,11 +28,11 @@
                 <table class="identification-card" width="100%">
                     <tr>
                         <td>Phone number:</td>
-                        <td>{{ selectedClient.phone }}</td>
+                        <td>{{ selectedStudent.phone }}</td>
                     </tr>
                     <tr>
                         <td>Current balance:</td>
-                        <td>{{ selectedClient.balance }} EUR</td>
+                        <td>{{ selectedStudent.balance }} EUR</td>
                         <td>
                             <button type="button" class="btn btn-success pull-right" data-toggle="modal"
                                     data-target="#addToBalanceModalView">Add to balance
@@ -49,12 +49,12 @@
 
             <div class="col-md-12 column" style="padding-top: 30px;">
                 <label for="parentInformation">Information about parents</label>
-                <textarea readonly class="form-control fixedTextArea" id="parentInformation" name="textarea">{{ selectedClient.parentsInfo }}</textarea>
+                <textarea readonly class="form-control fixedTextArea" id="parentInformation" name="textarea">{{ selectedStudent.parentsInfo }}</textarea>
             </div>
 
             <div class="col-md-12 column" style="padding-top: 30px; padding-bottom: 20px">
                 <label for="essentialInformation">Essential information</label>
-                <textarea readonly class="form-control fixedTextArea" id="essentialInformation" name="textarea">{{ selectedClient.essentialInformation }}</textarea>
+                <textarea readonly class="form-control fixedTextArea" id="essentialInformation" name="textarea">{{ selectedStudent.essentialInformation }}</textarea>
             </div>
         </fieldset>
     </form>

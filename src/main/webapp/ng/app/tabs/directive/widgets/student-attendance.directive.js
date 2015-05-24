@@ -2,12 +2,11 @@
 
 angular.module('edup.tabs')
 
-    .directive('tabsClient', function () {
+    .directive('studentAttendance', function () {
         return {
             restrict: 'E',
-            templateUrl: 'tabs-client',
+            templateUrl: 'student-attendance',
             link : function ($scope) {
-                $scope.directiveTest = 'Client tab directive';
             }
         };
     }

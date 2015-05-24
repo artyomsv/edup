@@ -4,8 +4,8 @@ angular.module('edup.header')
 
     .controller('NavbarController', function ($scope, $state) {
         $scope.calendarModel = {
-            items: ['Clients', 'Calendar'],
-            states: ['clients', 'calendar'],
+            items: ['Students', 'Calendar'],
+            states: ['students', 'calendar'],
             current: 0
         };
 

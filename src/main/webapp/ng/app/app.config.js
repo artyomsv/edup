@@ -5,10 +5,10 @@ angular.module('edup')
     .config(function ($stateProvider) {
 
         $stateProvider
-            .state('clients', {
-                templateUrl: 'tabs-client',
-                url: '/clients',
-                controller: 'ClientTabController'
+            .state('students', {
+                templateUrl: 'tabs-students',
+                url: '/students',
+                controller: 'StudentsTabController'
             })
             .state('calendar', {
                 templateUrl: 'tabs-calendar',

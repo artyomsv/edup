@@ -1,4 +1,4 @@
-<div class="mainForm" ng-controller="ClientFormController">
+<div class="mainForm" ng-controller="StudentFormController">
     <div class="row clearfix">
         <div class="col-md-6 column">
             <form class="form-horizontal">
@@ -9,7 +9,7 @@
                         <label class="col-md-4 control-label" for="nameInput">Name</label>
 
                         <div class="col-md-4">
-                            <input ng-model="selectedClient.name" id="nameInput" name="lastNameInput" type="text" placeholder="" class="form-control input-md" required="">
+                            <input ng-model="selectedStudent.name" id="nameInput" name="lastNameInput" type="text" placeholder="" class="form-control input-md" required="">
                         </div>
                     </div>
 
@@ -18,7 +18,7 @@
                         <label class="col-md-4 control-label" for="lastNameInput">Last name</label>
 
                         <div class="col-md-4">
-                            <input ng-model="selectedClient.lastName" id="lastNameInput" name="lastNameInput" type="text" placeholder="" class="form-control input-md" required="">
+                            <input ng-model="selectedStudent.lastName" id="lastNameInput" name="lastNameInput" type="text" placeholder="" class="form-control input-md" required="">
 
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                         <label class="col-md-4 control-label" for="personalNumberInput">Personal number</label>
 
                         <div class="col-md-4">
-                            <input ng-model="selectedClient.personalId" id="personalNumberInput" name="personalNumberInput" type="text" placeholder="" class="form-control input-md" required="">
+                            <input ng-model="selectedStudent.personalId" id="personalNumberInput" name="personalNumberInput" type="text" placeholder="" class="form-control input-md" required="">
 
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                         <label class="col-md-4 control-label" for="phoneInput">Mob. phone</label>
 
                         <div class="col-md-4">
-                            <input ng-model="selectedClient.phone" id="phoneInput" name="phoneInput" type="text" placeholder="" class="form-control input-md" required="">
+                            <input ng-model="selectedStudent.phone" id="phoneInput" name="phoneInput" type="text" placeholder="" class="form-control input-md" required="">
                         </div>
                     </div>
 
@@ -47,7 +47,7 @@
                         <label class="col-md-4 control-label" for="birthDateInput">Birth date</label>
 
                         <div class="col-md-4">
-                            <input ng-model="selectedClient.birthDay" id="birthDateInput" name="birthDateInput" type="text" placeholder="DD/MM/YYYY" class="form-control input-md" required="">
+                            <input ng-model="selectedStudent.birthDay" id="birthDateInput" name="birthDateInput" type="text" placeholder="DD/MM/YYYY" class="form-control input-md" required="">
                         </div>
                     </div>
 
@@ -55,7 +55,7 @@
             </form>
         </div>
         <div class="col-md-6 column vcenter">
-            <img alt="280x280" src="{{selectedClient.photo}}" class="img-rounded pull-right "/>
+            <img alt="280x280" src="{{selectedStudent.photo}}" class="img-rounded pull-right "/>
         </div>
     </div>
 
@@ -70,7 +70,7 @@
 
                     <!-- Textarea -->
                     <div class="col-md-12">
-                        <textarea ng-model="selectedClient.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
+                        <textarea ng-model="selectedStudent.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
                     </div>
 
                 </fieldset>
@@ -91,7 +91,7 @@
 
                     <!-- Textarea -->
                     <div class="col-md-12">
-                        <textarea ng-model="selectedClient.essentialInformation" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
+                        <textarea ng-model="selectedStudent.essentialInformation" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
                     </div>
 
                 </fieldset>

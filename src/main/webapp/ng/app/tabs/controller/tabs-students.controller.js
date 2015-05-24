@@ -2,9 +2,9 @@
 
 angular.module('edup.tabs')
 
-    .controller('ClientTabController', function ($scope) {
+    .controller('StudentsTabController', function ($scope) {
 
-        $scope.clients = [
+        $scope.students = [
             {
                 'id' : 1,
                 'name': 'Artyom',
@@ -56,11 +56,11 @@ angular.module('edup.tabs')
 
         ];
 
-        $scope.selectedClient = $scope.clients[2];
+        $scope.selectedStudent = $scope.students[2];
 
-        $scope.setSelected = function (clientId) {
-            $scope.selectedClient = _.find($scope.clients, function(client) {
-                return clientId === client.id;
+        $scope.setSelected = function (studentId) {
+            $scope.selectedStudent = _.find($scope.students, function(student) {
+                return studentId === student.id;
             });
         };
     }

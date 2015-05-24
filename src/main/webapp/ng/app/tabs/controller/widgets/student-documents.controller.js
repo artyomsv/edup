@@ -2,7 +2,7 @@
 
 angular.module('edup.tabs')
 
-    .controller('ClientDocumentsController', function ($scope) {
+    .controller('StudentDocumentsController', function ($scope) {
 
         $scope.documents = [
             {
