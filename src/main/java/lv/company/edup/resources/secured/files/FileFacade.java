@@ -49,8 +49,9 @@ public class FileFacade extends ApplicationFacade {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public Response downloadFile(Long id) {
         FileEntity file = service.getFile(id);
-        return streamResponse(file.getData(), file.getContentType().getContentType());
+        return streamResponse(file.getData(), file.getContentType().getContentType(), file.getName());
     }
+
 
     public Response getFilesInformation() {
         return ok(service.findFiles());

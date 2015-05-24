@@ -1,9 +1,10 @@
-package lv.company.edup.services.students;
+package lv.company.edup.services.students.dto;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @XmlRootElement
-public class StudentDto {
+public class BaseStudentDto {
 
     private Long id;
     private Long versionId;
@@ -11,10 +12,8 @@ public class StudentDto {
     private String lastName;
     private String personId;
     private String mobile;
-    private String parentInfo;
-    private String characteristics;
-    private String photo;
-    private Long balance;
+    private Long age;
+    private Date birthDate;
 
     public Long getId() {
         return id;
@@ -64,35 +63,19 @@ public class StudentDto {
         this.mobile = mobile;
     }
 
-    public String getParentInfo() {
-        return parentInfo;
+    public Long getAge() {
+        return age;
     }
 
-    public void setParentInfo(String parentInfo) {
-        this.parentInfo = parentInfo;
+    public void setAge(Long age) {
+        this.age = age;
     }
 
-    public String getCharacteristics() {
-        return characteristics;
+    public Date getBirthDate() {
+        return birthDate;
     }
 
-    public void setCharacteristics(String characteristics) {
-        this.characteristics = characteristics;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 }

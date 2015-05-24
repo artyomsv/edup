@@ -47,7 +47,7 @@ public class DocumentsFacade extends ApplicationFacade {
         String render = engine.render(template, context);
         try {
             byte[] data = service.generate(render);
-            return streamResponse(data, "application/pdf");
+            return streamResponse(data, "application/pdf", "doc.pdf");
         } catch (IOException | DocumentException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             throw new RuntimeException(e);

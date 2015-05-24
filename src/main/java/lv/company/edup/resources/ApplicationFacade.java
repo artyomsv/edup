@@ -54,12 +54,12 @@ public class ApplicationFacade {
         return Response.noContent().build();
     }
 
-    public Response streamResponse(final byte[] data, String contentType) {
+    public Response streamResponse(final byte[] data, String contentType, String fileName) {
         return Response.status(Response.Status.OK)
                 .header(HttpHeaders.CONTENT_TYPE, contentType)
                 .expires(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(7)))
                 .header(HttpHeaders.CACHE_CONTROL, "maxAge=" + TimeUnit.DAYS.toSeconds(7) + ", private")
-                .header("Content-Disposition", String.format("attachment; filename=\"%s\"", "visiting_journal.pdf"))
+                .header("Content-Disposition", String.format("attachment; filename=\"%s\"", fileName))
                 .entity(new StreamingOutput() {
                             @Override
                             public void write(OutputStream output) throws IOException, WebApplicationException {

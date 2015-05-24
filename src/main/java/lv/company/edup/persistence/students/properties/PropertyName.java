@@ -1,13 +1,13 @@
-package lv.company.edup.persistence.students;
+package lv.company.edup.persistence.students.properties;
 
 public enum PropertyName {
 
     PERSONAL_NUMBER,
     MOBILE_PHONE,
-    E_MAIL,
+    MAIL,
     BIRTH_DATE,
     PARENT_INFORMATION,
     CHARACTERISTICS,
-    PHOTO_URL
+    PHOTO_ID
 
 }

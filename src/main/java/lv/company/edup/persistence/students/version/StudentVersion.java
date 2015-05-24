@@ -1,23 +1,17 @@
 package lv.company.edup.persistence.students.version;
 
 import lv.company.edup.persistence.students.Student;
-import lv.company.edup.persistence.students.StudentProperty;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.NamedStoredProcedureQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.List;
 
 @NamedStoredProcedureQuery(name = StudentVersion.Procedure.GENERATE_USER_ID, procedureName = "getStudentId")
 
@@ -48,15 +42,6 @@ public class StudentVersion extends Student {
 
     @Column(name = "STUDENT_ID")
     private Long id;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "STUDENT_VERSION_FK", referencedColumnName = "STUDENT_VERSION_ID")
-    private List<StudentProperty> properties;
-
-    @Override
-    public List<StudentProperty> getProperties() {
-        return properties;
-    }
 
     @Override
     public Long getVersionId() {

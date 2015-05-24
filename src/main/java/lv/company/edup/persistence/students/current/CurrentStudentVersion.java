@@ -1,17 +1,11 @@
 package lv.company.edup.persistence.students.current;
 
 import lv.company.edup.persistence.students.Student;
-import lv.company.edup.persistence.students.StudentProperty;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name = "V_STUDENTS")
@@ -23,15 +17,6 @@ public class CurrentStudentVersion extends Student {
 
     @Column(name = "STUDENT_VERSION_ID")
     private Long versionId;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "STUDENT_VERSION_FK", referencedColumnName = "STUDENT_VERSION_ID")
-    private List<StudentProperty> properties;
-
-    @Override
-    public List<StudentProperty> getProperties() {
-        return properties;
-    }
 
     @Override
     public Long getId() {

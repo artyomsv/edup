@@ -1,4 +1,4 @@
-package lv.company.edup.persistence.students;
+package lv.company.edup.persistence.students.properties;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +37,14 @@ public class StudentProperty {
 
     @Column(name = "REFERENCE_ID")
     private Long referenceId;
+
+    public StudentProperty() {
+    }
+
+    public StudentProperty(PropertyName name, String value) {
+        this.name = name;
+        this.value = value;
+    }
 
     public Long getId() {
         return id;
@@ -84,5 +92,14 @@ public class StudentProperty {
 
     public void setReferenceId(Long referenceId) {
         this.referenceId = referenceId;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("StudentProperty{");
+        sb.append("name=").append(name);
+        sb.append(", value='").append(value).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

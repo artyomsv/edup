@@ -2,8 +2,8 @@ package lv.company.edup.resources.secured.students;
 
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
-import lv.company.edup.services.students.StudentDto;
 import lv.company.edup.services.students.StudentsService;
+import lv.company.edup.services.students.dto.StudentDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
