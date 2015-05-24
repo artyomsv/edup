@@ -17,7 +17,7 @@
             <th>Age</th>
             <th>ID</th>
             <th>Phone</th>
-            <th>Active</th>
+            <!--<th>Active</th>-->
             <th></th>
         </tr>
         </thead>
@@ -27,9 +27,9 @@
             <td>{{ student.name }}</td>
             <td>{{ student.lastName }}</td>
             <td>{{ student.age }}</td>
-            <td>{{ student.personalId }}</td>
-            <td>{{ student.phone }}</td>
-            <td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="student.active"></td>
+            <td>{{ student.personId }}</td>
+            <td>{{ student.mobile }}</td>
+            <!--<td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="student.active"></td>-->
             <td>
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#input-forms-modal-view">Details</button>
             </td>
