@@ -1,7 +1,7 @@
 package lv.company.edup.services.files;
 
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
-import lv.company.edup.infrastructure.mapping.ObjectTransformer;
+import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.persistence.files.FileEntity;
 import lv.company.edup.persistence.files.FileRepository;
 import lv.company.edup.persistence.files.FileType;
@@ -27,7 +27,7 @@ import java.util.zip.Checksum;
 public class FileService {
 
     @Inject FileRepository repository;
-    @Inject ObjectTransformer transformer;
+    @Inject ObjectMapper mapper;
 
     public FileDto persistFile(FileItem item) throws IOException {
 
@@ -41,7 +41,7 @@ public class FileService {
         if (CollectionUtils.isNotEmpty(list)) {
             for (FileEntity entity : list) {
                 if (entity.getSize() == data.length) {
-                    return transformer.map(entity, FileDto.class);
+                    return mapper.map(entity, FileDto.class);
                 }
             }
         }
@@ -56,7 +56,7 @@ public class FileService {
 
         repository.persist(entity);
 
-        return transformer.map(entity, FileDto.class);
+        return mapper.map(entity, FileDto.class);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -70,6 +70,6 @@ public class FileService {
 
     public Collection<FileDto> findFiles() {
         List<FileEntity> files = repository.findAll();
-        return transformer.map(files, FileDto.class);
+        return mapper.map(files, FileDto.class);
     }
 }

@@ -14,13 +14,13 @@ public abstract class Student implements Serializable {
     }
 
     @Column(name = "NAME")
-    private String name;
+    protected String name;
 
     @Column(name = "LAST_NAME")
-    private String lastName;
+    protected String lastName;
 
     @Column(name = "CREATED")
-    private Date created;
+    protected Date created;
 
     public abstract List<StudentProperty> getProperties();
 

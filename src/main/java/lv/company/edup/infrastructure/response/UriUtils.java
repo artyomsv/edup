@@ -2,6 +2,7 @@ package lv.company.edup.infrastructure.response;
 
 import javax.enterprise.context.RequestScoped;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.ext.Provider;
 import java.net.URI;
@@ -25,5 +26,9 @@ public class UriUtils {
 
     public URI buildCreated(Long id) {
         return info.getAbsolutePathBuilder().build(id);
+    }
+
+    public MultivaluedMap<String, String> getQueryParameters() {
+        return info.getQueryParameters(true);
     }
 }

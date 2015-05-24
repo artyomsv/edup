@@ -1,6 +1,6 @@
 package lv.company.edup.resources.secured.students;
 
-import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentTemplateData;
+import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
 import lv.company.edup.services.students.StudentDto;
 import lv.company.edup.services.students.StudentsService;
@@ -15,10 +15,11 @@ import java.util.logging.Logger;
 public class StudentsFacade extends ApplicationFacade {
 
     private final Logger logger = Logger.getLogger(StudentsFacade.class.getSimpleName());
+
     @Inject StudentsService service;
 
     public Response search() {
-        return ok(service.findAll());
+        return ok(service.search());
     }
 
     public Response findStudent(Long id) {
@@ -34,17 +35,17 @@ public class StudentsFacade extends ApplicationFacade {
     }
 
     public Response createStudent(StudentDto dto) {
-        Long id = service.createdStudent(dto);
-        return created(id);
+        EntityPayload payload = service.createStudentVersion(dto);
+        return created(payload.getId());
     }
 
-    public Response updateStudent(StudentTemplateData dto, Long id) {
-        logger.log(Level.INFO, "put student {0}", id);
-        return ok();
+    public Response updateStudent(StudentDto dto, Long id) {
+        EntityPayload payload = service.updateStudent(dto, id);
+        return updated(payload.getVersionId());
     }
 
     public Response deleteStudent(Long id) {
-        logger.log(Level.INFO, "delete student {0}", id);
+        logger.log(Level.INFO, "delete student {0} is not supported yet", id);
         return ok();
     }
 }

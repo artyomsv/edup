@@ -8,11 +8,11 @@ import javax.persistence.StoredProcedureQuery;
 import java.math.BigInteger;
 
 @Stateless
-public class StudentRepository extends EdupRepository<StudentCurrent> {
+public class CurrentStudentVersionRepository extends EdupRepository<CurrentStudentVersion> {
 
     @Override
-    public Class<StudentCurrent> getEntityClass() {
-        return StudentCurrent.class;
+    public Class<CurrentStudentVersion> getEntityClass() {
+        return CurrentStudentVersion.class;
     }
 
     public Long getNextStudentId() {

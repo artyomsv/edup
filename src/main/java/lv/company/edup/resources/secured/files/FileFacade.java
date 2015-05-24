@@ -1,7 +1,7 @@
 package lv.company.edup.resources.secured.files;
 
 import lv.company.edup.infrastructure.exceptions.InternalException;
-import lv.company.edup.infrastructure.mapping.ObjectTransformer;
+import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.ErrorResponseProvider;
 import lv.company.edup.persistence.files.FileEntity;
 import lv.company.edup.resources.ApplicationFacade;
@@ -27,7 +27,7 @@ public class FileFacade extends ApplicationFacade {
     @Inject ErrorResponseProvider provider;
     @Inject EdupFileItemFactory factory;
     @Inject FileService service;
-    @Inject ObjectTransformer transformer;
+    @Inject ObjectMapper mapper;
 
     public Response uploadFile(HttpServletRequest request) {
         List<FileItem> items = factory.parse(request);
@@ -58,6 +58,6 @@ public class FileFacade extends ApplicationFacade {
 
     public Response getFileInformation(Long id) {
         FileEntity file = service.getFile(id);
-        return ok(transformer.map(file, FileDto.class));
+        return ok(mapper.map(file, FileDto.class));
     }
 }

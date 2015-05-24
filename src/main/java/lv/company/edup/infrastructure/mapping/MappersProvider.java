@@ -8,7 +8,7 @@ import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class TransformersProvider {
+public class MappersProvider {
 
     @Inject Instance<CustomMapper> mappers;
     @Inject Instance<CustomConverter<?, ?>> converters;

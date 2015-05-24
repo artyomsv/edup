@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "V_STUDENTS")
-public class StudentCurrent extends Student {
+public class CurrentStudentVersion extends Student {
 
     @Id
     @Column(name = "STUDENT_ID")

@@ -10,12 +10,12 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Collection;
+import java.util.List;
 
 @ApplicationScoped
-public class ObjectTransformer {
+public class ObjectMapper {
 
-    @Inject TransformersProvider provider;
+    @Inject MappersProvider provider;
 
     private MapperFacade facade;
 
@@ -45,7 +45,7 @@ public class ObjectTransformer {
         return facade.map(source, clazz);
     }
 
-    public <S, D> Collection<D> map(Iterable<S> source, Class<D> clazz) {
+    public <S, D> List<D> map(Iterable<S> source, Class<D> clazz) {
         return facade.mapAsList(source, clazz);
     }
 }

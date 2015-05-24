@@ -1,6 +1,5 @@
 package lv.company.edup.resources.secured.students;
 
-import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentTemplateData;
 import lv.company.edup.services.students.StudentDto;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -55,7 +54,7 @@ public class StudentsResource {
     @POST
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateStudent(StudentTemplateData dto, @PathParam("id") Long id) {
+    public Response updateStudent(StudentDto dto, @PathParam("id") Long id) {
         return facade.updateStudent(dto, id);
     }
 

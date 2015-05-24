@@ -46,6 +46,10 @@ public class ApplicationFacade {
         return Response.created(utils.buildCreated(id)).build();
     }
 
+    public Response updated(Long id) {
+        return Response.ok().header(HttpHeaders.ETAG, String.valueOf(id)).build();
+    }
+
     public Response notFound() {
         return Response.noContent().build();
     }
