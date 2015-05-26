@@ -3,14 +3,14 @@
     <div class="col-md-12 column">
         <div class="col-md-3 form-inline">
             <div class="btn-group pull-left">
-                <button class="btn btn-primary" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" decrement="calendarView">&lt;&lt; Prev</button>
-                <button class="btn" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" set-to-today> Today</button>
-                <button class="btn btn-primary" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" increment="calendarView"> Next &gt;&gt; </button>
+                <button class="btn btn-primary btn-sm" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" decrement="calendarView">&lt;&lt; Prev</button>
+                <button class="btn btn-sm" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" set-to-today> Today</button>
+                <button class="btn btn-primary btn-sm" ng-click="updateTitle()" mwl-date-modifier date="calendarDay" increment="calendarView"> Next &gt;&gt; </button>
             </div>
         </div>
 
         <div class="col-md-2">
-            <div class="btn-group text-center">
+            <div class="btn-group">
                 <h4> {{ currentDay }} </h4>
             </div>
 
@@ -18,13 +18,14 @@
 
         <div class="col-md-3 form-inline">
             <div class="btn-group pull-right">
-                <button class="btn btn-warning" ng-click="setCalendarView('year')">Year</button>
-                <button class="btn btn-warning" ng-click="setCalendarView('month')">Month</button>
-                <button class="btn btn-warning" ng-click="setCalendarView('week')">Week</button>
-                <button class="btn btn-warning" ng-click="setCalendarView('day')">Day</button>
+                <button class="btn btn-primary btn-sm" ng-click="setCalendarView('year')">Year</button>
+                <button class="btn btn-primary btn-sm" ng-click="setCalendarView('month')">Month</button>
+                <button class="btn btn-primary btn-sm" ng-click="setCalendarView('week')">Week</button>
+                <button class="btn btn-primary btn-sm" ng-click="setCalendarView('day')">Day</button>
             </div>
         </div>
         <div class="col-md-4 form-inline">
+            <h4>Today events:</h4>
         </div>
     </div>
 
@@ -48,12 +49,18 @@
         </div>
 
         <div class="col-md-4 column">
-            <h4>Today events:</h4>
-
             <div ng-repeat="event in events">
                 <h4>
                     <div class="label"
-                         ng-class="{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}">{{event.title}} ({{event.startsAt | date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}})</div>
+                         ng-class="{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}"
+                         data-toggle="tooltip"
+                         data-placement="top"
+                         title="Tooltip on top"
+                         tooltip="{{ event.title }}"
+                         tooltip-trigger="{{{true: 'mouseenter', false: 'never'}[myForm.username.$invalid]}}"
+                            >
+                        ({{event.startsAt | date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}}) {{event.title | limitTo: 33}} {{event.title.length > 33 ? '...' : ''}}
+                    </div>
                 </h4>
             </div>
         </div>

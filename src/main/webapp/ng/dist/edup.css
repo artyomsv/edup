@@ -232,6 +232,12 @@ td.identification-card {
 .modalViewPadding {
   padding: 10px 20px 10px 20px;
 }
+.appWidget {
+  border: 1px solid #d3d3d3;
+  background-color: #ededed;
+  border-radius: 5px;
+  padding: 10px;
+}
 fieldset.scheduler-border {
   border: 2px groove #ddd !important;
   border-radius: 10px;
