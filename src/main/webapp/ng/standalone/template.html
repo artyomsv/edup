@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>App standalone</title>
+    <title>Login standalone</title>
 
     <link rel="stylesheet" type="text/css" href="../dist/edup-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="../dist/edup.css">
@@ -24,21 +24,12 @@
 
     <script type="text/javascript" src="../dist/edup.js"></script>
 
+
 </head>
-<body ng-app="edup">
+<body ng-app="edup" class="standaloneBody">
 
-<div ng-controller="NavbarController" id="edupHeader">
-    <!--<div ng-controller="NavbarController" id="edupHeader" style="position: fixed;top: 0;width: 100%;">-->
-    <edup-header></edup-header>
-</div>
+<!--<photo-upload></photo-upload>-->
+<file-upload></file-upload>
 
-<div class="container"
-     ui-view
-     style="width: 80%;border: 1px solid #d3d3d3;border-radius: 10px;background-color: rgba(244, 244, 244, 0.7);margin-bottom: 20px">
-</div>
-
-<!--<div>-->
-<!--<edup-footer></edup-footer>-->
-<!--</div>-->
 </body>
 </html>

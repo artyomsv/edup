@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('edup.tabs', [
-    'mwl.calendar',
-    'ui.bootstrap',
-    'ngAnimate'
+    'edup.calendar',
+    'edup.students',
+    'edup.widgets'
 ]);

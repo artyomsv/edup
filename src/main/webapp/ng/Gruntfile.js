@@ -71,8 +71,16 @@ module.exports = function (grunt) {
                     'app/footer/footer.module.js',
                     'app/footer/**/*.js',
 
+                    'app/tabs/calendar/calendar.module.js',
+                    'app/tabs/calendar/**/*.js',
+
+                    'app/tabs/students/students.module.js',
+                    'app/tabs/students/**/*.js',
+
+                    'app/tabs/widgets/widgets.module.js',
+                    'app/tabs/widgets/**/*.js',
+
                     'app/tabs/tabs.module.js',
-                    'app/tabs/**/*.js',
 
                     'app/app.module.js',
 
@@ -98,7 +106,8 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-animate/angular-animate.min.js',
                     'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
                     'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js',
-                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js',
+                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+                    'vendor/bower_components/angular-file-upload/angular-file-upload.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

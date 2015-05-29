@@ -6,14 +6,14 @@ angular.module('edup')
 
         $stateProvider
             .state('students', {
-                templateUrl: 'tabs-students',
+                templateUrl: 'students',
                 url: '/students',
-                controller: 'StudentsTabController'
+                controller: 'StudentsController'
             })
             .state('calendar', {
-                templateUrl: 'tabs-calendar',
+                templateUrl: 'calendar',
                 url: '/calendar',
-                controller: 'CalendarTabController'
+                controller: 'CalendarController'
             }
         );
 
