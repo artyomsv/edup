@@ -1,7 +1,10 @@
 package lv.company.edup.resources;
 
-import lv.company.edup.infrastructure.response.CommonResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.response.UriUtils;
+import lv.company.odata.api.ODataResult;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -12,8 +15,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ApplicationFacade {
@@ -32,22 +37,36 @@ public class ApplicationFacade {
         }
     }
 
+    public Response ok(ODataResult o) {
+        if (o != null) {
+            return prepare(Response.Status.OK, o);
+        } else {
+            return notFound();
+        }
+    }
+
     public Response ok(Collection c) {
-        if (CollectionUtils.isEmpty(c)) {
+        return ok(new ArrayList(c));
+    }
+
+    public Response ok(List list) {
+        if (CollectionUtils.isEmpty(list)) {
             return notFound();
         } else {
-            CommonResponse response = new CommonResponse();
-            response.setPayload(c);
+            ODataResult response = new ODataResult();
+            response.setValues(list);
             return prepare(Response.Status.OK, response);
         }
     }
 
     public Response created(Long id) {
-        return Response.created(utils.buildCreated(id)).build();
+        String entity = String.format("{\"payload\": %s}", id);
+        return Response.created(utils.buildCreated(id)).entity(entity).build();
     }
 
     public Response updated(Long id) {
-        return Response.ok().header(HttpHeaders.ETAG, String.valueOf(id)).build();
+        String entity = String.format("{\"payload\": %s}", id);
+        return Response.ok().header(HttpHeaders.ETAG, String.valueOf(id)).entity(entity).build();
     }
 
     public Response notFound() {
@@ -78,7 +97,16 @@ public class ApplicationFacade {
         return Response.status(status).build();
     }
 
-    private Response prepare(Response.Status status, Object o) {
+    private <T> Response prepare(Response.Status status, T o) {
+        try {
+            String entity = String.format("{\"payload\": %s}", new ObjectMapper().writeValueAsString(o));
+            return Response.status(status).entity(entity).build();
+        } catch (JsonProcessingException e) {
+            throw new InternalException(e);
+        }
+    }
+
+    private Response prepare(Response.Status status, ODataResult o) {
         return Response.status(status).entity(o).build();
     }
 }

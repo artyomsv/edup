@@ -1,19 +1,13 @@
 package lv.company.edup.infrastructure.response;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.Collection;
 
 @XmlRootElement
-public class CommonResponse {
+public class CommonResponse<T> {
 
-    private Collection<?> payload = new ArrayList();
+    private T payload;
 
-    public Collection<?> getPayload() {
-        return payload;
-    }
-
-    public void setPayload(Collection<?> payload) {
+    public void setPayload(T payload) {
         this.payload = payload;
     }
 }

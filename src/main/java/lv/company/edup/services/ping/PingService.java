@@ -50,7 +50,7 @@ public class PingService {
         builder.append(getMessage(version, appName));
         builder.append("</h2>");
         builder.append("<p>");
-        builder.append("To open application please click  <a href=\"/edup/app/index.html\">EDUP</a>");
+        builder.append("To open application please click  <a href=\"/edup/index.html\">EDUP</a>");
         builder.append("</p>");
         builder.append("</body>");
         builder.append("</html>");

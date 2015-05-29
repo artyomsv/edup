@@ -1,3 +1,15 @@
+DROP VIEW public.v_students RESTRICT;
+DROP TABLE public.students_version_mapping;
+DROP TABLE public.students;
+DROP TABLE public.student_properties;
+
+DROP SEQUENCE public.student_id_sequence RESTRICT;
+DROP SEQUENCE public.student_property_sequence RESTRICT;
+DROP SEQUENCE public.student_version_sequence RESTRICT;
+DROP FUNCTION public.update_current_student_version();
+DROP FUNCTION public.getstudentid();
+
+
 -- Create sequence for students.
 CREATE SEQUENCE STUDENT_ID_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 

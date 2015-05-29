@@ -72,12 +72,15 @@ public class StudentsService {
         return mapper.map(student, StudentDto.class);
     }
 
-    public Collection<BaseStudentDto> findVersions(Long id) {
+    public ODataResult<BaseStudentDto> findVersions(Long id) {
         Collection<? extends Student> versions = versionRepository.findVersions(id);
 
         fetchBaseStudentProperties(versions);
 
-        return mapper.map(versions, BaseStudentDto.class);
+        List<BaseStudentDto> list = mapper.map(versions, BaseStudentDto.class);
+        ODataResult<BaseStudentDto> result = new ODataResult<BaseStudentDto>();
+        result.setValues(list);
+        return result;
     }
 
     public StudentDto findVersion(Long id, Long versionId) {
