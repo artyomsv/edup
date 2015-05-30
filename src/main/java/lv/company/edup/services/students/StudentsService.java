@@ -1,7 +1,13 @@
 package lv.company.edup.services.students;
 
+import com.github.javafaker.Faker;
+import com.github.javafaker.Name;
 import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
+import lv.company.edup.infrastructure.lucene.api.config.StudentReader;
+import lv.company.edup.infrastructure.lucene.api.config.StudentWriter;
+import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;
+import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
 import lv.company.edup.infrastructure.utils.AppCollectionUtils;
@@ -23,12 +29,17 @@ import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.text.StrBuilder;
+import org.apache.commons.lang3.time.DateUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -41,6 +52,9 @@ import java.util.Map;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class StudentsService {
 
+    @Inject @StudentReader StudentsSearcher searcher;
+    @Inject @StudentWriter StudentsIndexer indexer;
+
     @Inject CurrentStudentVersionRepository currentStudentVersionRepository;
     @Inject StudentPropertyRepository propertyRepository;
     @Inject StudentVersionRepository versionRepository;
@@ -50,12 +64,13 @@ public class StudentsService {
 
     public ODataResult<BaseStudentDto> search() {
         ODataCriteria critetia = new ODataCriteria(utils.getQueryParameters());
-        ODataResult<CurrentStudentVersion> result = searchService.search(critetia, CurrentStudentVersion.class);
-        List<CurrentStudentVersion> studentVersions = result.getValues();
 
-        fetchBaseStudentProperties(studentVersions);
+        if (!critetia.isNotEmpty()) {
+            critetia.setSearch("*");
+        }
+        ODataResult<StudentDto> result = searcher.search(critetia);
 
-        List<BaseStudentDto> dtos = mapper.map(studentVersions, BaseStudentDto.class);
+        List<BaseStudentDto> dtos = mapper.map(result.getValues(), BaseStudentDto.class);
         return result.cloneFromValues(dtos);
     }
 
@@ -97,11 +112,11 @@ public class StudentsService {
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public EntityPayload createStudentVersion(StudentDto dto) {
-        return createdStudentVersion(dto, null);
+        return createStudentVersion(dto, null);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public EntityPayload createdStudentVersion(StudentDto dto, Long id) {
+    public EntityPayload createStudentVersion(StudentDto dto, Long id) {
         final StudentVersion version = mapper.map(dto, StudentVersion.class);
         version.setId(id == null ? currentStudentVersionRepository.getNextStudentId() : id);
         version.setCreated(new Date());
@@ -120,11 +135,12 @@ public class StudentsService {
             throw new NotFoundException();
         }
 
-        return createdStudentVersion(dto, id);
+        return createStudentVersion(dto, id);
     }
 
 
-    private void fetchBaseStudentProperties(Collection<? extends Student> versions) {
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void fetchBaseStudentProperties(Collection<? extends Student> versions) {
         if (CollectionUtils.isEmpty(versions)) {
             return;
         }
@@ -148,6 +164,7 @@ public class StudentsService {
                 if (version == null) {
                     continue;
                 }
+                version.setRootUrl(utils.getRootUrl() + "/secured/files/download");
                 if (map.containsKey(version.getVersionId())) {
                     CollectionUtils.addAll(version.getProperties(), map.get(version.getVersionId()));
                 }
@@ -164,5 +181,42 @@ public class StudentsService {
                 }
             });
         }
+    }
+
+    public Boolean fillFakeData() {
+        Faker faker = new Faker();
+
+        List<StudentDto> dtos = new ArrayList<StudentDto>();
+        for (int i = 0; i < 500; i++) {
+            StudentDto dto = new StudentDto();
+            Name name = faker.name();
+            dto.setName(name.firstName());
+            dto.setLastName(name.lastName());
+            dto.setCharacteristics(faker.lorem().paragraph());
+            dto.setMail(faker.internet().emailAddress());
+            dto.setPersonId(faker.code().isbn13());
+            dto.setMobile(faker.phoneNumber().phoneNumber());
+            try {
+                dto.setBirthDate(DateUtils.parseDate(getRandomDate(), "yyyyMMdd"));
+            } catch (ParseException e) {
+
+            }
+            createStudentVersion(dto);
+            dtos.add(dto);
+        }
+        indexer.add(dtos);
+        return true;
+    }
+
+    private String getRandomDate() {
+        StrBuilder strBuilder = new StrBuilder();
+        strBuilder.append(RandomUtils.nextInt(1995, 2010))
+                .append(String.format("%2d", RandomUtils.nextInt(0, 11)))
+                .append(String.format("%2d", RandomUtils.nextInt(0, 28)));
+        return strBuilder.toString();
+    }
+
+    public void rebuild() {
+        indexer.rebuild();
     }
 }

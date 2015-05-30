@@ -48,4 +48,13 @@ public class StudentsFacade extends ApplicationFacade {
         logger.log(Level.INFO, "delete student {0} is not supported yet", id);
         return ok();
     }
+
+    public Response fill() {
+        return ok(service.fillFakeData());
+    }
+
+    public Response rebuild() {
+        service.rebuild();
+        return ok();
+    }
 }

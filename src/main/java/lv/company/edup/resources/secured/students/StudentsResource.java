@@ -28,6 +28,18 @@ public class StudentsResource {
     }
 
     @GET
+    @Path("rebuild")
+    public Response rebuild() {
+        return facade.rebuild();
+    }
+
+    @GET
+    @Path("fill")
+    public Response fill() {
+        return facade.fill();
+    }
+
+    @GET
     @Path("{id}")
     public Response findStudent(@PathParam("id") Long id) {
         return facade.findStudent(id);
