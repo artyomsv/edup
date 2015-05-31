@@ -46,8 +46,8 @@ angular.module('edup.widgets')
                 //    console.info('onProgressAll', progress);
                 //};
                 scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                    scope.id = response.id;
-                    scope.photoUrl = UrlService.Files.Download + '/' + response.id;
+                    scope.id = response.payload.id;
+                    scope.photoUrl = UrlService.Files.Download + '/' + scope.id;
                     scope.photoUploaded = true;
                 };
                 scope.uploader.onErrorItem = function (fileItem, response, status, headers) {

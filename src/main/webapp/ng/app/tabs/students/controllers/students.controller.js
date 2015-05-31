@@ -89,7 +89,7 @@ angular.module('edup.students')
                     $scope.paging.page = 1;
                     loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
                 }, 300);
-            } else if (searchValue.length === 0) {
+            } else if (searchValue && searchValue.length === 0) {
                 $timeout(function () {
                     $scope.paging.page = 1;
                     loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
