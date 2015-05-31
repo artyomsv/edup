@@ -33,6 +33,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.time.DateUtils;
 
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -119,12 +120,16 @@ public class StudentsService {
     public EntityPayload createStudentVersion(StudentDto dto, Long id) {
         final StudentVersion version = mapper.map(dto, StudentVersion.class);
         version.setId(id == null ? currentStudentVersionRepository.getNextStudentId() : id);
-        version.setCreated(new Date());
+        Date created = new Date();
+        version.setCreated(created);
         versionRepository.persist(version);
 
         setVersionIdForProperties(version.getVersionId(), version.getProperties());
 
         propertyRepository.persist(version.getProperties());
+
+        dto.setId(version.getId());
+        dto.setVersionId(version.getVersionId());
         return new EntityPayload(version.getId(), version.getVersionId());
     }
 
@@ -172,6 +177,11 @@ public class StudentsService {
         }
     }
 
+    @Asynchronous
+    public void updateIndex(StudentDto dto) {
+        indexer.add(dto);
+    }
+
     private void setVersionIdForProperties(final Long versionId, List<StudentProperty> properties) {
         if (CollectionUtils.isNotEmpty(properties)) {
             CollectionUtils.forAllDo(properties, new Closure<StudentProperty>() {
@@ -187,7 +197,7 @@ public class StudentsService {
         Faker faker = new Faker();
 
         List<StudentDto> dtos = new ArrayList<StudentDto>();
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 20; i++) {
             StudentDto dto = new StudentDto();
             Name name = faker.name();
             dto.setName(name.firstName());
