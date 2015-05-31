@@ -120,9 +120,12 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
         Collection<Document> documents = new ArrayList<Document>();
         TopFieldDocs docs = searcher.search(query, skip + top, sort);
         ScoreDoc[] scoreDocs = docs.scoreDocs;
-        for (ScoreDoc scoreDoc : scoreDocs) {
-            CollectionUtils.addIgnoreNull(documents, searcher.doc(scoreDoc.doc));
+        for (int i = skip; i < scoreDocs.length; i++) {
+            ScoreDoc hit = scoreDocs[i];
+            Document doc = searcher.doc(hit.doc);
+            CollectionUtils.addIgnoreNull(documents, doc);
         }
+
         return documents;
     }
 
