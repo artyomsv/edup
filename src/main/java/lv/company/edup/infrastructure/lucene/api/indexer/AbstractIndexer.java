@@ -49,11 +49,14 @@ public abstract class AbstractIndexer<T> implements Indexer<T> {
         try {
             if (t != null) {
                 Document document = build(t);
+                String id = getId(t);
+                document.add(new StringField(LuceneDocumentUtils.TECHNICAL_ID, id, Store.YES));
+
                 indexWriter = getIndexWriter();
                 indexWriter.updateDocument(new Term(LuceneDocumentUtils.TECHNICAL_ID), document);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            IOUtils.closeQuietly(indexWriter);
         } finally {
             IOUtils.closeQuietly(indexWriter);
         }

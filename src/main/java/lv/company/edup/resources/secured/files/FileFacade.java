@@ -43,7 +43,6 @@ public class FileFacade extends ApplicationFacade {
         } catch (IOException e) {
             throw new InternalException(e);
         }
-
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
