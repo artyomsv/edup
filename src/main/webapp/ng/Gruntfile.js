@@ -108,6 +108,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js',
                     'vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
                     'vendor/bower_components/angular-file-upload/angular-file-upload.min.js',
+                    'vendor/bower_components/angular-utils-pagination/dirPagination.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

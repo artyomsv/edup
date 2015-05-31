@@ -1,10 +1,21 @@
 <div>
 
-    <div class="parent">
-        <div class="child pull=left">
-            <input id="searchinput" name="searchinput" type="search" placeholder="search" class="form-control input-md">
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1" ng-class="{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}"></span>
+                <input type="text" class="form-control" placeholder="search" ng-model="searchValue" ng-keyup="executeSearch(searchValue)">
+            </div>
         </div>
-        <div class="child pull-right">
+        <div class="col-xs-3">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(10)">10</button>
+                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(25)">25</button>
+                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(50)">50</button>
+            </div>
+        </div>
+
+        <div class="col-xs-1">
             <h4><span class="glyphicon glyphicon-plus pull-right"
                       style="cursor: pointer"
                       data-toggle="modal"
@@ -28,7 +39,14 @@
         </thead>
         <tbody>
 
-        <tr ng-repeat="student in students" ng-class-odd="'success'" ng-class-even="'active'" ng-click="setSelected(student.id)" ng-class="{selected: student.id === selectedStudent.id}">
+        <tr dir-paginate="student in students | itemsPerPage: paging.perPage"
+            current-page="paging.page"
+            total-items="paging.totalRecords"
+            ng-class-odd="'success'"
+            ng-class-even="'active'"
+            ng-click="setSelected(student.id)"
+            ng-class="{selected: student.id === selectedStudent.id}">
+
             <td>{{ student.name }}</td>
             <td>{{ student.lastName }}</td>
             <td>{{ student.age }}</td>
@@ -39,22 +57,15 @@
                 <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#input-forms-modal-view">Details</button>
             </td>
         </tr>
+
         </tbody>
     </table>
 
-    <div class="text-center">
-        <ul class="pagination pagination-sm">
-            <li><a href="#">Prev</a></li>
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#">4</a></li>
-            <li><a href="#">5</a></li>
-            <li><a href="#">Next</a></li>
-        </ul>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber, searchValue)"></dir-pagination-controls>
+        </div>
     </div>
-
-
     <div app-modal id="input-forms-modal-view" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content modalViewPadding">

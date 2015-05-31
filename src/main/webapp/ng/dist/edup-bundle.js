@@ -52083,9 +52083,533 @@ angular.module("ui.bootstrap",["ui.bootstrap.tpls","ui.bootstrap.collapse","ui.b
 */
 !function(a,b){return"function"==typeof define&&define.amd?(define("angular-file-upload",["angular"],function(a){return b(a)}),void 0):b(a)}("undefined"==typeof angular?null:angular,function(a){var b=a.module("angularFileUpload",[]);return b.value("fileUploaderOptions",{url:"/",alias:"file",headers:{},queue:[],progress:0,autoUpload:!1,removeAfterUpload:!1,method:"POST",filters:[],formData:[],queueLimit:Number.MAX_VALUE,withCredentials:!1}).factory("FileUploader",["fileUploaderOptions","$rootScope","$http","$window","$compile",function(b,c,d,e,f){function g(c){var d=a.copy(b);a.extend(this,d,c,{isUploading:!1,_nextIndex:0,_failFilterIndex:-1,_directives:{select:[],drop:[],over:[]}}),this.filters.unshift({name:"queueLimit",fn:this._queueLimitFilter}),this.filters.unshift({name:"folder",fn:this._folderFilter})}function h(b){var c=a.isElement(b),d=c?b.value:b,e=a.isString(d)?"FakePath":"Object",f="_createFrom"+e;this[f](d)}function i(b,c,d){var e=a.isElement(c),f=e?a.element(c):null,h=e?null:c;a.extend(this,{url:b.url,alias:b.alias,headers:a.copy(b.headers),formData:a.copy(b.formData),removeAfterUpload:b.removeAfterUpload,withCredentials:b.withCredentials,method:b.method},d,{uploader:b,file:new g.FileLikeObject(c),isReady:!1,isUploading:!1,isUploaded:!1,isSuccess:!1,isCancel:!1,isError:!1,progress:0,index:null,_file:h,_input:f}),f&&this._replaceNode(f)}function j(b){a.extend(this,b),this.uploader._directives[this.prop].push(this),this._saveLinks(),this.bind()}function k(){k.super_.apply(this,arguments),this.uploader.isHTML5||this.element.removeAttr("multiple"),this.element.prop("value",null)}function l(){l.super_.apply(this,arguments)}function m(){m.super_.apply(this,arguments)}return g.prototype.isHTML5=!(!e.File||!e.FormData),g.prototype.addToQueue=function(b,c,d){var e=this.isArrayLikeObject(b)?b:[b],f=this._getFilters(d),h=this.queue.length,i=[];a.forEach(e,function(a){var b=new g.FileLikeObject(a);if(this._isValidFile(b,f,c)){var d=new g.FileItem(this,a,c);i.push(d),this.queue.push(d),this._onAfterAddingFile(d)}else{var e=this.filters[this._failFilterIndex];this._onWhenAddingFileFailed(b,e,c)}},this),this.queue.length!==h&&(this._onAfterAddingAll(i),this.progress=this._getTotalProgress()),this._render(),this.autoUpload&&this.uploadAll()},g.prototype.removeFromQueue=function(a){var b=this.getIndexOfItem(a),c=this.queue[b];c.isUploading&&c.cancel(),this.queue.splice(b,1),c._destroy(),this.progress=this._getTotalProgress()},g.prototype.clearQueue=function(){for(;this.queue.length;)this.queue[0].remove();this.progress=0},g.prototype.uploadItem=function(a){var b=this.getIndexOfItem(a),c=this.queue[b],d=this.isHTML5?"_xhrTransport":"_iframeTransport";c._prepareToUploading(),this.isUploading||(this.isUploading=!0,this[d](c))},g.prototype.cancelItem=function(a){var b=this.getIndexOfItem(a),c=this.queue[b],d=this.isHTML5?"_xhr":"_form";c&&c.isUploading&&c[d].abort()},g.prototype.uploadAll=function(){var b=this.getNotUploadedItems().filter(function(a){return!a.isUploading});b.length&&(a.forEach(b,function(a){a._prepareToUploading()}),b[0].upload())},g.prototype.cancelAll=function(){var b=this.getNotUploadedItems();a.forEach(b,function(a){a.cancel()})},g.prototype.isFile=function(a){var b=e.File;return b&&a instanceof b},g.prototype.isFileLikeObject=function(a){return a instanceof g.FileLikeObject},g.prototype.isArrayLikeObject=function(b){return a.isObject(b)&&"length"in b},g.prototype.getIndexOfItem=function(b){return a.isNumber(b)?b:this.queue.indexOf(b)},g.prototype.getNotUploadedItems=function(){return this.queue.filter(function(a){return!a.isUploaded})},g.prototype.getReadyItems=function(){return this.queue.filter(function(a){return a.isReady&&!a.isUploading}).sort(function(a,b){return a.index-b.index})},g.prototype.destroy=function(){a.forEach(this._directives,function(b){a.forEach(this._directives[b],function(a){a.destroy()},this)},this)},g.prototype.onAfterAddingAll=function(){},g.prototype.onAfterAddingFile=function(){},g.prototype.onWhenAddingFileFailed=function(){},g.prototype.onBeforeUploadItem=function(){},g.prototype.onProgressItem=function(){},g.prototype.onProgressAll=function(){},g.prototype.onSuccessItem=function(){},g.prototype.onErrorItem=function(){},g.prototype.onCancelItem=function(){},g.prototype.onCompleteItem=function(){},g.prototype.onCompleteAll=function(){},g.prototype._getTotalProgress=function(a){if(this.removeAfterUpload)return a||0;var b=this.getNotUploadedItems().length,c=b?this.queue.length-b:this.queue.length,d=100/this.queue.length,e=(a||0)*d/100;return Math.round(c*d+e)},g.prototype._getFilters=function(b){if(a.isUndefined(b))return this.filters;if(a.isArray(b))return b;var c=b.match(/[^\s,]+/g);return this.filters.filter(function(a){return-1!==c.indexOf(a.name)},this)},g.prototype._render=function(){c.$$phase||c.$apply()},g.prototype._folderFilter=function(a){return!(!a.size&&!a.type)},g.prototype._queueLimitFilter=function(){return this.queue.length<this.queueLimit},g.prototype._isValidFile=function(a,b,c){return this._failFilterIndex=-1,b.length?b.every(function(b){return this._failFilterIndex++,b.fn.call(this,a,c)},this):!0},g.prototype._isSuccessCode=function(a){return a>=200&&300>a||304===a},g.prototype._transformResponse=function(b,c){var e=this._headersGetter(c);return a.forEach(d.defaults.transformResponse,function(a){b=a(b,e)}),b},g.prototype._parseHeaders=function(b){var c,d,e,f={};return b?(a.forEach(b.split("\n"),function(a){e=a.indexOf(":"),c=a.slice(0,e).trim().toLowerCase(),d=a.slice(e+1).trim(),c&&(f[c]=f[c]?f[c]+", "+d:d)}),f):f},g.prototype._headersGetter=function(a){return function(b){return b?a[b.toLowerCase()]||null:a}},g.prototype._xhrTransport=function(b){var c=b._xhr=new XMLHttpRequest,d=new FormData,e=this;e._onBeforeUploadItem(b),a.forEach(b.formData,function(b){a.forEach(b,function(a,b){d.append(b,a)})}),d.append(b.alias,b._file,b.file.name),c.upload.onprogress=function(a){var c=Math.round(a.lengthComputable?100*a.loaded/a.total:0);e._onProgressItem(b,c)},c.onload=function(){var a=e._parseHeaders(c.getAllResponseHeaders()),d=e._transformResponse(c.response,a),f=e._isSuccessCode(c.status)?"Success":"Error",g="_on"+f+"Item";e[g](b,d,c.status,a),e._onCompleteItem(b,d,c.status,a)},c.onerror=function(){var a=e._parseHeaders(c.getAllResponseHeaders()),d=e._transformResponse(c.response,a);e._onErrorItem(b,d,c.status,a),e._onCompleteItem(b,d,c.status,a)},c.onabort=function(){var a=e._parseHeaders(c.getAllResponseHeaders()),d=e._transformResponse(c.response,a);e._onCancelItem(b,d,c.status,a),e._onCompleteItem(b,d,c.status,a)},c.open(b.method,b.url,!0),c.withCredentials=b.withCredentials,a.forEach(b.headers,function(a,b){c.setRequestHeader(b,a)}),c.send(d),this._render()},g.prototype._iframeTransport=function(b){var c=a.element('<form style="display: none;" />'),d=a.element('<iframe name="iframeTransport'+Date.now()+'">'),e=b._input,f=this;b._form&&b._form.replaceWith(e),b._form=c,f._onBeforeUploadItem(b),e.prop("name",b.alias),a.forEach(b.formData,function(b){a.forEach(b,function(b,d){var e=a.element('<input type="hidden" name="'+d+'" />');e.val(b),c.append(e)})}),c.prop({action:b.url,method:"POST",target:d.prop("name"),enctype:"multipart/form-data",encoding:"multipart/form-data"}),d.bind("load",function(){try{var a=d[0].contentDocument.body.innerHTML}catch(c){}var e={response:a,status:200,dummy:!0},g={},h=f._transformResponse(e.response,g);f._onSuccessItem(b,h,e.status,g),f._onCompleteItem(b,h,e.status,g)}),c.abort=function(){var a,g={status:0,dummy:!0},h={};d.unbind("load").prop("src","javascript:false;"),c.replaceWith(e),f._onCancelItem(b,a,g.status,h),f._onCompleteItem(b,a,g.status,h)},e.after(c),c.append(e).append(d),c[0].submit(),this._render()},g.prototype._onWhenAddingFileFailed=function(a,b,c){this.onWhenAddingFileFailed(a,b,c)},g.prototype._onAfterAddingFile=function(a){this.onAfterAddingFile(a)},g.prototype._onAfterAddingAll=function(a){this.onAfterAddingAll(a)},g.prototype._onBeforeUploadItem=function(a){a._onBeforeUpload(),this.onBeforeUploadItem(a)},g.prototype._onProgressItem=function(a,b){var c=this._getTotalProgress(b);this.progress=c,a._onProgress(b),this.onProgressItem(a,b),this.onProgressAll(c),this._render()},g.prototype._onSuccessItem=function(a,b,c,d){a._onSuccess(b,c,d),this.onSuccessItem(a,b,c,d)},g.prototype._onErrorItem=function(a,b,c,d){a._onError(b,c,d),this.onErrorItem(a,b,c,d)},g.prototype._onCancelItem=function(a,b,c,d){a._onCancel(b,c,d),this.onCancelItem(a,b,c,d)},g.prototype._onCompleteItem=function(b,c,d,e){b._onComplete(c,d,e),this.onCompleteItem(b,c,d,e);var f=this.getReadyItems()[0];return this.isUploading=!1,a.isDefined(f)?(f.upload(),void 0):(this.onCompleteAll(),this.progress=this._getTotalProgress(),this._render(),void 0)},g.isFile=g.prototype.isFile,g.isFileLikeObject=g.prototype.isFileLikeObject,g.isArrayLikeObject=g.prototype.isArrayLikeObject,g.isHTML5=g.prototype.isHTML5,g.inherit=function(a,b){a.prototype=Object.create(b.prototype),a.prototype.constructor=a,a.super_=b},g.FileLikeObject=h,g.FileItem=i,g.FileDirective=j,g.FileSelect=k,g.FileDrop=l,g.FileOver=m,h.prototype._createFromFakePath=function(a){this.lastModifiedDate=null,this.size=null,this.type="like/"+a.slice(a.lastIndexOf(".")+1).toLowerCase(),this.name=a.slice(a.lastIndexOf("/")+a.lastIndexOf("\\")+2)},h.prototype._createFromObject=function(b){this.lastModifiedDate=a.copy(b.lastModifiedDate),this.size=b.size,this.type=b.type,this.name=b.name},i.prototype.upload=function(){this.uploader.uploadItem(this)},i.prototype.cancel=function(){this.uploader.cancelItem(this)},i.prototype.remove=function(){this.uploader.removeFromQueue(this)},i.prototype.onBeforeUpload=function(){},i.prototype.onProgress=function(){},i.prototype.onSuccess=function(){},i.prototype.onError=function(){},i.prototype.onCancel=function(){},i.prototype.onComplete=function(){},i.prototype._onBeforeUpload=function(){this.isReady=!0,this.isUploading=!0,this.isUploaded=!1,this.isSuccess=!1,this.isCancel=!1,this.isError=!1,this.progress=0,this.onBeforeUpload()},i.prototype._onProgress=function(a){this.progress=a,this.onProgress(a)},i.prototype._onSuccess=function(a,b,c){this.isReady=!1,this.isUploading=!1,this.isUploaded=!0,this.isSuccess=!0,this.isCancel=!1,this.isError=!1,this.progress=100,this.index=null,this.onSuccess(a,b,c)},i.prototype._onError=function(a,b,c){this.isReady=!1,this.isUploading=!1,this.isUploaded=!0,this.isSuccess=!1,this.isCancel=!1,this.isError=!0,this.progress=0,this.index=null,this.onError(a,b,c)},i.prototype._onCancel=function(a,b,c){this.isReady=!1,this.isUploading=!1,this.isUploaded=!1,this.isSuccess=!1,this.isCancel=!0,this.isError=!1,this.progress=0,this.index=null,this.onCancel(a,b,c)},i.prototype._onComplete=function(a,b,c){this.onComplete(a,b,c),this.removeAfterUpload&&this.remove()},i.prototype._destroy=function(){this._input&&this._input.remove(),this._form&&this._form.remove(),delete this._form,delete this._input},i.prototype._prepareToUploading=function(){this.index=this.index||++this.uploader._nextIndex,this.isReady=!0},i.prototype._replaceNode=function(a){var b=f(a.clone())(a.scope());b.prop("value",null),a.css("display","none"),a.after(b)},j.prototype.events={},j.prototype.bind=function(){for(var a in this.events){var b=this.events[a];this.element.bind(a,this[b])}},j.prototype.unbind=function(){for(var a in this.events)this.element.unbind(a,this.events[a])},j.prototype.destroy=function(){var a=this.uploader._directives[this.prop].indexOf(this);this.uploader._directives[this.prop].splice(a,1),this.unbind()},j.prototype._saveLinks=function(){for(var a in this.events){var b=this.events[a];this[b]=this[b].bind(this)}},g.inherit(k,j),k.prototype.events={$destroy:"destroy",change:"onChange"},k.prototype.prop="select",k.prototype.getOptions=function(){},k.prototype.getFilters=function(){},k.prototype.isEmptyAfterSelection=function(){return!!this.element.attr("multiple")},k.prototype.onChange=function(){var a=this.uploader.isHTML5?this.element[0].files:this.element[0],b=this.getOptions(),c=this.getFilters();this.uploader.isHTML5||this.destroy(),this.uploader.addToQueue(a,b,c),this.isEmptyAfterSelection()&&this.element.prop("value",null)},g.inherit(l,j),l.prototype.events={$destroy:"destroy",drop:"onDrop",dragover:"onDragOver",dragleave:"onDragLeave"},l.prototype.prop="drop",l.prototype.getOptions=function(){},l.prototype.getFilters=function(){},l.prototype.onDrop=function(b){var c=this._getTransfer(b);if(c){var d=this.getOptions(),e=this.getFilters();this._preventAndStop(b),a.forEach(this.uploader._directives.over,this._removeOverClass,this),this.uploader.addToQueue(c.files,d,e)}},l.prototype.onDragOver=function(b){var c=this._getTransfer(b);this._haveFiles(c.types)&&(c.dropEffect="copy",this._preventAndStop(b),a.forEach(this.uploader._directives.over,this._addOverClass,this))},l.prototype.onDragLeave=function(b){b.currentTarget===this.element[0]&&(this._preventAndStop(b),a.forEach(this.uploader._directives.over,this._removeOverClass,this))},l.prototype._getTransfer=function(a){return a.dataTransfer?a.dataTransfer:a.originalEvent.dataTransfer},l.prototype._preventAndStop=function(a){a.preventDefault(),a.stopPropagation()},l.prototype._haveFiles=function(a){return a?a.indexOf?-1!==a.indexOf("Files"):a.contains?a.contains("Files"):!1:!1},l.prototype._addOverClass=function(a){a.addOverClass()},l.prototype._removeOverClass=function(a){a.removeOverClass()},g.inherit(m,j),m.prototype.events={$destroy:"destroy"},m.prototype.prop="over",m.prototype.overClass="nv-file-over",m.prototype.addOverClass=function(){this.element.addClass(this.getOverClass())},m.prototype.removeOverClass=function(){this.element.removeClass(this.getOverClass())},m.prototype.getOverClass=function(){return this.overClass},g}]).directive("nvFileSelect",["$parse","FileUploader",function(a,b){return{link:function(c,d,e){var f=c.$eval(e.uploader);if(!(f instanceof b))throw new TypeError('"Uploader" must be an instance of FileUploader');var g=new b.FileSelect({uploader:f,element:d});g.getOptions=a(e.options).bind(g,c),g.getFilters=function(){return e.filters}}}}]).directive("nvFileDrop",["$parse","FileUploader",function(a,b){return{link:function(c,d,e){var f=c.$eval(e.uploader);if(!(f instanceof b))throw new TypeError('"Uploader" must be an instance of FileUploader');if(f.isHTML5){var g=new b.FileDrop({uploader:f,element:d});g.getOptions=a(e.options).bind(g,c),g.getFilters=function(){return e.filters}}}}}]).directive("nvFileOver",["FileUploader",function(a){return{link:function(b,c,d){var e=b.$eval(d.uploader);if(!(e instanceof a))throw new TypeError('"Uploader" must be an instance of FileUploader');var f=new a.FileOver({uploader:e,element:c});f.getOverClass=function(){return d.overClass||this.overClass}}}}]),b});
 //# sourceMappingURL=angular-file-upload.min.map
+/**
+ * dirPagination - AngularJS module for paginating (almost) anything.
+ *
+ *
+ * Credits
+ * =======
+ *
+ * Daniel Tabuenca: https://groups.google.com/d/msg/angular/an9QpzqIYiM/r8v-3W1X5vcJ
+ * for the idea on how to dynamically invoke the ng-repeat directive.
+ *
+ * I borrowed a couple of lines and a few attribute names from the AngularUI Bootstrap project:
+ * https://github.com/angular-ui/bootstrap/blob/master/src/pagination/pagination.js
+ *
+ * Copyright 2014 Michael Bromley <michael@michaelbromley.co.uk>
+ */
+
+(function() {
+
+    /**
+     * Config
+     */
+    var moduleName = 'angularUtils.directives.dirPagination';
+    var DEFAULT_ID = '__default';
+
+    /**
+     * Module
+     */
+    var module;
+    try {
+        module = angular.module(moduleName);
+    } catch(err) {
+        // named module does not exist, so create one
+        module = angular.module(moduleName, []);
+    }
+
+    module
+        .directive('dirPaginate', ['$compile', '$parse', 'paginationService', dirPaginateDirective])
+        .directive('dirPaginateNoCompile', noCompileDirective)
+        .directive('dirPaginationControls', ['paginationService', 'paginationTemplate', dirPaginationControlsDirective])
+        .filter('itemsPerPage', ['paginationService', itemsPerPageFilter])
+        .service('paginationService', paginationService)
+        .provider('paginationTemplate', paginationTemplateProvider)
+        .run(['$templateCache',dirPaginationControlsTemplateInstaller]);
+
+    function dirPaginateDirective($compile, $parse, paginationService) {
+
+        return  {
+            terminal: true,
+            multiElement: true,
+            compile: dirPaginationCompileFn
+        };
+
+        function dirPaginationCompileFn(tElement, tAttrs){
+
+            var expression = tAttrs.dirPaginate;
+            // regex taken directly from https://github.com/angular/angular.js/blob/master/src/ng/directive/ngRepeat.js#L211
+            var match = expression.match(/^\s*([\s\S]+?)\s+in\s+([\s\S]+?)(?:\s+track\s+by\s+([\s\S]+?))?\s*$/);
+
+            var filterPattern = /\|\s*itemsPerPage\s*:[^|]*/;
+            if (match[2].match(filterPattern) === null) {
+                throw 'pagination directive: the \'itemsPerPage\' filter must be set.';
+            }
+            var itemsPerPageFilterRemoved = match[2].replace(filterPattern, '');
+            var collectionGetter = $parse(itemsPerPageFilterRemoved);
+
+            addNoCompileAttributes(tElement);
+
+            // If any value is specified for paginationId, we register the un-evaluated expression at this stage for the benefit of any
+            // dir-pagination-controls directives that may be looking for this ID.
+            var rawId = tAttrs.paginationId || DEFAULT_ID;
+            paginationService.registerInstance(rawId);
+
+            return function dirPaginationLinkFn(scope, element, attrs){
+
+                // Now that we have access to the `scope` we can interpolate any expression given in the paginationId attribute and
+                // potentially register a new ID if it evaluates to a different value than the rawId.
+                var paginationId = $parse(attrs.paginationId)(scope) || attrs.paginationId || DEFAULT_ID;
+                paginationService.registerInstance(paginationId);
+
+                var repeatExpression = getRepeatExpression(expression, paginationId);
+                addNgRepeatToElement(element, attrs, repeatExpression);
+
+                removeTemporaryAttributes(element);
+                var compiled =  $compile(element);
+
+                var currentPageGetter = makeCurrentPageGetterFn(scope, attrs, paginationId);
+                paginationService.setCurrentPageParser(paginationId, currentPageGetter, scope);
+
+                if (typeof attrs.totalItems !== 'undefined') {
+                    paginationService.setAsyncModeTrue(paginationId);
+                    scope.$watch(function() {
+                        return $parse(attrs.totalItems)(scope);
+                    }, function (result) {
+                        if (0 <= result) {
+                            paginationService.setCollectionLength(paginationId, result);
+                        }
+                    });
+                } else {
+                    scope.$watchCollection(function() {
+                        return collectionGetter(scope);
+                    }, function(collection) {
+                        if (collection) {
+                            paginationService.setCollectionLength(paginationId, collection.length);
+                        }
+                    });
+                }
+
+                // Delegate to the link function returned by the new compilation of the ng-repeat
+                compiled(scope);
+            };
+        }
+
+        /**
+         * If a pagination id has been specified, we need to check that it is present as the second argument passed to
+         * the itemsPerPage filter. If it is not there, we add it and return the modified expression.
+         *
+         * @param expression
+         * @param paginationId
+         * @returns {*}
+         */
+        function getRepeatExpression(expression, paginationId) {
+            var repeatExpression,
+                idDefinedInFilter = !!expression.match(/(\|\s*itemsPerPage\s*:[^|]*:[^|]*)/);
+
+            if (paginationId !== DEFAULT_ID && !idDefinedInFilter) {
+                repeatExpression = expression.replace(/(\|\s*itemsPerPage\s*:[^|]*)/, "$1 : '" + paginationId + "'");
+            } else {
+                repeatExpression = expression;
+            }
+
+            return repeatExpression;
+        }
+
+        /**
+         * Adds the ng-repeat directive to the element. In the case of multi-element (-start, -end) it adds the
+         * appropriate multi-element ng-repeat to the first and last element in the range.
+         * @param element
+         * @param attrs
+         * @param repeatExpression
+         */
+        function addNgRepeatToElement(element, attrs, repeatExpression) {
+            if (element[0].hasAttribute('dir-paginate-start') || element[0].hasAttribute('data-dir-paginate-start')) {
+                // using multiElement mode (dir-paginate-start, dir-paginate-end)
+                attrs.$set('ngRepeatStart', repeatExpression);
+                element.eq(element.length - 1).attr('ng-repeat-end', true);
+            } else {
+                attrs.$set('ngRepeat', repeatExpression);
+            }
+        }
+
+        /**
+         * Adds the dir-paginate-no-compile directive to each element in the tElement range.
+         * @param tElement
+         */
+        function addNoCompileAttributes(tElement) {
+            angular.forEach(tElement, function(el) {
+                if (el.nodeType === Node.ELEMENT_NODE) {
+                    angular.element(el).attr('dir-paginate-no-compile', true);
+                }
+            });
+        }
+
+        /**
+         * Removes the variations on dir-paginate (data-, -start, -end) and the dir-paginate-no-compile directives.
+         * @param element
+         */
+        function removeTemporaryAttributes(element) {
+            angular.forEach(element, function(el) {
+                if (el.nodeType === Node.ELEMENT_NODE) {
+                    angular.element(el).removeAttr('dir-paginate-no-compile');
+                }
+            });
+            element.eq(0).removeAttr('dir-paginate-start').removeAttr('dir-paginate').removeAttr('data-dir-paginate-start').removeAttr('data-dir-paginate');
+            element.eq(element.length - 1).removeAttr('dir-paginate-end').removeAttr('data-dir-paginate-end');
+        }
+
+        /**
+         * Creates a getter function for the current-page attribute, using the expression provided or a default value if
+         * no current-page expression was specified.
+         *
+         * @param scope
+         * @param attrs
+         * @param paginationId
+         * @returns {*}
+         */
+        function makeCurrentPageGetterFn(scope, attrs, paginationId) {
+            var currentPageGetter;
+            if (attrs.currentPage) {
+                currentPageGetter = $parse(attrs.currentPage);
+            } else {
+                // if the current-page attribute was not set, we'll make our own
+                var defaultCurrentPage = paginationId + '__currentPage';
+                scope[defaultCurrentPage] = 1;
+                currentPageGetter = $parse(defaultCurrentPage);
+            }
+            return currentPageGetter;
+        }
+    }
+
+    /**
+     * This is a helper directive that allows correct compilation when in multi-element mode (ie dir-paginate-start, dir-paginate-end).
+     * It is dynamically added to all elements in the dir-paginate compile function, and it prevents further compilation of
+     * any inner directives. It is then removed in the link function, and all inner directives are then manually compiled.
+     */
+    function noCompileDirective() {
+        return {
+            priority: 5000,
+            terminal: true
+        };
+    }
+
+    function dirPaginationControlsTemplateInstaller($templateCache) {
+        $templateCache.put('angularUtils.directives.dirPagination.template', '<ul class="pagination" ng-if="1 < pages.length"><li ng-if="boundaryLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(1)">&laquo;</a></li><li ng-if="directionLinks" ng-class="{ disabled : pagination.current == 1 }"><a href="" ng-click="setCurrent(pagination.current - 1)">&lsaquo;</a></li><li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == \'...\' }"><a href="" ng-click="setCurrent(pageNumber)">{{ pageNumber }}</a></li><li ng-if="directionLinks" ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.current + 1)">&rsaquo;</a></li><li ng-if="boundaryLinks"  ng-class="{ disabled : pagination.current == pagination.last }"><a href="" ng-click="setCurrent(pagination.last)">&raquo;</a></li></ul>');
+    }
+
+    function dirPaginationControlsDirective(paginationService, paginationTemplate) {
+
+        var numberRegex = /^\d+$/;
+
+        return {
+            restrict: 'AE',
+            templateUrl: function(elem, attrs) {
+                return attrs.templateUrl || paginationTemplate.getPath();
+            },
+            scope: {
+                maxSize: '=?',
+                onPageChange: '&?',
+                paginationId: '=?'
+            },
+            link: dirPaginationControlsLinkFn
+        };
+
+        function dirPaginationControlsLinkFn(scope, element, attrs) {
+
+            // rawId is the un-interpolated value of the pagination-id attribute. This is only important when the corresponding dir-paginate directive has
+            // not yet been linked (e.g. if it is inside an ng-if block), and in that case it prevents this controls directive from assuming that there is
+            // no corresponding dir-paginate directive and wrongly throwing an exception.
+            var rawId = attrs.paginationId ||  DEFAULT_ID;
+            var paginationId = scope.paginationId || attrs.paginationId ||  DEFAULT_ID;
+
+            if (!paginationService.isRegistered(paginationId) && !paginationService.isRegistered(rawId)) {
+                var idMessage = (paginationId !== DEFAULT_ID) ? ' (id: ' + paginationId + ') ' : ' ';
+                throw 'pagination directive: the pagination controls' + idMessage + 'cannot be used without the corresponding pagination directive.';
+            }
+
+            if (!scope.maxSize) { scope.maxSize = 9; }
+            scope.directionLinks = angular.isDefined(attrs.directionLinks) ? scope.$parent.$eval(attrs.directionLinks) : true;
+            scope.boundaryLinks = angular.isDefined(attrs.boundaryLinks) ? scope.$parent.$eval(attrs.boundaryLinks) : false;
+
+            var paginationRange = Math.max(scope.maxSize, 5);
+            scope.pages = [];
+            scope.pagination = {
+                last: 1,
+                current: 1
+            };
+            scope.range = {
+                lower: 1,
+                upper: 1,
+                total: 1
+            };
+
+            scope.$watch(function() {
+                return (paginationService.getCollectionLength(paginationId) + 1) * paginationService.getItemsPerPage(paginationId);
+            }, function(length) {
+                if (0 < length) {
+                    generatePagination();
+                }
+            });
+
+            scope.$watch(function() {
+                return (paginationService.getItemsPerPage(paginationId));
+            }, function(current, previous) {
+                if (current != previous && typeof previous !== 'undefined') {
+                    goToPage(scope.pagination.current);
+                }
+            });
+
+            scope.$watch(function() {
+                return paginationService.getCurrentPage(paginationId);
+            }, function(currentPage, previousPage) {
+                if (currentPage != previousPage) {
+                    goToPage(currentPage);
+                }
+            });
+
+            scope.setCurrent = function(num) {
+                if (isValidPageNumber(num)) {
+                    num = parseInt(num, 10);
+                    paginationService.setCurrentPage(paginationId, num);
+                }
+            };
+
+            function goToPage(num) {
+                if (isValidPageNumber(num)) {
+                    scope.pages = generatePagesArray(num, paginationService.getCollectionLength(paginationId), paginationService.getItemsPerPage(paginationId), paginationRange);
+                    scope.pagination.current = num;
+                    updateRangeValues();
+
+                    // if a callback has been set, then call it with the page number as an argument
+                    if (scope.onPageChange) {
+                        scope.onPageChange({ newPageNumber : num });
+                    }
+                }
+            }
+
+            function generatePagination() {
+                var page = parseInt(paginationService.getCurrentPage(paginationId)) || 1;
+
+                scope.pages = generatePagesArray(page, paginationService.getCollectionLength(paginationId), paginationService.getItemsPerPage(paginationId), paginationRange);
+                scope.pagination.current = page;
+                scope.pagination.last = scope.pages[scope.pages.length - 1];
+                if (scope.pagination.last < scope.pagination.current) {
+                    scope.setCurrent(scope.pagination.last);
+                } else {
+                    updateRangeValues();
+                }
+            }
+
+            /**
+             * This function updates the values (lower, upper, total) of the `scope.range` object, which can be used in the pagination
+             * template to display the current page range, e.g. "showing 21 - 40 of 144 results";
+             */
+            function updateRangeValues() {
+                var currentPage = paginationService.getCurrentPage(paginationId),
+                    itemsPerPage = paginationService.getItemsPerPage(paginationId),
+                    totalItems = paginationService.getCollectionLength(paginationId);
+
+                scope.range.lower = (currentPage - 1) * itemsPerPage + 1;
+                scope.range.upper = Math.min(currentPage * itemsPerPage, totalItems);
+                scope.range.total = totalItems;
+            }
+
+            function isValidPageNumber(num) {
+                return (numberRegex.test(num) && (0 < num && num <= scope.pagination.last));
+            }
+        }
+
+        /**
+         * Generate an array of page numbers (or the '...' string) which is used in an ng-repeat to generate the
+         * links used in pagination
+         *
+         * @param currentPage
+         * @param rowsPerPage
+         * @param paginationRange
+         * @param collectionLength
+         * @returns {Array}
+         */
+        function generatePagesArray(currentPage, collectionLength, rowsPerPage, paginationRange) {
+            var pages = [];
+            var totalPages = Math.ceil(collectionLength / rowsPerPage);
+            var halfWay = Math.ceil(paginationRange / 2);
+            var position;
+
+            if (currentPage <= halfWay) {
+                position = 'start';
+            } else if (totalPages - halfWay < currentPage) {
+                position = 'end';
+            } else {
+                position = 'middle';
+            }
+
+            var ellipsesNeeded = paginationRange < totalPages;
+            var i = 1;
+            while (i <= totalPages && i <= paginationRange) {
+                var pageNumber = calculatePageNumber(i, currentPage, paginationRange, totalPages);
+
+                var openingEllipsesNeeded = (i === 2 && (position === 'middle' || position === 'end'));
+                var closingEllipsesNeeded = (i === paginationRange - 1 && (position === 'middle' || position === 'start'));
+                if (ellipsesNeeded && (openingEllipsesNeeded || closingEllipsesNeeded)) {
+                    pages.push('...');
+                } else {
+                    pages.push(pageNumber);
+                }
+                i ++;
+            }
+            return pages;
+        }
+
+        /**
+         * Given the position in the sequence of pagination links [i], figure out what page number corresponds to that position.
+         *
+         * @param i
+         * @param currentPage
+         * @param paginationRange
+         * @param totalPages
+         * @returns {*}
+         */
+        function calculatePageNumber(i, currentPage, paginationRange, totalPages) {
+            var halfWay = Math.ceil(paginationRange/2);
+            if (i === paginationRange) {
+                return totalPages;
+            } else if (i === 1) {
+                return i;
+            } else if (paginationRange < totalPages) {
+                if (totalPages - halfWay < currentPage) {
+                    return totalPages - paginationRange + i;
+                } else if (halfWay < currentPage) {
+                    return currentPage - halfWay + i;
+                } else {
+                    return i;
+                }
+            } else {
+                return i;
+            }
+        }
+    }
+
+    /**
+     * This filter slices the collection into pages based on the current page number and number of items per page.
+     * @param paginationService
+     * @returns {Function}
+     */
+    function itemsPerPageFilter(paginationService) {
+
+        return function(collection, itemsPerPage, paginationId) {
+            if (typeof (paginationId) === 'undefined') {
+                paginationId = DEFAULT_ID;
+            }
+            if (!paginationService.isRegistered(paginationId)) {
+                throw 'pagination directive: the itemsPerPage id argument (id: ' + paginationId + ') does not match a registered pagination-id.';
+            }
+            var end;
+            var start;
+            if (collection instanceof Array) {
+                itemsPerPage = parseInt(itemsPerPage) || 9999999999;
+                if (paginationService.isAsyncMode(paginationId)) {
+                    start = 0;
+                } else {
+                    start = (paginationService.getCurrentPage(paginationId) - 1) * itemsPerPage;
+                }
+                end = start + itemsPerPage;
+                paginationService.setItemsPerPage(paginationId, itemsPerPage);
+
+                return collection.slice(start, end);
+            } else {
+                return collection;
+            }
+        };
+    }
+
+    /**
+     * This service allows the various parts of the module to communicate and stay in sync.
+     */
+    function paginationService() {
+
+        var instances = {};
+        var lastRegisteredInstance;
+
+        this.registerInstance = function(instanceId) {
+            if (typeof instances[instanceId] === 'undefined') {
+                instances[instanceId] = {
+                    asyncMode: false
+                };
+                lastRegisteredInstance = instanceId;
+            }
+        };
+
+        this.isRegistered = function(instanceId) {
+            return (typeof instances[instanceId] !== 'undefined');
+        };
+
+        this.getLastInstanceId = function() {
+            return lastRegisteredInstance;
+        };
+
+        this.setCurrentPageParser = function(instanceId, val, scope) {
+            instances[instanceId].currentPageParser = val;
+            instances[instanceId].context = scope;
+        };
+        this.setCurrentPage = function(instanceId, val) {
+            instances[instanceId].currentPageParser.assign(instances[instanceId].context, val);
+        };
+        this.getCurrentPage = function(instanceId) {
+            var parser = instances[instanceId].currentPageParser;
+            return parser ? parser(instances[instanceId].context) : 1;
+        };
+
+        this.setItemsPerPage = function(instanceId, val) {
+            instances[instanceId].itemsPerPage = val;
+        };
+        this.getItemsPerPage = function(instanceId) {
+            return instances[instanceId].itemsPerPage;
+        };
+
+        this.setCollectionLength = function(instanceId, val) {
+            instances[instanceId].collectionLength = val;
+        };
+        this.getCollectionLength = function(instanceId) {
+            return instances[instanceId].collectionLength;
+        };
+
+        this.setAsyncModeTrue = function(instanceId) {
+            instances[instanceId].asyncMode = true;
+        };
+
+        this.isAsyncMode = function(instanceId) {
+            return instances[instanceId].asyncMode;
+        };
+    }
+
+    /**
+     * This provider allows global configuration of the template path used by the dir-pagination-controls directive.
+     */
+    function paginationTemplateProvider() {
+
+        var templatePath = 'angularUtils.directives.dirPagination.template';
+
+        this.setPath = function(path) {
+            templatePath = path;
+        };
+
+        this.$get = function() {
+            return {
+                getPath: function() {
+                    return templatePath;
+                }
+            };
+        };
+    }
+})();
+
 'use strict';
 
-angular.module('edup.common', ['restangular']);
+angular.module('edup.common', [
+    'restangular',
+    'angularUtils.directives.dirPagination'
+]);
 'use strict';
 
 angular.module('edup.common')
@@ -52152,7 +52676,13 @@ angular.module('edup.common')
     });
 'use strict';
 
+angular.module('edup.common').config(['paginationTemplateProvider', function(paginationTemplateProvider) {
+    paginationTemplateProvider.setPath('/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
+}]);
+'use strict';
+
 angular.module('edup.common').run(['Restangular', 'UrlService', function (Restangular, UrlService) {
+
     Restangular.setBaseUrl(UrlService.BaseUrl);
 
     Restangular.setErrorInterceptor(function (resp) {
@@ -52160,6 +52690,27 @@ angular.module('edup.common').run(['Restangular', 'UrlService', function (Restan
         return false;
     });
 }]);
+'use strict';
+
+angular.module('edup.common')
+
+    .service('PaginationService', function () {
+
+        var getTop = function (paging) {
+            return paging.page * paging.perPage;
+        };
+
+        var getSkip = function (paging) {
+            return (paging.page * paging.perPage) - paging.perPage;
+        };
+
+        return {
+            Top: getTop,
+            Skip: getSkip
+        };
+
+    }
+);
 'use strict';
 
 angular.module('edup.common')
@@ -52180,14 +52731,14 @@ angular.module('edup.common')
 
     .service('UrlService', function () {
 
-        var location = window.location.host;
+        var location = window.location.hostname;
 
         var baseUrl;
 
         if (location.indexOf('127.0.0.1') > -1) {
             baseUrl = 'https://localhost:8443/edup/api';
         } else {
-            baseUrl = 'https://' + location + '/edup/api';
+            baseUrl = 'https://' + location + ':8443/edup/api';
         }
 
         return {
@@ -52415,15 +52966,45 @@ angular.module('edup.calendar')
 angular.module('edup.students', []);
 'use strict';
 
+
 angular.module('edup.students')
 
-    .controller('StudentsController', ['$scope', 'RestService', function ($scope, RestService) {
+    .controller('StudentsController', ['$scope', '$timeout', 'RestService', 'PaginationService', function ($scope, $timeout, RestService, PaginationService) {
 
         $scope.studentSelected = false;
+        $scope.basicSearch = {
+            spin: false
+        };
+        $scope.paging = {
+            enabled: false,
+            page: 1,
+            perPage: 10,
+            totalRecords: 0
+        };
 
-        $scope.loadStudents = function (id) {
-            RestService.Students.get().then(function (result) {
+        var prepareQuery = function (top, skip, search) {
+            var queries = {};
+
+            queries.$count = true;
+
+            if (top) {
+                queries.$top = top;
+            }
+            if (top) {
+                queries.$skip = skip;
+            }
+            if (top) {
+                queries.$search = search;
+            }
+            return queries;
+        };
+
+        var loadStudents = function (id, top, skip, search) {
+            $scope.basicSearch.spin = true;
+            var query = prepareQuery(top, skip, search);
+            RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
+                $scope.paging.totalRecords = result.count;
                 if ($scope.students.length > 0) {
                     if (id) {
                         $scope.loadFullStudent(id);
@@ -52433,6 +53014,8 @@ angular.module('edup.students')
                 } else {
                     $scope.studentSelected = false;
                 }
+
+                $scope.basicSearch.spin = false;
             });
         };
 
@@ -52445,18 +53028,44 @@ angular.module('edup.students')
             }
         };
 
-        $scope.loadStudents();
+        loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
 
         $scope.setSelected = function (studentId) {
             $scope.loadFullStudent(studentId);
         };
 
         $scope.addToBalance = function (value) {
-            $scope.selectedStudent.balance = $scope.selectedStudent.balance + parseInt(value);
+            $scope.selectedStudent.balance += parseInt(value);
+        };
+
+        $scope.pageChanged = function (newPage, searchValue) {
+            $scope.paging.page = newPage;
+            loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+            console.log($scope.paging);
+        };
+
+        $scope.setRecordsPerPage = function (newRecordsPerPageValue) {
+            $scope.paging.perPage = newRecordsPerPageValue;
+        };
+
+        $scope.executeSearch = function (searchValue) {
+            console.log(searchValue);
+            if (searchValue && searchValue.length > 2) {
+                $timeout(function () {
+                    $scope.paging.page = 1;
+                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+                }, 300);
+            } else if (searchValue.length === 0) {
+                $timeout(function () {
+                    $scope.paging.page = 1;
+                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                }, 300);
+            }
         };
 
     }]
-);
+)
+;
 
 
 'use strict';
@@ -52939,7 +53548,7 @@ angular.module('edup')
 
 
   $templateCache.put('students-list',
-    "<div><div class=parent><div class=\"child pull=left\"><input id=searchinput name=searchinput type=search placeholder=search class=\"form-control input-md\"></div><div class=\"child pull-right\"><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#add-new-student-modal-view></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr ng-repeat=\"student in students\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{selected: student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#input-forms-modal-view>Details</button></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div><div app-modal id=input-forms-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><student-input-forms></student-input-forms></div></div></div><div app-modal id=add-new-student-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><new-student></new-student></div></div></div></div>"
+    "<div><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#add-new-student-modal-view></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: paging.perPage\" current-page=paging.page total-items=paging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{selected: student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#input-forms-modal-view>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"pageChanged(newPageNumber, searchValue)\"></dir-pagination-controls></div></div><div app-modal id=input-forms-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><student-input-forms></student-input-forms></div></div></div><div app-modal id=add-new-student-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><new-student></new-student></div></div></div></div>"
   );
 
 }]);

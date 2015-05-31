@@ -1,3 +1,6 @@
 'use strict';
 
-angular.module('edup.common', ['restangular']);
+angular.module('edup.common', [
+    'restangular',
+    'angularUtils.directives.dirPagination'
+]);

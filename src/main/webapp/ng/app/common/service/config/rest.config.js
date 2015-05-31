@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('edup.common').run(function (Restangular, UrlService) {
+
     Restangular.setBaseUrl(UrlService.BaseUrl);
 
     Restangular.setErrorInterceptor(function (resp) {

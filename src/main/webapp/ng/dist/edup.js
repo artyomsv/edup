@@ -1,6 +1,9 @@
 'use strict';
 
-angular.module('edup.common', ['restangular']);
+angular.module('edup.common', [
+    'restangular',
+    'angularUtils.directives.dirPagination'
+]);
 'use strict';
 
 angular.module('edup.common')
@@ -67,7 +70,13 @@ angular.module('edup.common')
     });
 'use strict';
 
+angular.module('edup.common').config(['paginationTemplateProvider', function(paginationTemplateProvider) {
+    paginationTemplateProvider.setPath('/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
+}]);
+'use strict';
+
 angular.module('edup.common').run(['Restangular', 'UrlService', function (Restangular, UrlService) {
+
     Restangular.setBaseUrl(UrlService.BaseUrl);
 
     Restangular.setErrorInterceptor(function (resp) {
@@ -75,6 +84,27 @@ angular.module('edup.common').run(['Restangular', 'UrlService', function (Restan
         return false;
     });
 }]);
+'use strict';
+
+angular.module('edup.common')
+
+    .service('PaginationService', function () {
+
+        var getTop = function (paging) {
+            return paging.page * paging.perPage;
+        };
+
+        var getSkip = function (paging) {
+            return (paging.page * paging.perPage) - paging.perPage;
+        };
+
+        return {
+            Top: getTop,
+            Skip: getSkip
+        };
+
+    }
+);
 'use strict';
 
 angular.module('edup.common')
@@ -95,14 +125,14 @@ angular.module('edup.common')
 
     .service('UrlService', function () {
 
-        var location = window.location.host;
+        var location = window.location.hostname;
 
         var baseUrl;
 
         if (location.indexOf('127.0.0.1') > -1) {
             baseUrl = 'https://localhost:8443/edup/api';
         } else {
-            baseUrl = 'https://' + location + '/edup/api';
+            baseUrl = 'https://' + location + ':8443/edup/api';
         }
 
         return {
@@ -330,15 +360,45 @@ angular.module('edup.calendar')
 angular.module('edup.students', []);
 'use strict';
 
+
 angular.module('edup.students')
 
-    .controller('StudentsController', ['$scope', 'RestService', function ($scope, RestService) {
+    .controller('StudentsController', ['$scope', '$timeout', 'RestService', 'PaginationService', function ($scope, $timeout, RestService, PaginationService) {
 
         $scope.studentSelected = false;
+        $scope.basicSearch = {
+            spin: false
+        };
+        $scope.paging = {
+            enabled: false,
+            page: 1,
+            perPage: 10,
+            totalRecords: 0
+        };
 
-        $scope.loadStudents = function (id) {
-            RestService.Students.get().then(function (result) {
+        var prepareQuery = function (top, skip, search) {
+            var queries = {};
+
+            queries.$count = true;
+
+            if (top) {
+                queries.$top = top;
+            }
+            if (top) {
+                queries.$skip = skip;
+            }
+            if (top) {
+                queries.$search = search;
+            }
+            return queries;
+        };
+
+        var loadStudents = function (id, top, skip, search) {
+            $scope.basicSearch.spin = true;
+            var query = prepareQuery(top, skip, search);
+            RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
+                $scope.paging.totalRecords = result.count;
                 if ($scope.students.length > 0) {
                     if (id) {
                         $scope.loadFullStudent(id);
@@ -348,6 +408,8 @@ angular.module('edup.students')
                 } else {
                     $scope.studentSelected = false;
                 }
+
+                $scope.basicSearch.spin = false;
             });
         };
 
@@ -360,18 +422,44 @@ angular.module('edup.students')
             }
         };
 
-        $scope.loadStudents();
+        loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
 
         $scope.setSelected = function (studentId) {
             $scope.loadFullStudent(studentId);
         };
 
         $scope.addToBalance = function (value) {
-            $scope.selectedStudent.balance = $scope.selectedStudent.balance + parseInt(value);
+            $scope.selectedStudent.balance += parseInt(value);
+        };
+
+        $scope.pageChanged = function (newPage, searchValue) {
+            $scope.paging.page = newPage;
+            loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+            console.log($scope.paging);
+        };
+
+        $scope.setRecordsPerPage = function (newRecordsPerPageValue) {
+            $scope.paging.perPage = newRecordsPerPageValue;
+        };
+
+        $scope.executeSearch = function (searchValue) {
+            console.log(searchValue);
+            if (searchValue && searchValue.length > 2) {
+                $timeout(function () {
+                    $scope.paging.page = 1;
+                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+                }, 300);
+            } else if (searchValue.length === 0) {
+                $timeout(function () {
+                    $scope.paging.page = 1;
+                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                }, 300);
+            }
         };
 
     }]
-);
+)
+;
 
 
 'use strict';
@@ -854,7 +942,7 @@ angular.module('edup')
 
 
   $templateCache.put('students-list',
-    "<div><div class=parent><div class=\"child pull=left\"><input id=searchinput name=searchinput type=search placeholder=search class=\"form-control input-md\"></div><div class=\"child pull-right\"><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#add-new-student-modal-view></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr ng-repeat=\"student in students\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{selected: student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#input-forms-modal-view>Details</button></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div><div app-modal id=input-forms-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><student-input-forms></student-input-forms></div></div></div><div app-modal id=add-new-student-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><new-student></new-student></div></div></div></div>"
+    "<div><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#add-new-student-modal-view></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: paging.perPage\" current-page=paging.page total-items=paging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{selected: student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#input-forms-modal-view>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"pageChanged(newPageNumber, searchValue)\"></dir-pagination-controls></div></div><div app-modal id=input-forms-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><student-input-forms></student-input-forms></div></div></div><div app-modal id=add-new-student-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><new-student></new-student></div></div></div></div>"
   );
 
 }]);
