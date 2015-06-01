@@ -50,6 +50,34 @@ CREATE TABLE ACCOUNT_ACTION (
   CONTEXT    VARCHAR(256)
 );
 
+------------------------------------ VIEWS -----------------------------------------
+DROP VIEW public.V_ACCOUNT RESTRICT;
+CREATE OR REPLACE VIEW V_ACCOUNT AS
+  SELECT
+    a.username,
+    c.password,
+    a.status
+  FROM account a, credential_version c
+  WHERE
+    a.credential_version_fk = c.id
+    AND
+    a.status = 'APPROVED';
+
+
+DROP VIEW public.V_ROLES RESTRICT;
+CREATE VIEW V_ROLES AS
+  SELECT
+    a.username,
+    u.role,
+    a.status
+  FROM account a, user_role u
+  WHERE
+    a.id = u.account_fk
+    AND
+    a.status = 'APPROVED';
+
+-------------------------------- TEST DATA ------------------------------------------
+
 -- admin SHA-512-> 'x61Ey612Kl2gpFL56FT9weDnpSo4AV8j8+qx2AuTHdRyY036xxzTTrw10Wq3+4qQyB+XURPWx1ONxp3Y3pB37A=='
 
 -- admin SHA-256-> 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg='
@@ -75,3 +103,8 @@ VALUES (DEFAULT, 1, 'USER', CURRENT_TIMESTAMP);
 UPDATE ACCOUNT
 SET ACCOUNT_VERSION_FK = 1, CREDENTIAL_VERSION_FK = 1
 WHERE ID = 1;
+
+---------------------------------------------------------------------------------------
+
+
+
