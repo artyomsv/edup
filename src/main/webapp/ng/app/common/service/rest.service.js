@@ -4,10 +4,11 @@ angular.module('edup.common')
 
     .service('RestService', function (Restangular) {
 
-        var rpc = Restangular.one('secured');
+        var rpc = Restangular.one('private');
 
         return {
-            Students: rpc.one('students')
+            Students: rpc.one('students'),
+            Balance: rpc.one('balance')
         };
 
     }

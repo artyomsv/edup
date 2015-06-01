@@ -10,7 +10,7 @@ angular.module('edup.widgets')
             priority: 10,
             link: function (scope) {
                 scope.uploader = new FileUploader({
-                    url: UrlService.BaseUrl + '/secured/files/upload'
+                    url: UrlService.BaseUrl + '/private/files/upload'
                 });
                 scope.uploader.removeAfterUpload = true;
 

@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <td>Current balance:</td>
-                        <td>{{ selectedStudent.balance }} EUR</td>
+                        <td>{{ selectedStudent.balance | number : 2}} EUR</td>
                         <td>
                             <button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal"
                                     data-target="#addToBalanceModalView">Add to balance
@@ -39,6 +39,7 @@
                         </td>
                     </tr>
                 </table>
+
 
             </div>
 
@@ -49,40 +50,8 @@
         </fieldset>
     </form>
 
-    <div id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content modalViewPadding">
-                <form class="form-horizontal">
-                    <fieldset>
-                        <!-- Form Name -->
-                        <legend>Add money to account</legend>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="amountTextInput">Amount</label>
-
-                            <div class="col-md-8">
-                                <input ng-model="newBalanceValue" id="amountTextInput" name="textinput" type="text" placeholder="amount" class="form-control input-md">
-                            </div>
-                        </div>
-
-                        <!-- Button -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="addToBalanceButton"></label>
-
-                            <div class="col-md-4">
-                                <button ng-click="addToBalance(newBalanceValue)"
-                                        id="addToBalanceButton"
-                                        name="payButton"
-                                        class="btn btn-success pull-right"
-                                        data-dismiss="modal">Save</button>
-                            </div>
-                        </div>
-
-                    </fieldset>
-                </form>
-            </div>
-        </div>
+    <div app-modal id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <currency-input selected-student="selectedStudent"></currency-input>
     </div>
 </div>
 

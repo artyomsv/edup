@@ -9,9 +9,9 @@
         </div>
         <div class="col-xs-3">
             <div class="btn-group" role="group" aria-label="...">
-                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(10)">10</button>
-                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(25)">25</button>
-                <button type="button" class="btn btn-default" ng-click="setRecordsPerPage(50)">50</button>
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 10}" ng-click="setRecordsPerPage(10)">10</button>
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 25}" ng-click="setRecordsPerPage(25)">25</button>
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 50}" ng-click="setRecordsPerPage(50)">50</button>
             </div>
         </div>
 

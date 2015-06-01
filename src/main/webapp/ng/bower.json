@@ -16,9 +16,10 @@
     "ui-router": "0.2.14",
     "angular-bootstrap-calendar": "0.10.1",
     "angular-bootstrap": "0.13.0",
-    "angular-animate" : "1.4.0-build.3993+sha.1268b17",
+    "angular-animate": "1.4.0-build.3993+sha.1268b17",
     "jquery": "2.1.4",
     "angular-file-upload": "latest",
-    "angular-utils-pagination": "latest"
+    "angular-utils-pagination": "latest",
+    "angular-money-directive": "latest"
   }
 }

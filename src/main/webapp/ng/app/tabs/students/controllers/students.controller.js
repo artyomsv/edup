@@ -33,7 +33,19 @@ angular.module('edup.students')
             return queries;
         };
 
-        var loadStudents = function (id, top, skip, search) {
+        $scope.loadFullStudent = function (id) {
+            if (id) {
+                $scope.basicSearch.spin = true;
+                RestService.Students.one(id.toString()).get().then(function (response) {
+                    $scope.selectedStudent = response.payload;
+                    $scope.selectedStudent.balance = (response.payload.balance / 100);
+                    $scope.studentSelected = true;
+                    $scope.basicSearch.spin = false;
+                });
+            }
+        };
+
+        $scope.loadStudents = function (id, top, skip, search) {
             $scope.basicSearch.spin = true;
             var query = prepareQuery(top, skip, search);
             RestService.Students.get(query).then(function (result) {
@@ -53,46 +65,44 @@ angular.module('edup.students')
             });
         };
 
-        $scope.loadFullStudent = function (id) {
-            if (id) {
-                RestService.Students.one(id.toString()).get().then(function (response) {
-                    $scope.selectedStudent = response.payload;
-                    $scope.studentSelected = true;
-                });
-            }
-        };
-
-        loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+        $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
 
         $scope.setSelected = function (studentId) {
             $scope.loadFullStudent(studentId);
         };
 
         $scope.addToBalance = function (value) {
-            $scope.selectedStudent.balance += parseInt(value);
+            console.log('Add new balance ' + value);
+            //$scope.selectedStudent.balance += parseInt(value);
         };
 
         $scope.pageChanged = function (newPage, searchValue) {
             $scope.paging.page = newPage;
-            loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
-            console.log($scope.paging);
+            $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
         };
 
         $scope.setRecordsPerPage = function (newRecordsPerPageValue) {
             $scope.paging.perPage = newRecordsPerPageValue;
         };
 
+        function isEmpty(str) {
+            return (!str || 0 === str.length);
+        }
+
+        var previousSearch = '';
+
         $scope.executeSearch = function (searchValue) {
-            console.log(searchValue);
             if (searchValue && searchValue.length > 2) {
                 $timeout(function () {
                     $scope.paging.page = 1;
-                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+                    $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+                    previousSearch = searchValue;
                 }, 300);
-            } else if (searchValue && searchValue.length === 0) {
+            } else if (isEmpty(searchValue) && previousSearch != searchValue) {
                 $timeout(function () {
                     $scope.paging.page = 1;
-                    loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                    $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                    previousSearch = searchValue;
                 }, 300);
             }
         };

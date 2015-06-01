@@ -2,6 +2,7 @@
 
 angular.module('edup.widgets', [
 
-    'angularFileUpload'
+    'angularFileUpload',
+    'fiestah.money'
 
 ]);

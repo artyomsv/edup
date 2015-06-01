@@ -17,9 +17,9 @@ angular.module('edup.common')
         return {
             BaseUrl: baseUrl,
             Files: {
-                Info: baseUrl + '/secured/files',
-                Upload: baseUrl + '/secured/files/upload',
-                Download: baseUrl + '/secured/files/download'
+                Info: baseUrl + '/private/files',
+                Upload: baseUrl + '/private/files/upload',
+                Download: baseUrl + '/private/files/download'
             }
         };
 

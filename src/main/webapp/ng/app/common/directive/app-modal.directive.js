@@ -6,7 +6,7 @@ angular.module('edup.common')
         return {
             restrict: 'A',
             link: function (scope, element) {
-                scope.dismiss = function () {
+                scope.dismissModal = function () {
                     element.modal('hide');
                 };
             }
