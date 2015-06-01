@@ -51,8 +51,8 @@ public class StudentsFacade extends ApplicationFacade {
         return ok();
     }
 
-    public Response fill() {
-        return ok(service.fillFakeData());
+    public Response fill(int count) {
+        return ok(service.fillFakeData(count));
     }
 
     public Response rebuild() {

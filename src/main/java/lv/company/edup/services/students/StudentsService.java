@@ -193,11 +193,11 @@ public class StudentsService {
         }
     }
 
-    public Boolean fillFakeData() {
+    public Boolean fillFakeData(int count) {
         Faker faker = new Faker();
 
         List<StudentDto> dtos = new ArrayList<StudentDto>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < count; i++) {
             StudentDto dto = new StudentDto();
             Name name = faker.name();
             dto.setName(name.firstName());

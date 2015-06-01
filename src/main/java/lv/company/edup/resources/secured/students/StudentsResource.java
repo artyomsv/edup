@@ -34,9 +34,9 @@ public class StudentsResource {
     }
 
     @GET
-    @Path("fill")
-    public Response fill() {
-        return facade.fill();
+    @Path("fill/{records}")
+    public Response fill(@PathParam("records") Integer records) {
+        return facade.fill(records);
     }
 
     @GET
