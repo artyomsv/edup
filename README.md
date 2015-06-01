@@ -24,3 +24,8 @@ http://bootsnipp.com/snippets/featured/custom-search-input
 http://bootsnipp.com/snippets/featured/expanding-search-button-in-css
 
 http://bootsnipp.com/snippets/featured/responsive-quote-carousel
+
+
+Localization:
+http://www.ng-newsletter.com/posts/angular-translate.html
+https://angular-translate.github.io
