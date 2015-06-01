@@ -53,6 +53,8 @@ import java.util.Map;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class StudentsService {
 
+    private static final String SECURED_FILES_DOWNLOAD = "/private/files/download";
+
     @Inject @StudentReader StudentsSearcher searcher;
     @Inject @StudentWriter StudentsIndexer indexer;
 
@@ -75,16 +77,17 @@ public class StudentsService {
         return result.cloneFromValues(dtos);
     }
 
+    public StudentDto findLeanStudent(Long id) {
+        Student student = fetchLeanStudent(id);
+        return mapper.map(student, StudentDto.class);
+    }
+
     public StudentDto findStudent(Long id) {
-        Student student = currentStudentVersionRepository.find(id);
-        if (student == null) {
-            throw new NotFoundException();
-        }
+        Student student = fetchLeanStudent(id);
 
         List<StudentProperty> properties = propertyRepository.findByAttribute(student.getVersionId(), StudentProperty_.versionId);
         CollectionUtils.addAll(student.getProperties(), properties);
 
-        student.setRootUrl(utils.getRootUrl() + "/secured/files/download");
         return mapper.map(student, StudentDto.class);
     }
 
@@ -143,7 +146,6 @@ public class StudentsService {
         return createStudentVersion(dto, id);
     }
 
-
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void fetchBaseStudentProperties(Collection<? extends Student> versions) {
         if (CollectionUtils.isEmpty(versions)) {
@@ -169,13 +171,14 @@ public class StudentsService {
                 if (version == null) {
                     continue;
                 }
-                version.setRootUrl(utils.getRootUrl() + "/secured/files/download");
+                version.setRootUrl(utils.getRootUrl() + SECURED_FILES_DOWNLOAD);
                 if (map.containsKey(version.getVersionId())) {
                     CollectionUtils.addAll(version.getProperties(), map.get(version.getVersionId()));
                 }
             }
         }
     }
+
 
     @Asynchronous
     public void updateIndex(StudentDto dto) {
@@ -228,5 +231,15 @@ public class StudentsService {
 
     public void rebuild() {
         indexer.rebuild();
+    }
+
+    public Student fetchLeanStudent(Long id) {
+        Student student = currentStudentVersionRepository.find(id);
+        if (student == null) {
+            throw new NotFoundException();
+        }
+
+        student.setRootUrl(utils.getRootUrl() + SECURED_FILES_DOWNLOAD);
+        return student;
     }
 }

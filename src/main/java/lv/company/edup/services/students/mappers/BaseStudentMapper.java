@@ -20,6 +20,7 @@ public class BaseStudentMapper implements CustomMapper {
                         dto.setAge(AgeService.getAge(student.getDateProperty(PropertyName.BIRTH_DATE)));
                         dto.setMobile(student.getStringProperty(PropertyName.MOBILE_PHONE));
                         dto.setPersonId(student.getStringProperty(PropertyName.PERSONAL_NUMBER));
+
                     }
 
                     @Override

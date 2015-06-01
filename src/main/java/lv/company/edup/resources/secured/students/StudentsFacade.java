@@ -1,8 +1,11 @@
 package lv.company.edup.resources.secured.students;
 
+import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
+import lv.company.edup.services.students.BalanceService;
 import lv.company.edup.services.students.StudentsService;
+import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentDto;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -16,33 +19,36 @@ public class StudentsFacade extends ApplicationFacade {
 
     private final Logger logger = Logger.getLogger(StudentsFacade.class.getSimpleName());
 
-    @Inject StudentsService service;
+    @Inject StudentsService studentsService;
+    @Inject BalanceService balanceService;
 
     public Response search() {
-        return ok(service.search());
+        return ok(studentsService.search());
     }
 
     public Response findStudent(Long id) {
-        return ok(service.findStudent(id));
+        StudentDto student = studentsService.findStudent(id);
+        fetchStudentBalance(id, student);
+        return ok(student);
     }
 
     public Response findVersions(Long id) {
-        return ok(service.findVersions(id));
+        return ok(studentsService.findVersions(id));
     }
 
     public Response findVersion(Long id, Long versionId) {
-        return ok(service.findVersion(id, versionId));
+        return ok(studentsService.findVersion(id, versionId));
     }
 
     public Response createStudent(StudentDto dto) {
-        EntityPayload payload = service.createStudentVersion(dto);
-        service.updateIndex(dto);
+        EntityPayload payload = studentsService.createStudentVersion(dto);
+        studentsService.updateIndex(dto);
         return created(payload.getId());
     }
 
     public Response updateStudent(StudentDto dto, Long id) {
-        EntityPayload payload = service.updateStudent(dto, id);
-        service.updateIndex(dto);
+        EntityPayload payload = studentsService.updateStudent(dto, id);
+        studentsService.updateIndex(dto);
         return updated(payload.getVersionId());
     }
 
@@ -52,11 +58,25 @@ public class StudentsFacade extends ApplicationFacade {
     }
 
     public Response fill(int count) {
-        return ok(service.fillFakeData(count));
+        return ok(studentsService.fillFakeData(count));
     }
 
     public Response rebuild() {
-        service.rebuild();
+        studentsService.rebuild();
         return ok();
+    }
+
+    public Response getStudentBalance(Long id) {
+        if (studentsService.fetchLeanStudent(id) == null) {
+            throw new NotFoundException("Missing student with [" + id + "] id.");
+        }
+        return ok(balanceService.currentStudentBalance(id));
+    }
+
+    private void fetchStudentBalance(Long id, StudentDto student) {
+        if (student != null) {
+            CurrentBalanceDto balance = balanceService.currentStudentBalance(id);
+            student.setBalance(balance != null ? balance.getAmount() : 0L);
+        }
     }
 }

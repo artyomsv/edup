@@ -12,7 +12,7 @@ import javax.ws.rs.core.UriInfo;
 import java.net.MalformedURLException;
 import java.net.URI;
 
-@Path("secured/logout")
+@Path("private/logout")
 @Stateless
 public class LogoutResource {
 

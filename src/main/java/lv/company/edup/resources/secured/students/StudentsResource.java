@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @ApplicationScoped
-@Path("secured/students")
+@Path("private/students")
 @Produces(MediaType.APPLICATION_JSON)
 public class StudentsResource {
 
@@ -75,6 +75,12 @@ public class StudentsResource {
     @Path("{id}")
     public Response deleteStudent(@PathParam("id") Long id) {
         return facade.deleteStudent(id);
+    }
+
+    @GET
+    @Path("{id}/balance")
+    public Response getBalance(@PathParam("id") Long id) {
+        return facade.getStudentBalance(id);
     }
 
 

@@ -43,8 +43,6 @@ public abstract class Student implements Serializable {
     @Transient
     private String rootUrl;
     @Transient
-    private Long balance;
-    @Transient
     private boolean indexed = false;
     @Transient
     private List<StudentProperty> properties;
@@ -198,14 +196,6 @@ public abstract class Student implements Serializable {
 
     public void setRootUrl(String rootUrl) {
         this.rootUrl = rootUrl;
-    }
-
-    public Long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Long balance) {
-        this.balance = balance;
     }
 
     public abstract Long getId();

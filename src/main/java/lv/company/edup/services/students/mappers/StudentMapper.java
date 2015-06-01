@@ -16,9 +16,7 @@ public class StudentMapper implements CustomMapper {
                     @Override
                     public void mapAtoB(Student entity, StudentDto dto, MappingContext context) {
                         dto.setPhotoId(entity.getLongProperty(PropertyName.PHOTO_ID));
-                        if (dto.getPhotoId() != null) {
-                            dto.setPhotoUrl(entity.getRootUrl() + "/" + dto.getPhotoId());
-                        }
+                        dto.setPhotoUrl(entity.getRootUrl() + "/" + (dto.getPhotoId() != null ? dto.getPhotoId() : "1"));
                         dto.setMail(entity.getStringProperty(PropertyName.MAIL));
                         dto.setParentsInfo(entity.getStringProperty(PropertyName.PARENT_INFORMATION));
                         dto.setCharacteristics(entity.getStringProperty(PropertyName.CHARACTERISTICS));

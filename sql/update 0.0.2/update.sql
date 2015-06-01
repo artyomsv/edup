@@ -1,3 +1,6 @@
+DROP TABLE public.t_file;
+DROP SEQUENCE public.file_sequence RESTRICT;
+
 -- Create sequence for files.
 CREATE SEQUENCE FILE_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
