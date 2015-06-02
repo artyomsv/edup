@@ -7,6 +7,7 @@ angular.module('edup.students')
             restrict: 'E',
             templateUrl: 'student-attendance',
             link : function ($scope) {
+               
             }
         };
     }

@@ -19,7 +19,8 @@
         <div class="col-xs-1">
             <h4><span class="glyphicon glyphicon-plus pull-right"
                       style="cursor: pointer"
-                      ng-click="openModalView()"
+                      data-toggle="modal"
+                      data-target="#add-new-student-modal-view"
                     >
             </span></h4>
         </div>
@@ -66,16 +67,14 @@
             <dir-pagination-controls on-page-change="pageChanged(newPageNumber, searchValue)"></dir-pagination-controls>
         </div>
     </div>
+
     <div app-modal id="input-forms-modal-view" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content modalViewPadding">
-                <student-details></student-details>
-            </div>
-        </div>
+        <student-details></student-details>
     </div>
 
-    <student-new-record></student-new-record>
-
+    <div id="add-new-student-modal-view" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <student-new-record></student-new-record>
+    </div>
 </div>
 
 

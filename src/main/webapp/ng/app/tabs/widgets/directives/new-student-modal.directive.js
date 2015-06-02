@@ -1,14 +1,12 @@
 'use strict';
 
-angular.module('edup.students')
+angular.module('edup.widgets')
 
     .directive('studentNewRecord', function () {
         return {
             restrict: 'E',
-            templateUrl: 'student-new-record',
+            templateUrl: 'new-student-modal',
             link: function (scope) {
-                scope.birth = 'birth';
-                scope.birthDate = 'date';
             }
         };
     }

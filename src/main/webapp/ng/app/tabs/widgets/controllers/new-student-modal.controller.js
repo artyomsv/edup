@@ -2,7 +2,7 @@
 
 angular.module('edup.students')
 
-    .controller('StudentNewRecordController', function ($scope, RestService) {
+    .controller('NewStudentModalController', function ($scope, RestService) {
         $scope.executeStudentSave = function (student) {
             if (student && student.name && student.lastName) {
                 RestService.Students.customPOST(student).then(function (response) {
