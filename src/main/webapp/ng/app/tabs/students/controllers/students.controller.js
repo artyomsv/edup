@@ -98,7 +98,7 @@ angular.module('edup.students')
                     $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
                     previousSearch = searchValue;
                 }, 300);
-            } else if (isEmpty(searchValue) && previousSearch != searchValue) {
+            } else if (isEmpty(searchValue) && previousSearch !== searchValue) {
                 $timeout(function () {
                     $scope.paging.page = 1;
                     $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);

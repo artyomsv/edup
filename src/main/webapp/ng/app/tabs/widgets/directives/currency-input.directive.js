@@ -33,7 +33,7 @@ angular.module('edup.widgets')
 
                 scope.resetValue = function () {
                     scope.balance = null;
-                }
+                };
             }
         };
     }

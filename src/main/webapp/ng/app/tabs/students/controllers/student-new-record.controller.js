@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('edup.widgets')
+angular.module('edup.students')
 
-    .controller('NewStudentController', function ($scope, RestService) {
+    .controller('StudentNewRecordController', function ($scope, RestService) {
         $scope.executeStudentSave = function (student) {
             if (student && student.name && student.lastName) {
                 RestService.Students.customPOST(student).then(function (response) {

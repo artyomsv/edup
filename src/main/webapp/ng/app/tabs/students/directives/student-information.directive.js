@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('edup.widgets')
+angular.module('edup.students')
 
-    .directive('studentForm', function () {
+    .directive('studentInformation', function () {
         return {
             restrict: 'E',
-            templateUrl: 'student-form',
+            templateUrl: 'student-information',
             link : function ($scope) {
                 $scope.directiveTest = 'Student Form tabbed pane directive';
             }

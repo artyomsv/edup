@@ -110,6 +110,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-file-upload/angular-file-upload.min.js',
                     'vendor/bower_components/angular-utils-pagination/dirPagination.js',
                     'vendor/bower_components/angular-money-directive/angular-money-directive.js',
+                    'vendor/bower_components/angular-modal-service/dst/angular-modal-service.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

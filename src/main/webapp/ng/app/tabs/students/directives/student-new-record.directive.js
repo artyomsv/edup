@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('edup.widgets')
+angular.module('edup.students')
 
-    .directive('newStudent', function () {
+    .directive('studentNewRecord', function () {
         return {
             restrict: 'E',
-            templateUrl: 'new-student',
+            templateUrl: 'student-new-record',
             link: function (scope) {
                 scope.birth = 'birth';
                 scope.birthDate = 'date';

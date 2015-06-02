@@ -2,10 +2,10 @@
 
 angular.module('edup.students')
 
-    .directive('studentInputForms', function () {
+    .directive('studentDetails', function () {
         return {
             restrict: 'E',
-            templateUrl: 'student-input-forms',
+            templateUrl: 'student-details',
             link : function ($scope) {
                 $scope.directiveTest = 'Student input forms';
             }
