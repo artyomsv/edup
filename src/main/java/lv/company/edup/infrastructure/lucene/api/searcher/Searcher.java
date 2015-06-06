@@ -36,7 +36,10 @@ public interface Searcher<T> {
 
     Map<IndexAttribute, Float> getCustomBoosts();
 
+    Collection<String> getNumericFields();
+
     QueryParser getQueryParser();
 
     Long getId(T t);
+
 }

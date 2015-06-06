@@ -1,6 +1,6 @@
 package lv.company.edup.infrastructure.lucene.impl.searcher;
 
-import lv.company.edup.infrastructure.lucene.api.config.IndexAnalyzer;
+import lv.company.edup.infrastructure.lucene.api.config.AppAnalyzer;
 import lv.company.edup.infrastructure.lucene.api.config.IndexConfigProvider;
 import lv.company.edup.infrastructure.lucene.api.config.IndexType;
 import lv.company.edup.infrastructure.lucene.api.config.StudentReader;
@@ -18,11 +18,14 @@ import org.apache.lucene.search.IndexSearcher;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.ID;
 
 @StudentReader
 @ApplicationScoped
@@ -30,10 +33,11 @@ public class StudentsSearcher extends AbstractSearcher<StudentDto> {
 
     private static final Logger LOGGER = Logger.getLogger(StudentsSearcher.class.getSimpleName());
 
+    private Analyzer analyzer = new AppAnalyzer();
+
     @Inject IndexConfigProvider provider;
     @Inject CurrentStudentVersionRepository repository;
     @Inject ObjectMapper mapper;
-    @Inject @IndexAnalyzer Analyzer analyzer;
     @Inject QueryParser parser;
     @Inject StudentsService service;
 
@@ -72,6 +76,11 @@ public class StudentsSearcher extends AbstractSearcher<StudentDto> {
     @Override
     public Map<IndexAttribute, Float> getCustomBoosts() {
         return Collections.emptyMap();
+    }
+
+    @Override
+    public Collection<String> getNumericFields() {
+        return Arrays.asList(ID.getValue());
     }
 
     @Override

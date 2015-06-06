@@ -35,7 +35,8 @@ public class StudentMappersTest extends BaseMappersTest {
         CurrentStudentVersion entity = new CurrentStudentVersion();
         entity.setId(ID);
         entity.setVersionId(VERSION_ID);
-        entity.setCreated(new Date());
+        Date created = new Date();
+        entity.setCreated(created);
         entity.setName(NAME);
         entity.setLastName(LAST_NAME);
         entity.addProperty(PropertyName.BIRTH_DATE, BIRTH_DATE);
@@ -65,6 +66,7 @@ public class StudentMappersTest extends BaseMappersTest {
         assertThat(dto.getCharacteristics(), is(CHARACTERISTICS));
         assertThat(dto.getMail(), is(MAIL));
         assertThat(dto.getPhotoUrl(), is(HTTPS_LOCALHOST_8443_EDUP + "/" + PHOTO_ID));
+        assertTrue(DateUtils.isSameInstant(dto.getCreated(), entity.getCreated()));
 
     }
 

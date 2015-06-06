@@ -14,6 +14,7 @@ public class BaseStudentDto {
     private String mobile;
     private Long age;
     private Date birthDate;
+    private Date created;
 
     public Long getId() {
         return id;
@@ -77,5 +78,13 @@ public class BaseStudentDto {
 
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 }

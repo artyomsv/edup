@@ -1,10 +1,12 @@
 package lv.company.edup.infrastructure.lucene.impl.searcher;
 
+import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils;
 import lv.company.odata.impl.parse.SortingDefinition;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.apache.lucene.search.SortedNumericSortField;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,13 +70,17 @@ public class LuceneSorterQueryBuilder {
         if (StringUtils.equalsIgnoreCase(RELEVANCE, field)) {
             return new SortField(null, Type.SCORE, !ascending);
         } else {
-            return new SortField(getSortableField(field), type, !ascending);
+            if (type == Type.LONG) {
+                return new SortedNumericSortField(getSortableField(field), type, !ascending);
+            } else {
+                return new SortField(getSortableField(field), type, !ascending);
+            }
         }
     }
 
     private Sort buildSort(Collection<SortField> sortFields) {
-        if (CollectionUtils.isNotEmpty(sortFields)) {
-            return new Sort(new SortField(TECHNICAL_ID, Type.LONG, false));
+        if (CollectionUtils.isEmpty(sortFields)) {
+            return new Sort(new SortedNumericSortField(LuceneDocumentUtils.getSortableField(TECHNICAL_ID), Type.LONG, false));
         } else {
             sortFields.add(SortField.FIELD_SCORE);
             return new Sort(sortFields.toArray(new SortField[sortFields.size()]));

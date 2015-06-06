@@ -6,7 +6,6 @@ import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -19,7 +18,6 @@ import org.apache.lucene.store.MMapDirectory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -42,8 +40,6 @@ import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAtt
 public class IndexConfigProvider {
 
     private static final Logger LOGGER = Logger.getLogger(IndexConfigProvider.class.getSimpleName());
-
-    @Inject @IndexAnalyzer Analyzer analyzer;
 
     private Map<IndexType, Directory> directoryMap = new ConcurrentHashMap<IndexType, Directory>();
     private Map<IndexType, DirectoryReader> directoryReaderMap = new ConcurrentHashMap<IndexType, DirectoryReader>();
@@ -124,7 +120,7 @@ public class IndexConfigProvider {
     }
 
     private IndexWriterConfig get() {
-        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+        IndexWriterConfig config = new IndexWriterConfig(new AppAnalyzer());
 //        config.setMergedSegmentWarmer(new SimpleMergedSegmentWarmer(new PrintStreamInfoStream(System.out)));
 //        config.setMergeScheduler(new ConcurrentMergeScheduler());
         config.setRAMBufferSizeMB(256);

@@ -6,24 +6,33 @@ import org.apache.commons.lang3.StringUtils;
 public enum StudentIndexAttribute implements IndexAttribute {
 
 
-    ID("Id"),
-    NAME("Name"),
-    LAST_NAME("LastName"),
-    MAIL("Mail"),
-    BIRTH_DATE("BirthDate"),
-    MOBILE("Mobile"),
-    PERSON_ID("PersonId");
+    ID("Id", ""),
+    NAME("Name", ""),
+    LAST_NAME("LastName", ""),
+    MAIL("Mail", ""),
+    BIRTH_DATE("BirthDate", "Format"),
+    CREATED("Created", "Format"),
+    MOBILE("Mobile", ""),
+    PERSON_ID("PersonId", "");
 
     private final String value;
+    private final String postFix;
 
-    StudentIndexAttribute(String value) {
+    StudentIndexAttribute(String value, String postFix) {
         this.value = value;
+        this.postFix = postFix;
     }
 
     @Override
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String getPostFix() {
+        return postFix;
+    }
+
 
     @Override
     public IndexAttribute resolve(String value) {

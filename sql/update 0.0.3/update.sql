@@ -1,6 +1,10 @@
+DROP VIEW public.v_student_balance RESTRICT;
+DROP TABLE public.student_balance;
+DROP SEQUENCE public.student_balance_sequence RESTRICT;
+
 DROP VIEW public.v_students RESTRICT;
-DROP TABLE public.students_version_mapping;
 DROP TABLE public.student_properties;
+DROP TABLE public.students_version_mapping;
 DROP TABLE public.students;
 
 DROP SEQUENCE public.student_id_sequence RESTRICT;

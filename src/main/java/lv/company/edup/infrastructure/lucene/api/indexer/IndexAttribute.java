@@ -4,6 +4,8 @@ public interface IndexAttribute {
 
     String getValue();
 
+    String getPostFix();
+
     IndexAttribute resolve(String value);
 
 }

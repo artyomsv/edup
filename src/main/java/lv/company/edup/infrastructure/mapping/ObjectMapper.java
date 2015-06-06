@@ -15,7 +15,7 @@ import java.util.List;
 @ApplicationScoped
 public class ObjectMapper {
 
-    @Inject MappersProvider provider;
+    MappersProvider provider;
 
     private MapperFacade facade;
 
@@ -35,6 +35,11 @@ public class ObjectMapper {
         }
 
         facade = factory.getMapperFacade();
+    }
+
+    @Inject
+    public void setProvider(MappersProvider provider) {
+        this.provider = provider;
     }
 
     public void map(Object o1, Object o2) {

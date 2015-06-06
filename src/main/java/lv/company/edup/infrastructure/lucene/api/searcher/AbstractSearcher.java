@@ -6,8 +6,8 @@ import lv.company.edup.infrastructure.utils.AppCollectionUtils;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -94,9 +94,12 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
     private List<Long> getDocumentIds(Collection<Document> documents) {
         List<Long> ids = new ArrayList<Long>();
         for (Document document : documents) {
-            String value = document.getField(LuceneDocumentUtils.TECHNICAL_ID).stringValue();
-            Long id = StringUtils.isNumeric(value) ? Long.valueOf(value) : null;
-            CollectionUtils.addIgnoreNull(ids, id);
+            IndexableField field = document.getField(LuceneDocumentUtils.TECHNICAL_ID);
+            if (field != null) {
+                Number value = field.numericValue();
+                Long id = value.longValue();
+                CollectionUtils.addIgnoreNull(ids, id);
+            }
         }
         return ids;
     }
@@ -113,6 +116,7 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
     private Sort buildSort(ODataCriteria criteria) {
         return LuceneSorterQueryBuilder.get()
                 .orderBy(getQueryParser().analyzeOrderBy(criteria.getOrderBy()))
+                .numericFields(getNumericFields())
                 .build();
     }
 

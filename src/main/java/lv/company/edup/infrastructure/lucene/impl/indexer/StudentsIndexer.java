@@ -56,6 +56,7 @@ public class StudentsIndexer extends AbstractIndexer<StudentDto> {
         builder.add(StudentIndexAttribute.PERSON_ID, studentDto.getPersonId());
         builder.add(StudentIndexAttribute.MAIL, studentDto.getMail());
         builder.add(StudentIndexAttribute.BIRTH_DATE, studentDto.getBirthDate());
+        builder.add(StudentIndexAttribute.CREATED, studentDto.getCreated());
         builder.add(StudentIndexAttribute.MOBILE, studentDto.getMobile());
 
         builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()));

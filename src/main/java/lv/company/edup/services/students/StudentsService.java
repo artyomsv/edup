@@ -205,12 +205,20 @@ public class StudentsService {
             Name name = faker.name();
             dto.setName(name.firstName());
             dto.setLastName(name.lastName());
+            dto.setParentsInfo(faker.lorem().paragraph());
             dto.setCharacteristics(faker.lorem().paragraph());
             dto.setMail(faker.internet().emailAddress());
-            dto.setPersonId(faker.code().isbn13());
-            dto.setMobile(faker.phoneNumber().phoneNumber());
+
+            int year = random(1995, 2010);
+            int month = random(1, 12);
+            int date = random(1, 28);
+
+            String birthDate = String.format("%04d%02d%02d", year, month, date);
+
+            dto.setPersonId(String.format("%02d%02d%04d-%5d", date, month, year, random(10000, 50000)));
+            dto.setMobile(String.format("%s", random(28000000, 29000000)));
             try {
-                dto.setBirthDate(DateUtils.parseDate(getRandomDate(), "yyyyMMdd"));
+                dto.setBirthDate(DateUtils.parseDate(birthDate, "yyyyMMdd"));
             } catch (ParseException e) {
 
             }
@@ -219,6 +227,10 @@ public class StudentsService {
         }
         indexer.add(dtos);
         return true;
+    }
+
+    private Integer random(int from, int to) {
+        return RandomUtils.nextInt(from, to);
     }
 
     private String getRandomDate() {
