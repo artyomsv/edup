@@ -1,5 +1,8 @@
 package lv.company.edup.services.students.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -86,5 +89,15 @@ public class BaseStudentDto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.JSON_STYLE)
+                .append("id", id)
+                .append("name", name)
+                .append("lastName", lastName)
+                .append("created", created)
+                .toString();
     }
 }

@@ -1,5 +1,6 @@
 package lv.company.edup.resources.secured.students;
 
+import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
@@ -7,6 +8,7 @@ import lv.company.edup.services.students.BalanceService;
 import lv.company.edup.services.students.StudentsService;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentDto;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -43,11 +45,15 @@ public class StudentsFacade extends ApplicationFacade {
     public Response createStudent(StudentDto dto) {
         EntityPayload payload = studentsService.createStudentVersion(dto);
         studentsService.updateIndex(dto);
-        return created(payload.getId());
+        return created(payload.getId(), payload.getVersionId());
     }
 
-    public Response updateStudent(StudentDto dto, Long id) {
-        EntityPayload payload = studentsService.updateStudent(dto, id);
+    public Response updateStudent(StudentDto dto, Long id, String etag) {
+        if (StringUtils.isBlank(etag)) {
+            throw new BadRequestException("Missing etag");
+        }
+
+        EntityPayload payload = studentsService.updateStudent(dto, id, etag);
         studentsService.updateIndex(dto);
         return updated(payload.getVersionId());
     }

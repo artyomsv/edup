@@ -6,9 +6,6 @@ angular.module('edup.widgets')
         return {
             restrict: 'E',
             templateUrl: 'balance-modal',
-            scope: {
-                selectedStudent: '='
-            },
             link: function (scope) {
                 scope.price = {
                     amount: 0
@@ -28,6 +25,7 @@ angular.module('edup.widgets')
                                 scope.selectedStudent.balance += balance.amount;
                                 scope.balance = null;
                                 scope.dismissModal();
+                                //$('#addToBalanceModalView').modal('hide')
                             }
                         });
                     }

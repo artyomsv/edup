@@ -20,6 +20,7 @@ import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,6 +41,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -229,6 +231,38 @@ public class LuceneTest {
     }
 
     @Test
+    public void filterMultipleIdsOrderByCreatedAsc() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$filter", "Id eq (2,3,12)");
+        parameters.add("$orderby", "Created asc");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(3));
+        Iterator<StudentDto> iterator = values.iterator();
+        assertThat(iterator.next().getId(), is(2L));
+        assertThat(iterator.next().getId(), is(3L));
+        assertThat(iterator.next().getId(), is(12L));
+    }
+
+    @Test
+    public void filterMultipleIdsOrderByCreatedDesc() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$filter", "Id eq (2,3,12)");
+        parameters.add("$orderby", "Created desc");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(3));
+        Iterator<StudentDto> iterator = values.iterator();
+        assertThat(iterator.next().getId(), is(12L));
+        assertThat(iterator.next().getId(), is(3L));
+        assertThat(iterator.next().getId(), is(2L));
+    }
+
+    @Test
     public void filterOrderByIdDesc() throws Exception {
         MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
         parameters.add("$orderby", "Id desc");
@@ -283,11 +317,81 @@ public class LuceneTest {
         }
     }
 
-    private StudentDto getStudentDto(long id, String name, String lastName) {
+    @Test
+    public void filterOrderCreatedAsc() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$orderby", "Created asc");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+        criteria.setSearch("*");
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(10));
+        Iterator<StudentDto> iterator = values.iterator();
+        long id = 1L;
+        for (int i = 0; i < values.size(); i++) {
+            assertThat(iterator.next().getId(), is(id++));
+
+        }
+    }
+
+    @Test
+    public void filterOrderCreatedDesc() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$orderby", "Created desc");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+        criteria.setSearch("*");
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(10));
+        Iterator<StudentDto> iterator = values.iterator();
+        long id = 20L;
+        for (int i = 0; i < values.size(); i++) {
+            assertThat(iterator.next().getId(), is(id--));
+
+        }
+    }
+
+    @Test
+    public void filterOrderByCreatedDesc_AddNewRecordAfter() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$orderby", "Created desc");
+        parameters.add("$count", "true");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+        criteria.setSearch("*");
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(10));
+        Iterator<StudentDto> iterator = values.iterator();
+        long id = 20L;
+        for (int i = 0; i < values.size(); i++) {
+            assertThat(iterator.next().getId(), is(id--));
+        }
+
+        db.put(21L, getStudentDto(21L, "Artyom", "Stukans", DateUtils.addDays(new Date(), 40)));
+        indexer.add(db.get(21L));
+
+
+        result = searcher.search(criteria);
+        assertThat(result.getCount(), is(21L));
+        assertThat(result.getValues().iterator().next().getId(), is(21L));
+
+        indexer.update(db.get(21L));
+
+        result = searcher.search(criteria);
+        assertThat(result.getCount(), is(21L));
+        assertThat(result.getValues().iterator().next().getId(), is(21L));
+        assertThat(result.getValues().iterator().next().getId(), is(20L));
+    }
+
+    private StudentDto getStudentDto(long id, String name, String lastName, Date created) {
         StudentDto studentDto = new StudentDto();
         studentDto.setId(id);
         studentDto.setName(name);
         studentDto.setLastName(lastName);
+        studentDto.setCreated(created);
         return studentDto;
     }
 
@@ -307,25 +411,27 @@ public class LuceneTest {
     }
 
     private void init() {
-        db.put(1L, getStudentDto(1L, "z", "A"));
-        db.put(2L, getStudentDto(2L, "y", "B"));
-        db.put(3L, getStudentDto(3L, "x", "C"));
-        db.put(4L, getStudentDto(4L, "w", "D"));
-        db.put(5L, getStudentDto(5L, "v", "E"));
-        db.put(6L, getStudentDto(6L, "u", "F"));
-        db.put(7L, getStudentDto(7L, "t", "G"));
-        db.put(8L, getStudentDto(8L, "s", "H"));
-        db.put(9L, getStudentDto(9L, "r", "I"));
-        db.put(10L, getStudentDto(10L, "q", "J"));
-        db.put(11L, getStudentDto(11L, "p", "K"));
-        db.put(12L, getStudentDto(12L, "o", "L"));
-        db.put(13L, getStudentDto(13L, "n", "M"));
-        db.put(14L, getStudentDto(14L, "m", "N"));
-        db.put(15L, getStudentDto(15L, "l", "O"));
-        db.put(16L, getStudentDto(16L, "k", "P"));
-        db.put(17L, getStudentDto(17L, "j", "Q"));
-        db.put(18L, getStudentDto(18L, "i", "R"));
-        db.put(19L, getStudentDto(19L, "h", "S"));
-        db.put(20L, getStudentDto(20L, "g", "T"));
+        Date date = new Date();
+        int day = 0;
+        db.put(1L, getStudentDto(1L, "z", "A", DateUtils.addDays(date, day++)));
+        db.put(2L, getStudentDto(2L, "y", "B", DateUtils.addDays(date, day++)));
+        db.put(3L, getStudentDto(3L, "x", "C", DateUtils.addDays(date, day++)));
+        db.put(4L, getStudentDto(4L, "w", "D", DateUtils.addDays(date, day++)));
+        db.put(5L, getStudentDto(5L, "v", "E", DateUtils.addDays(date, day++)));
+        db.put(6L, getStudentDto(6L, "u", "F", DateUtils.addDays(date, day++)));
+        db.put(7L, getStudentDto(7L, "t", "G", DateUtils.addDays(date, day++)));
+        db.put(8L, getStudentDto(8L, "s", "H", DateUtils.addDays(date, day++)));
+        db.put(9L, getStudentDto(9L, "r", "I", DateUtils.addDays(date, day++)));
+        db.put(10L, getStudentDto(10L, "q", "J", DateUtils.addDays(date, day++)));
+        db.put(11L, getStudentDto(11L, "p", "K", DateUtils.addDays(date, day++)));
+        db.put(12L, getStudentDto(12L, "o", "L", DateUtils.addDays(date, day++)));
+        db.put(13L, getStudentDto(13L, "n", "M", DateUtils.addDays(date, day++)));
+        db.put(14L, getStudentDto(14L, "m", "N", DateUtils.addDays(date, day++)));
+        db.put(15L, getStudentDto(15L, "l", "O", DateUtils.addDays(date, day++)));
+        db.put(16L, getStudentDto(16L, "k", "P", DateUtils.addDays(date, day++)));
+        db.put(17L, getStudentDto(17L, "j", "Q", DateUtils.addDays(date, day++)));
+        db.put(18L, getStudentDto(18L, "i", "R", DateUtils.addDays(date, day++)));
+        db.put(19L, getStudentDto(19L, "h", "S", DateUtils.addDays(date, day++)));
+        db.put(20L, getStudentDto(20L, "g", "T", DateUtils.addDays(date, day++)));
     }
 }

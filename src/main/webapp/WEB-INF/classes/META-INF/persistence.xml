@@ -16,8 +16,8 @@
                       value="org.hibernate.service.jta.platform.internal.JBossAppServerJtaPlatform"/>
             <!--<property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>-->
             <property name="hibernate.jdbc.fetch_size" value="500"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.use_sql_comments" value="true"/>
         </properties>
     </persistence-unit>

@@ -27,7 +27,8 @@ public class BalanceFacade extends ApplicationFacade {
             throw new NotFoundException("Missing student id");
         }
 
-        return created(balanceService.save(dto));
+        Long save = balanceService.save(dto);
+        return created(save);
     }
 
     public Response deactivateBalanceRecord(Long id) {

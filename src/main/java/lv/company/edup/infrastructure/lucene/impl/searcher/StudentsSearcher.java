@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.BIRTH_DATE;
+import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.CREATED;
 import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.ID;
 
 @StudentReader
@@ -80,7 +82,7 @@ public class StudentsSearcher extends AbstractSearcher<StudentDto> {
 
     @Override
     public Collection<String> getNumericFields() {
-        return Arrays.asList(ID.getValue());
+        return Arrays.asList(ID.getValue(), CREATED.getValue(), BIRTH_DATE.getValue());
     }
 
     @Override

@@ -7,11 +7,13 @@ angular.module('edup.widgets')
             restrict: 'E',
             templateUrl: 'photo-upload',
             scope: {
-                id: '=photoId'
+                id: '=photoId',
+                photoUpdate: '=',
+                photoUrl: '='
             },
             priority: 10,
             link: function (scope) {
-                scope.photoUrl = '';
+                scope.photoUrl = null;
                 scope.photoUploaded = false;
 
                 scope.uploader = new FileUploader({

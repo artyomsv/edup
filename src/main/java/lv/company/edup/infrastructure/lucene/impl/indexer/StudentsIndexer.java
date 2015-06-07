@@ -11,7 +11,6 @@ import lv.company.edup.persistence.students.current.CurrentStudentVersionReposit
 import lv.company.edup.persistence.students.current.CurrentStudentVersion_;
 import lv.company.edup.services.students.StudentsService;
 import lv.company.edup.services.students.dto.StudentDto;
-import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -47,24 +46,6 @@ public class StudentsIndexer extends AbstractIndexer<StudentDto> {
     }
 
     @Override
-    public Document build(StudentDto studentDto) {
-        LuceneDocumentBuilder builder = LuceneDocumentBuilder.get();
-
-        builder.add(StudentIndexAttribute.ID, studentDto.getId());
-        builder.add(StudentIndexAttribute.NAME, studentDto.getName());
-        builder.add(StudentIndexAttribute.LAST_NAME, studentDto.getLastName());
-        builder.add(StudentIndexAttribute.PERSON_ID, studentDto.getPersonId());
-        builder.add(StudentIndexAttribute.MAIL, studentDto.getMail());
-        builder.add(StudentIndexAttribute.BIRTH_DATE, studentDto.getBirthDate());
-        builder.add(StudentIndexAttribute.CREATED, studentDto.getCreated());
-        builder.add(StudentIndexAttribute.MOBILE, studentDto.getMobile());
-
-        builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()));
-
-        return builder.build();
-    }
-
-    @Override
     public IndexType getType() {
         return IndexType.STUDENT;
     }
@@ -83,4 +64,23 @@ public class StudentsIndexer extends AbstractIndexer<StudentDto> {
     public String getId(StudentDto studentDto) {
         return String.valueOf(studentDto.getId());
     }
+
+    @Override
+    public LuceneDocumentBuilder prepareDocumentBuilder(StudentDto dto, boolean create) {
+        LuceneDocumentBuilder builder = LuceneDocumentBuilder.get();
+
+        builder.add(StudentIndexAttribute.ID, dto.getId(), create);
+        builder.add(StudentIndexAttribute.NAME, dto.getName(), create);
+        builder.add(StudentIndexAttribute.LAST_NAME, dto.getLastName(), create);
+        builder.add(StudentIndexAttribute.PERSON_ID, dto.getPersonId(), create);
+        builder.add(StudentIndexAttribute.MAIL, dto.getMail(), create);
+        builder.add(StudentIndexAttribute.BIRTH_DATE, dto.getBirthDate(), create);
+        builder.add(StudentIndexAttribute.CREATED, dto.getCreated(), create);
+        builder.add(StudentIndexAttribute.MOBILE, dto.getMobile(), create);
+
+        builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()), create);
+
+        return builder;
+    }
+
 }

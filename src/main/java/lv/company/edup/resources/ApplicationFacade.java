@@ -59,14 +59,29 @@ public class ApplicationFacade {
         }
     }
 
-    public Response created(Long id) {
+    public Response created(Long id, Long versionId) {
         String entity = String.format("{\"payload\": %s}", id);
-        return Response.created(utils.buildCreated(id)).entity(entity).build();
+        return Response
+                .created(utils.buildCreated(id))
+                .header(HttpHeaders.ETAG, String.valueOf(versionId))
+                .entity(entity)
+                .build();
     }
 
-    public Response updated(Long id) {
+    public Response created(Long id) {
         String entity = String.format("{\"payload\": %s}", id);
-        return Response.ok().header(HttpHeaders.ETAG, String.valueOf(id)).entity(entity).build();
+        return Response
+                .created(utils.buildCreated(id))
+                .entity(entity)
+                .build();
+    }
+
+    public Response updated(Long versionId) {
+        String entity = String.format("{\"payload\": %s}", versionId);
+        return Response.ok()
+                .header(HttpHeaders.ETAG, String.valueOf(versionId))
+                .entity(entity)
+                .build();
     }
 
     public Response notFound() {

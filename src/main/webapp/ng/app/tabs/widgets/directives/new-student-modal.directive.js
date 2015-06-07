@@ -2,7 +2,7 @@
 
 angular.module('edup.widgets')
 
-    .directive('studentNewRecord', function () {
+    .directive('newStudentRecord', function () {
         return {
             restrict: 'E',
             templateUrl: 'new-student-modal',

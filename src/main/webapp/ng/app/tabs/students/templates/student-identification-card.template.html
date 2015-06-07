@@ -33,7 +33,9 @@
                         <td>Current balance:</td>
                         <td>{{ selectedStudent.balance | number : 2}} EUR</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm pull-right" data-toggle="modal"
+                            <button type="button"
+                                    class="btn btn-primary btn-sm pull-right"
+                                    data-toggle="modal"
                                     data-target="#addToBalanceModalView">Add to balance
                             </button>
                         </td>
@@ -50,8 +52,7 @@
         </fieldset>
     </form>
 
-    <div app-modal id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <balance-modal selected-student="selectedStudent"></balance-modal>
-    </div>
+
+    <balance-modal></balance-modal>
 </div>
 

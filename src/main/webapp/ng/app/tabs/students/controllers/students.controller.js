@@ -16,7 +16,7 @@ angular.module('edup.students')
             totalRecords: 0
         };
 
-        var prepareQuery = function (top, skip, search) {
+        var prepareQuery = function (top, skip, search, orderBy) {
             var queries = {};
 
             queries.$count = true;
@@ -29,6 +29,9 @@ angular.module('edup.students')
             }
             if (top) {
                 queries.$search = search;
+            }
+            if (orderBy) {
+                queries.$orderby = orderBy;
             }
             return queries;
         };
@@ -47,7 +50,7 @@ angular.module('edup.students')
 
         $scope.loadStudents = function (id, top, skip, search) {
             $scope.basicSearch.spin = true;
-            var query = prepareQuery(top, skip, search);
+            var query = prepareQuery(top, skip, search, 'Created desc');
             RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
                 $scope.paging.totalRecords = result.count;
@@ -104,6 +107,20 @@ angular.module('edup.students')
                     $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
                     previousSearch = searchValue;
                 }, 300);
+            }
+        };
+
+        $scope.executeStudentUpdate = function (student) {
+            if (student && student.name && student.lastName && student.id && student.versionId) {
+                RestService.Students.one(student.id.toString())
+                    .customPUT(student)
+                    .then(function (response) {
+                        $scope.newStudent = null;
+                        $scope.photoUrl = null;
+                        $scope.photoUploaded = false;
+                        student.versionId = response.payload;
+                        $scope.loadStudents(student.id, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                    });
             }
         };
 

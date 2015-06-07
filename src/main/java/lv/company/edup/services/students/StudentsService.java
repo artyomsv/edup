@@ -30,10 +30,10 @@ import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.time.DateUtils;
 
-import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -122,6 +122,7 @@ public class StudentsService {
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public EntityPayload createStudentVersion(StudentDto dto, Long id) {
         final StudentVersion version = mapper.map(dto, StudentVersion.class);
+        version.setVersionId(null);
         version.setId(id == null ? currentStudentVersionRepository.getNextStudentId() : id);
         Date created = new Date();
         version.setCreated(created);
@@ -133,14 +134,19 @@ public class StudentsService {
 
         dto.setId(version.getId());
         dto.setVersionId(version.getVersionId());
+        dto.setCreated(created);
         return new EntityPayload(version.getId(), version.getVersionId());
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public EntityPayload updateStudent(StudentDto dto, Long id) {
+    public EntityPayload updateStudent(StudentDto dto, Long id, String etag) {
         CurrentStudentVersion currentVersion = currentStudentVersionRepository.find(id);
         if (currentVersion == null) {
             throw new NotFoundException();
+        }
+
+        if (!StringUtils.equals(etag, String.valueOf(currentVersion.getVersionId()))) {
+            throw new BadRequestException("Etag is outdated");
         }
 
         return createStudentVersion(dto, id);
@@ -179,8 +185,7 @@ public class StudentsService {
         }
     }
 
-
-    @Asynchronous
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void updateIndex(StudentDto dto) {
         indexer.add(dto);
     }
@@ -242,7 +247,9 @@ public class StudentsService {
     }
 
     public void rebuild() {
-        indexer.rebuild();
+        List<CurrentStudentVersion> all = currentStudentVersionRepository.findAll();
+        List<StudentDto> map = mapper.map(all, StudentDto.class);
+        indexer.rebuild(map);
     }
 
     public Student fetchLeanStudent(Long id) {
