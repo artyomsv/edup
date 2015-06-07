@@ -11,6 +11,7 @@ import lv.company.edup.persistence.students.current.CurrentStudentVersionReposit
 import lv.company.edup.persistence.students.current.CurrentStudentVersion_;
 import lv.company.edup.services.students.StudentsService;
 import lv.company.edup.services.students.dto.StudentDto;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -66,21 +67,21 @@ public class StudentsIndexer extends AbstractIndexer<StudentDto> {
     }
 
     @Override
-    public LuceneDocumentBuilder prepareDocumentBuilder(StudentDto dto, boolean create) {
+    public Document build(StudentDto dto) {
         LuceneDocumentBuilder builder = LuceneDocumentBuilder.get();
 
-        builder.add(StudentIndexAttribute.ID, dto.getId(), create);
-        builder.add(StudentIndexAttribute.NAME, dto.getName(), create);
-        builder.add(StudentIndexAttribute.LAST_NAME, dto.getLastName(), create);
-        builder.add(StudentIndexAttribute.PERSON_ID, dto.getPersonId(), create);
-        builder.add(StudentIndexAttribute.MAIL, dto.getMail(), create);
-        builder.add(StudentIndexAttribute.BIRTH_DATE, dto.getBirthDate(), create);
-        builder.add(StudentIndexAttribute.CREATED, dto.getCreated(), create);
-        builder.add(StudentIndexAttribute.MOBILE, dto.getMobile(), create);
+        builder.add(StudentIndexAttribute.ID, dto.getId());
+        builder.add(StudentIndexAttribute.NAME, dto.getName());
+        builder.add(StudentIndexAttribute.LAST_NAME, dto.getLastName());
+        builder.add(StudentIndexAttribute.PERSON_ID, dto.getPersonId());
+        builder.add(StudentIndexAttribute.MAIL, dto.getMail());
+        builder.add(StudentIndexAttribute.BIRTH_DATE, dto.getBirthDate());
+        builder.add(StudentIndexAttribute.CREATED, dto.getCreated());
+        builder.add(StudentIndexAttribute.MOBILE, dto.getMobile());
 
-        builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()), create);
+        builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()));
 
-        return builder;
+        return builder.build();
     }
 
 }

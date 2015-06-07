@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import org.apache.lucene.document.NumericDocValuesField;
 import org.apache.lucene.document.SortedDocValuesField;
 import org.apache.lucene.document.SortedNumericDocValuesField;
@@ -14,7 +13,6 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.util.BytesRef;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -30,7 +28,6 @@ import static org.apache.lucene.document.Field.Store;
 public class LuceneDocumentBuilder {
 
     private Document document;
-    private Collection<Field> docFields = new ArrayList<Field>();
 
     public static LuceneDocumentBuilder get() {
         return new LuceneDocumentBuilder();
@@ -41,65 +38,34 @@ public class LuceneDocumentBuilder {
     }
 
     public LuceneDocumentBuilder add(IndexAttribute field, Date value) {
-        return add(field, value, true);
-    }
-
-    public LuceneDocumentBuilder add(IndexAttribute field, Date value, boolean create) {
         if (field != null && value != null) {
             long time = value.getTime();
 
-            docFields.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
-            if (create) {
-                document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
-            }
+            document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
+            document.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
 
-            docFields.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
-            if (create) {
-                document.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
-            }
-
-            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd"), false, create);
+            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd"), false);
         }
         return this;
     }
 
     public LuceneDocumentBuilder add(IndexAttribute field, String value) {
-        return add(field, value, true);
-    }
-
-    public LuceneDocumentBuilder add(IndexAttribute field, String value, boolean create) {
         if (field != null && value != null) {
-            add(field.getValue(), String.valueOf(value), true, create);
+            add(field.getValue(), String.valueOf(value), true);
         }
         return this;
     }
 
     public LuceneDocumentBuilder add(IndexAttribute field, Number value) {
-        return add(field, value, true);
-    }
-
-    public LuceneDocumentBuilder add(IndexAttribute field, Number value, boolean create) {
         if (field != null && value != null) {
             add(field.getValue(), String.valueOf(value), false);
-
-            docFields.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), value.longValue()));
-            if (create) {
-                document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), value.longValue()));
-            }
-
-            docFields.add(new NumericDocValuesField(getRangeField(field.getValue()), value.longValue()));
-            if (create) {
-                document.add(new NumericDocValuesField(getRangeField(field.getValue()), value.longValue()));
-            }
+            document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), value.longValue()));
+            document.add(new NumericDocValuesField(getRangeField(field.getValue()), value.longValue()));
         }
         return this;
     }
 
     private LuceneDocumentBuilder add(String field, String value, boolean sortable) {
-        return add(field, value, sortable, true);
-    }
-
-    private LuceneDocumentBuilder add(String field, String value, boolean sortable, boolean create) {
         if (field == null || StringUtils.isEmpty(value)) {
             return this;
         }
@@ -109,19 +75,12 @@ public class LuceneDocumentBuilder {
         document.add(new TextField(getFullMatchField(field), getFullMatchValue(value), Store.NO));
         document.add(new TextField(getLikeField(field), getLikeValue(value), Store.NO));
         if (sortable) {
-            docFields.add(new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value))));
-            if (create) {
-                document.add(new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value))));
-            }
+            document.add(new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value))));
         }
         return this;
     }
 
     public LuceneDocumentBuilder addFullTextSearch(Collection<? extends IndexAttribute> attributes) {
-        return addFullTextSearch(attributes, true);
-    }
-
-    public LuceneDocumentBuilder addFullTextSearch(Collection<? extends IndexAttribute> attributes, boolean create) {
         if (CollectionUtils.isEmpty(attributes)) {
             return this;
         }
@@ -135,22 +94,12 @@ public class LuceneDocumentBuilder {
             }
         }
 
-        if (!create) {
-            for (Field field : docFields) {
-                builder.append(" ").append(field.stringValue());
-            }
-        }
-
         document.add(new TextField(LuceneDocumentUtils.ALL, LuceneDocumentUtils.sanitize(StringUtils.trim(builder.toString())), Store.YES));
         return this;
     }
-
 
     public Document build() {
         return document;
     }
 
-    public Collection<Field> getDocFields() {
-        return docFields;
-    }
 }

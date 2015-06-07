@@ -249,7 +249,7 @@ public class StudentsService {
     public void rebuild() {
         List<CurrentStudentVersion> all = currentStudentVersionRepository.findAll();
         List<StudentDto> map = mapper.map(all, StudentDto.class);
-        indexer.rebuild(map);
+        indexer.add(map);
     }
 
     public Student fetchLeanStudent(Long id) {

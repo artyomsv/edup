@@ -80,7 +80,7 @@ public class LuceneSorterQueryBuilder {
 
     private Sort buildSort(Collection<SortField> sortFields) {
         if (CollectionUtils.isEmpty(sortFields)) {
-            return new Sort(new SortedNumericSortField(LuceneDocumentUtils.getSortableField(TECHNICAL_ID), Type.LONG, false));
+            return new Sort(new SortField(LuceneDocumentUtils.getSortableField(TECHNICAL_ID), Type.STRING, false));
         } else {
             sortFields.add(SortField.FIELD_SCORE);
             return new Sort(sortFields.toArray(new SortField[sortFields.size()]));

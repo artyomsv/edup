@@ -6,6 +6,7 @@ import lv.company.edup.infrastructure.utils.AppCollectionUtils;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.IndexSearcher;
@@ -96,9 +97,10 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
         for (Document document : documents) {
             IndexableField field = document.getField(LuceneDocumentUtils.TECHNICAL_ID);
             if (field != null) {
-                Number value = field.numericValue();
-                Long id = value.longValue();
-                CollectionUtils.addIgnoreNull(ids, id);
+                String value = field.stringValue();
+                if (StringUtils.isNumeric(value)) {
+                    CollectionUtils.addIgnoreNull(ids, Long.valueOf(value));
+                }
             }
         }
         return ids;

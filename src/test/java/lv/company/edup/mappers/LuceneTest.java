@@ -160,10 +160,6 @@ public class LuceneTest {
         ODataResult<StudentDto> result = searcher.search(criteria);
         List<StudentDto> values = result.getValues();
         assertThat(values.size(), is(3));
-        Iterator<StudentDto> iterator = values.iterator();
-        assertThat(iterator.next().getId(), is(2L));
-        assertThat(iterator.next().getId(), is(3L));
-        assertThat(iterator.next().getId(), is(12L));
     }
 
     @Test
@@ -370,7 +366,7 @@ public class LuceneTest {
             assertThat(iterator.next().getId(), is(id--));
         }
 
-        db.put(21L, getStudentDto(21L, "Artyom", "Stukans", DateUtils.addDays(new Date(), 40)));
+        db.put(21L, getStudentDto(21L, "Brtyom", "Stukans", DateUtils.addDays(new Date(), 40)));
         indexer.add(db.get(21L));
 
 
@@ -378,12 +374,29 @@ public class LuceneTest {
         assertThat(result.getCount(), is(21L));
         assertThat(result.getValues().iterator().next().getId(), is(21L));
 
-        indexer.update(db.get(21L));
+        indexer.add(db.get(21L));
 
+        criteria.setTop(999);
         result = searcher.search(criteria);
         assertThat(result.getCount(), is(21L));
-        assertThat(result.getValues().iterator().next().getId(), is(21L));
-        assertThat(result.getValues().iterator().next().getId(), is(20L));
+        iterator = result.getValues().iterator();
+        assertThat(iterator.next().getId(), is(21L));
+        assertThat(iterator.next().getId(), is(20L));
+
+        db.get(20L).setName("Artyom");
+        indexer.add(db.get(20L));
+
+        parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$orderby", "Name asc");
+        parameters.add("$count", "true");
+        parameters.add("$all", "true");
+        criteria = new ODataCriteria(parameters);
+        criteria.setSearch("*");
+        result = searcher.search(criteria);
+        assertThat(result.getCount(), is(21L));
+        iterator = result.getValues().iterator();
+        assertThat(iterator.next().getId(), is(20L));
+        assertThat(iterator.next().getId(), is(21L));
     }
 
     private StudentDto getStudentDto(long id, String name, String lastName, Date created) {
