@@ -39,9 +39,6 @@ public class Balance {
     @Column(name = "CREATED")
     private Date created;
 
-    @Column(name = "UPDATED")
-    private Date updated;
-
     public Long getId() {
         return id;
     }
@@ -90,11 +87,4 @@ public class Balance {
         this.created = created;
     }
 
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setUpdated(Date updated) {
-        this.updated = updated;
-    }
 }
