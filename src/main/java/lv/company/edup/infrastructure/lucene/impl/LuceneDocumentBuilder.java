@@ -17,10 +17,7 @@ import org.apache.lucene.util.BytesRef;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.ALL;
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getFullMatchField;
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getFullMatchValue;
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getLikeField;
@@ -28,16 +25,12 @@ import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.get
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getRangeField;
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getSortValue;
 import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.getSortableField;
-import static lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils.sanitize;
 import static org.apache.lucene.document.Field.Store;
 
 public class LuceneDocumentBuilder {
 
     private Document document;
-
-    private Collection<Field> docValues = new ArrayList<Field>();
-    private Map<String, BytesRef> binaryValues = new HashMap<String, BytesRef>();
-    private Map<String, Long> numericDocValues = new HashMap<String, Long>();
+    private Collection<Field> docFields = new ArrayList<Field>();
 
     public static LuceneDocumentBuilder get() {
         return new LuceneDocumentBuilder();
@@ -55,19 +48,17 @@ public class LuceneDocumentBuilder {
         if (field != null && value != null) {
             long time = value.getTime();
 
-            String sortableField = getSortableField(field.getValue());
-            numericDocValues.put(sortableField, time);
+            docFields.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
             if (create) {
-                document.add(new SortedNumericDocValuesField(sortableField, time));
+                document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
             }
 
-            String rangeField = getRangeField(field.getValue());
-            numericDocValues.put(rangeField, time);
+            docFields.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
             if (create) {
-                document.add(new NumericDocValuesField(rangeField, time));
+                document.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
             }
 
-            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd"), false);
+            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd"), false, create);
         }
         return this;
     }
@@ -78,7 +69,7 @@ public class LuceneDocumentBuilder {
 
     public LuceneDocumentBuilder add(IndexAttribute field, String value, boolean create) {
         if (field != null && value != null) {
-            add(field.getValue(), String.valueOf(value), true);
+            add(field.getValue(), String.valueOf(value), true, create);
         }
         return this;
     }
@@ -91,16 +82,14 @@ public class LuceneDocumentBuilder {
         if (field != null && value != null) {
             add(field.getValue(), String.valueOf(value), false);
 
-            String sortableField = getSortableField(field.getValue());
-            numericDocValues.put(sortableField, value.longValue());
+            docFields.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), value.longValue()));
             if (create) {
-                document.add(new SortedNumericDocValuesField(sortableField, value.longValue()));
+                document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), value.longValue()));
             }
 
-            String rangeField = getRangeField(field.getValue());
-            numericDocValues.put(rangeField, value.longValue());
+            docFields.add(new NumericDocValuesField(getRangeField(field.getValue()), value.longValue()));
             if (create) {
-                document.add(new NumericDocValuesField(rangeField, value.longValue()));
+                document.add(new NumericDocValuesField(getRangeField(field.getValue()), value.longValue()));
             }
         }
         return this;
@@ -120,10 +109,9 @@ public class LuceneDocumentBuilder {
         document.add(new TextField(getFullMatchField(field), getFullMatchValue(value), Store.NO));
         document.add(new TextField(getLikeField(field), getLikeValue(value), Store.NO));
         if (sortable) {
-            SortedDocValuesField docValuesField = new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value)));
-            docValues.add(docValuesField);
+            docFields.add(new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value))));
             if (create) {
-                document.add(docValuesField);
+                document.add(new SortedDocValuesField(getSortableField(field), new BytesRef(getSortValue(value))));
             }
         }
         return this;
@@ -132,7 +120,6 @@ public class LuceneDocumentBuilder {
     public LuceneDocumentBuilder addFullTextSearch(Collection<? extends IndexAttribute> attributes) {
         return addFullTextSearch(attributes, true);
     }
-
 
     public LuceneDocumentBuilder addFullTextSearch(Collection<? extends IndexAttribute> attributes, boolean create) {
         if (CollectionUtils.isEmpty(attributes)) {
@@ -149,12 +136,12 @@ public class LuceneDocumentBuilder {
         }
 
         if (!create) {
-            for (Field docValue : docValues) {
-                builder.append(" ").append(docValue.stringValue());
+            for (Field field : docFields) {
+                builder.append(" ").append(field.stringValue());
             }
         }
 
-        document.add(new TextField(ALL, sanitize(StringUtils.trim(builder.toString())), Store.YES));
+        document.add(new TextField(LuceneDocumentUtils.ALL, LuceneDocumentUtils.sanitize(StringUtils.trim(builder.toString())), Store.YES));
         return this;
     }
 
@@ -163,15 +150,7 @@ public class LuceneDocumentBuilder {
         return document;
     }
 
-    public Collection<Field> getDocValues() {
-        return docValues;
-    }
-
-    public Map<String, BytesRef> getBinaryValues() {
-        return binaryValues;
-    }
-
-    public Map<String, Long> getNumericDocValues() {
-        return numericDocValues;
+    public Collection<Field> getDocFields() {
+        return docFields;
     }
 }

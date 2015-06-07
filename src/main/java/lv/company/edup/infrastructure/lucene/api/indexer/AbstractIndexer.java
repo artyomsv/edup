@@ -2,6 +2,7 @@ package lv.company.edup.infrastructure.lucene.api.indexer;
 
 import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentBuilder;
 import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -64,6 +65,10 @@ public abstract class AbstractIndexer<T> implements Indexer<T> {
 
             indexWriter.updateNumericDocValue(term, LuceneDocumentUtils.TECHNICAL_ID, Long.valueOf(id));
             indexWriter.updateNumericDocValue(term, LuceneDocumentUtils.getSortableField(LuceneDocumentUtils.TECHNICAL_ID), Long.valueOf(id));
+
+            if (CollectionUtils.isNotEmpty(builder.getDocFields())) {
+                indexWriter.updateDocValues(term, builder.getDocFields().toArray(new Field[builder.getDocFields().size()]));
+            }
 
 
         } catch (IOException e) {
