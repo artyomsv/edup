@@ -1,5 +1,6 @@
 package lv.company.edup.persistence.students.version;
 
+import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.persistence.students.Student;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.util.Date;
 
 @NamedStoredProcedureQuery(name = StudentVersion.Procedure.GENERATE_USER_ID, procedureName = "getStudentId")
 
@@ -51,6 +53,11 @@ public class StudentVersion extends Student {
     @Override
     public void setVersionId(Long versionId) {
         this.versionId = versionId;
+    }
+
+    @Override
+    public Date getUpdated() {
+        throw new InternalException("Student version dont have updated value");
     }
 
     @Override

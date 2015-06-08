@@ -42,6 +42,8 @@ public class StudentMappersTest extends BaseMappersTest {
         entity.addProperty(PropertyName.BIRTH_DATE, BIRTH_DATE);
         entity.addProperty(PropertyName.MOBILE_PHONE, MOBILE);
         entity.addProperty(PropertyName.PERSONAL_NUMBER, PERSON_ID);
+        Date updated = new Date();
+        entity.setUpdated(updated);
 
         entity.addProperty(PropertyName.PHOTO_ID, PHOTO_ID);
         entity.addProperty(PropertyName.PARENT_INFORMATION, PARENTS_INFO);
@@ -67,6 +69,7 @@ public class StudentMappersTest extends BaseMappersTest {
         assertThat(dto.getMail(), is(MAIL));
         assertThat(dto.getPhotoUrl(), is(HTTPS_LOCALHOST_8443_EDUP + "/" + PHOTO_ID));
         assertTrue(DateUtils.isSameInstant(dto.getCreated(), entity.getCreated()));
+        assertTrue(DateUtils.isSameInstant(dto.getUpdated(), entity.getUpdated()));
 
     }
 

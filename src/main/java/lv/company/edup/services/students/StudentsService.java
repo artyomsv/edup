@@ -124,8 +124,7 @@ public class StudentsService {
         final StudentVersion version = mapper.map(dto, StudentVersion.class);
         version.setVersionId(null);
         version.setId(id == null ? currentStudentVersionRepository.getNextStudentId() : id);
-        Date created = new Date();
-        version.setCreated(created);
+        version.setCreated(new Date());
         versionRepository.persist(version);
 
         setVersionIdForProperties(version.getVersionId(), version.getProperties());
@@ -134,7 +133,6 @@ public class StudentsService {
 
         dto.setId(version.getId());
         dto.setVersionId(version.getVersionId());
-        dto.setCreated(created);
         return new EntityPayload(version.getId(), version.getVersionId());
     }
 
@@ -186,8 +184,9 @@ public class StudentsService {
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void updateIndex(StudentDto dto) {
-        indexer.add(dto);
+    public void updateIndex(Long id) {
+        StudentDto student = findStudent(id);
+        indexer.add(student);
     }
 
     private void setVersionIdForProperties(final Long versionId, List<StudentProperty> properties) {

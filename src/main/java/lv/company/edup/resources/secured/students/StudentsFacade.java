@@ -44,7 +44,7 @@ public class StudentsFacade extends ApplicationFacade {
 
     public Response createStudent(StudentDto dto) {
         EntityPayload payload = studentsService.createStudentVersion(dto);
-        studentsService.updateIndex(dto);
+        studentsService.updateIndex(payload.getId());
         return created(payload.getId(), payload.getVersionId());
     }
 
@@ -54,7 +54,7 @@ public class StudentsFacade extends ApplicationFacade {
         }
 
         EntityPayload payload = studentsService.updateStudent(dto, id, etag);
-        studentsService.updateIndex(dto);
+        studentsService.updateIndex(payload.getId());
         return updated(payload.getVersionId());
     }
 

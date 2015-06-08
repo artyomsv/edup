@@ -205,4 +205,6 @@ public abstract class Student implements Serializable {
     public abstract Long getVersionId();
 
     public abstract void setVersionId(Long versionId);
+
+    public abstract Date getUpdated();
 }

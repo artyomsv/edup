@@ -12,6 +12,7 @@ public enum StudentIndexAttribute implements IndexAttribute {
     MAIL("Mail", ""),
     BIRTH_DATE("BirthDate", "Format"),
     CREATED("Created", "Format"),
+    UPDATED("Updated", "Format"),
     MOBILE("Mobile", ""),
     PERSON_ID("PersonId", "");
 

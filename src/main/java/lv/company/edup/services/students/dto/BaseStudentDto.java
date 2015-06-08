@@ -18,6 +18,7 @@ public class BaseStudentDto {
     private Long age;
     private Date birthDate;
     private Date created;
+    private Date updated;
 
     public Long getId() {
         return id;
@@ -89,6 +90,14 @@ public class BaseStudentDto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     @Override

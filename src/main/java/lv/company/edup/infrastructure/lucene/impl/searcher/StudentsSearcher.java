@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.BIRTH_DATE;
 import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.CREATED;
 import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.ID;
+import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.UPDATED;
 
 @StudentReader
 @ApplicationScoped
@@ -82,7 +83,7 @@ public class StudentsSearcher extends AbstractSearcher<StudentDto> {
 
     @Override
     public Collection<String> getNumericFields() {
-        return Arrays.asList(ID.getValue(), CREATED.getValue(), BIRTH_DATE.getValue());
+        return Arrays.asList(ID.getValue(), CREATED.getValue(), UPDATED.getValue(), BIRTH_DATE.getValue());
     }
 
     @Override

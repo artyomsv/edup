@@ -84,7 +84,6 @@ public class BalanceService {
         Balance balance = new Balance();
         balance.setAmount(dto.getAmount());
         balance.setCreated(new Date());
-        balance.setUpdated(new Date());
         balance.setComments(dto.getComments());
         balance.setStatus(BalanceStatus.SUBMITTED);
         balance.setStudentId(dto.getStudentId());
