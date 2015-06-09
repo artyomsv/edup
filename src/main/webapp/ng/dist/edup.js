@@ -2,30 +2,9 @@
 
 angular.module('edup.common', [
     'restangular',
-    'angularUtils.directives.dirPagination'
+    'angularUtils.directives.dirPagination',
+    'mgcrea.ngStrap'
 ]);
-'use strict';
-
-angular.module('edup.common')
-
-    .directive('appDatePicker', function () {
-        return {
-            restrict: 'A',
-            scope: {
-                selectedDate: '=pickerValue'
-            },
-            link: function (scope, element) {
-                element.datetimepicker();
-
-                element.on('dp.change dp.hide', function (e) {
-                    scope.selectedDate = e.date;
-                });
-
-            }
-        };
-    }
-);
-
 'use strict';
 
 angular.module('edup.common')
@@ -75,11 +54,12 @@ angular.module('edup.common').config(['paginationTemplateProvider', function(pag
 }]);
 'use strict';
 
-angular.module('edup.common').run(['Restangular', 'UrlService', function (Restangular, UrlService) {
+angular.module('edup.common').run(['Restangular', 'UrlService', 'NotificationService', function (Restangular, UrlService, NotificationService) {
 
     Restangular.setBaseUrl(UrlService.BaseUrl);
 
     Restangular.setErrorInterceptor(function (resp) {
+        NotificationService.Error(resp);
         console.log(angular.toJson(resp, true));
         return false;
     });
@@ -99,14 +79,50 @@ angular.module('edup.common').run(['Restangular', 'UrlService', function (Restan
 
 angular.module('edup.common')
 
+    .service('NotificationService', function () {
+
+        alertify.set('notifier', 'position', 'bottom-right');
+
+        return {
+            Success: function (msg, title) {
+                alertify.success(msg);
+            },
+            Info: function (msg, title) {
+                alertify.info(msg);
+            },
+            Warn: function (msg, title) {
+                alertify.notify(msg, 'custom', 2);
+            },
+            Error: function (msg, title) {
+                Alertify.error(msg);
+            }
+
+
+        };
+
+    }
+);
+'use strict';
+
+angular.module('edup.common')
+
     .service('PaginationService', function () {
 
         var getTop = function (paging) {
-            return paging.page * paging.perPage;
+            if (paging.page) {
+                return paging.page * paging.perPage;
+            } else {
+                return 1 * paging.perPage;
+            }
+
         };
 
         var getSkip = function (paging) {
-            return (paging.page * paging.perPage) - paging.perPage;
+            if (paging.page) {
+                return (paging.page * paging.perPage) - paging.perPage;
+            } else {
+                return (1 * paging.perPage) - paging.perPage;
+            }
         };
 
         return {
@@ -461,7 +477,7 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .controller('StudentsController', ['$scope', '$timeout', 'RestService', 'PaginationService', function ($scope, $timeout, RestService, PaginationService) {
+    .controller('StudentsController', ['$scope', '$timeout', 'RestService', 'PaginationService', 'NotificationService', function ($scope, $timeout, RestService, PaginationService, NotificationService) {
 
         $scope.studentSelected = false;
         $scope.basicSearch = {
@@ -526,7 +542,9 @@ angular.module('edup.students')
             });
         };
 
-        $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+        if (!$scope.basicSearch.spin) {
+            $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+        }
 
         $scope.setSelected = function (studentId) {
             $scope.loadFullStudent(studentId);
@@ -569,6 +587,8 @@ angular.module('edup.students')
         };
 
         $scope.executeStudentUpdate = function (student) {
+            student.id = $scope.selectedStudent.id;
+            student.versionId = $scope.selectedStudent.versionId;
             if (student && student.name && student.lastName && student.id && student.versionId) {
                 RestService.Students.one(student.id.toString())
                     .customPUT(student)
@@ -577,6 +597,7 @@ angular.module('edup.students')
                         $scope.photoUrl = null;
                         $scope.photoUploaded = false;
                         student.versionId = response.payload;
+                        NotificationService.Success(student.name + ' ' + student.lastName + ' updated!');
                         $scope.loadStudents(student.id, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
                     });
             }
@@ -713,21 +734,40 @@ angular.module('edup.widgets', [
 
 angular.module('edup.students')
 
-    .controller('NewStudentModalController', ['$scope', 'RestService', 'PaginationService', function ($scope, RestService, PaginationService) {
+    .controller('NewStudentModalController', ['$scope', 'RestService', 'PaginationService', 'NotificationService', function ($scope, RestService, PaginationService, NotificationService) {
+        var reset = function () {
+            $scope.$broadcast('clearFileUploadQueue', {message: 'reset'});
+
+            if ($scope.newStudent) {
+                $scope.newStudent.birthDate = null;
+                $scope.newStudent.photoUrl = null;
+                $scope.newStudent.photoId = null;
+            }
+            $scope.newStudent = null;
+            $scope.photoUrl = null;
+            $scope.photoUploaded = false;
+        };
+
         $scope.executeStudentSave = function (student) {
+            console.log(angular.toJson(student, true));
             if (student && student.name && student.lastName) {
+                student.photoId = $scope.id;
                 RestService.Students.customPOST(student).then(function (response) {
+                    NotificationService.Success('Student ' + student.name + ' ' + student.lastName + ' created!');
                     $scope.dismissModal();
-                    $scope.newStudent = null;
-                    $scope.photoUrl = null;
-                    $scope.photoUploaded = false;
                     $scope.loadStudents(response.payload, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                    reset();
                 });
             }
         };
 
+        $scope.executeReset = function () {
+            reset();
+        };
+
         $scope.executeCancel = function () {
-            $scope.newStudent = null;
+            reset();
+            $scope.dismissModal();
         };
 
     }]
@@ -842,8 +882,14 @@ angular.module('edup.widgets')
     .directive('newStudentRecord', function () {
         return {
             restrict: 'E',
+            scope: {
+                loadStudents: '&',
+                paging: '='
+            },
             templateUrl: 'new-student-modal',
             link: function (scope) {
+
+
             }
         };
     }
@@ -852,20 +898,16 @@ angular.module('edup.widgets')
 
 angular.module('edup.widgets')
 
-    .directive('photoUpload', ['UrlService', 'FileUploader', '$window', function (UrlService, FileUploader, $window) {
+    .directive('photoUpload', ['UrlService', 'FileUploader', '$window', '$timeout', 'NotificationService', function (UrlService, FileUploader, $window, $timeout, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'photo-upload',
             scope: {
                 id: '=photoId',
-                photoUpdate: '=',
                 photoUrl: '='
             },
             priority: 10,
             link: function (scope) {
-                scope.photoUrl = null;
-                scope.photoUploaded = false;
-
                 scope.uploader = new FileUploader({
                     url: UrlService.Files.Upload
                 });
@@ -878,6 +920,11 @@ angular.module('edup.widgets')
                 scope.openDownloadUrl = function (url) {
                     $window.open(url, '_blank');
                 };
+
+                scope.$on('clearFileUploadQueue', function (event, args) {
+                    scope.uploader.clearQueue();
+                    scope.photoUploaded = false;
+                });
 
                 //scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
                 //    console.info('onWhenAddingFileFailed', item, filter, options);
@@ -900,9 +947,14 @@ angular.module('edup.widgets')
                 scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
                     scope.id = response.payload.id;
                     scope.photoUrl = UrlService.Files.Download + '/' + scope.id;
-                    scope.photoUploaded = true;
+                    NotificationService.Success('Student photo uploaded!');
+
+                    $timeout(function () {
+                        scope.photoUploaded = true;
+                    }, 500);
                 };
                 scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+                    NotificationService.Error('Failed to upload student photo!');
                     console.info('onErrorItem', fileItem, response, status, headers);
                 };
                 //scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
@@ -1008,12 +1060,12 @@ angular.module('edup')
 
 
   $templateCache.put('student-information',
-      "<div class=mainForm><div class=\"row clearfix\"><form role=form><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=selectedStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=selectedStudent.lastName required></div><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"selectedStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"selectedStudent.personId\"></div><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"selectedStudent.mail\"></div><div class=form-group><label for=datePickerInput>Birthday</label><div class=\"input-group date\" id=dateTimePicker><input app-date-picker ng-value=\"selectedStudent.birthDate | date\" picker-value=selectedStudent.birthDate id=datePickerInput class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=selectedStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=selectedStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div><div class=\"col-md-12 row\"><photo-upload photo-id=selectedStudent.photoId photo-update=true photo-url=selectedStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentUpdate(selectedStudent)>Update</button></div></form></div></div>"
+    "<div class=mainForm><div class=\"row clearfix\"><form role=form><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=form-group><label for=datePickerInput>Birthday</label><div class=\"input-group date\" id=dateTimePicker><input app-date-picker ng-value=\"studentEdit.birthDate | date\" picker-value=studentEdit.birthDate id=datePickerInput class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
   );
 
 
   $templateCache.put('students-list',
-    "<div><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#addNewStudentModalView></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: paging.perPage\" current-page=paging.page total-items=paging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'selected': student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#student-details-modal-view ng-click=\"selectedStudent = student\">Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"pageChanged(newPageNumber, searchValue)\"></dir-pagination-controls></div></div><student-details></student-details><new-student-record></new-student-record></div>"
+    "<div><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: paging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#addNewStudentModalView ng-click=\"newStudent = null\"></span></h4></div></div><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: paging.perPage\" current-page=paging.page total-items=paging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'selected': student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#student-details-modal-view ng-click=\"selectedStudent = student\">Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"pageChanged(newPageNumber, searchValue)\"></dir-pagination-controls></div></div><student-details></student-details><new-student-record load-students=loadStudents paging=paging></new-student-record></div>"
   );
 
 
@@ -1033,12 +1085,12 @@ angular.module('edup')
 
 
   $templateCache.put('new-student-modal',
-    "<div app-modal ng-controller=NewStudentModalController id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=form-group><label for=datePickerInput>Birthday</label><div class=\"input-group date\" id=dateTimePicker><input app-date-picker picker-value=newStudent.birthDate id=datePickerInput class=\"form-control\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-update=false photo-url=selectedStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\">Reset</button> <button type=button class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
+    "<div app-modal ng-controller=NewStudentModalController id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true>×</button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=form-group><label for=datePickerInput>Birthday</label><div class=\"input-group date\" id=dateTimePicker><input id=datePickerInput type=datetime date-time ng-model=newStudent.birthDate view=year max-view=year min-view=date auto-close=true><div date-picker=start min-view=year></div><span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-url=newStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\" ng-click=executeReset()>Reset</button> <button type=reset class=\"btn btn-warning btn-sm\" ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
   );
 
 
   $templateCache.put('photo-upload',
-    "<div style=\"padding: 10px\"><div ng-show=\"!photoUploaded || photoUpdate\"><div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button></td></tr></tbody></table></div><div ng-show=\"photoUploaded || photoUpdate\"><img alt=140x140 src={{photoUrl}} class=\"img-rounded pull-left\"></div></div>"
+    "<div style=\"padding: 10px\"><div><div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button></td></tr></tbody></table></div><div ng-show=photoUploaded><img alt=140x140 src={{photoUrl}} class=\"img-rounded text-center\"></div></div>"
   );
 
 }]);

@@ -2,20 +2,16 @@
 
 angular.module('edup.widgets')
 
-    .directive('photoUpload', function (UrlService, FileUploader, $window) {
+    .directive('photoUpload', function (UrlService, FileUploader, $window, $timeout, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'photo-upload',
             scope: {
                 id: '=photoId',
-                photoUpdate: '=',
                 photoUrl: '='
             },
             priority: 10,
             link: function (scope) {
-                scope.photoUrl = null;
-                scope.photoUploaded = false;
-
                 scope.uploader = new FileUploader({
                     url: UrlService.Files.Upload
                 });
@@ -28,6 +24,11 @@ angular.module('edup.widgets')
                 scope.openDownloadUrl = function (url) {
                     $window.open(url, '_blank');
                 };
+
+                scope.$on('clearFileUploadQueue', function (event, args) {
+                    scope.uploader.clearQueue();
+                    scope.photoUploaded = false;
+                });
 
                 //scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
                 //    console.info('onWhenAddingFileFailed', item, filter, options);
@@ -50,9 +51,14 @@ angular.module('edup.widgets')
                 scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
                     scope.id = response.payload.id;
                     scope.photoUrl = UrlService.Files.Download + '/' + scope.id;
-                    scope.photoUploaded = true;
+                    NotificationService.Success('Student photo uploaded!');
+
+                    $timeout(function () {
+                        scope.photoUploaded = true;
+                    }, 500);
                 };
                 scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+                    NotificationService.Error('Failed to upload student photo!');
                     console.info('onErrorItem', fileItem, response, status, headers);
                 };
                 //scope. uploader.onCancelItem = function(fileItem, response, status, headers) {

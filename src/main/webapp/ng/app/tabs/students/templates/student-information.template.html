@@ -3,34 +3,39 @@
         <form role="form">
             <div class="col-md-6 column">
 
-                <div class="form-group">
-                    <label for="studentName">Name</label>
-                    <input type="text" class="form-control" id="studentName" ng-model="selectedStudent.name" required/>
-                </div>
-                <div class="form-group">
-                    <label for="studentLastName">Last name</label>
-                    <input type="tel" class="form-control" id="studentLastName" ng-model="selectedStudent.lastName" required/>
-                </div>
-                <div class="form-group">
-                    <label for="studentMobile">Mobile</label>
-                    <input type="text" class="form-control" id="studentMobile" ng-model="selectedStudent.mobile"/>
-                </div>
-                <div class="form-group">
-                    <label for="studentPersonalNumber">Personal number</label>
-                    <input type="text" class="form-control" id="studentPersonalNumber" ng-model="selectedStudent.personId"/>
+                <div class="col-md-6 column">
+                    <div class="form-group">
+                        <label for="studentName">Name</label>
+                        <input type="text" class="form-control" id="studentName" ng-model="studentEdit.name" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentLastName">Last name</label>
+                        <input type="tel" class="form-control" id="studentLastName" ng-model="studentEdit.lastName" required/>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="studentMail">e-mail</label>
-                    <input type="text" class="form-control" id="studentMail" ng-model="selectedStudent.mail"/>
+                <div class="col-md-6 column">
+                    <div class="form-group">
+                        <label for="studentMobile">Mobile</label>
+                        <input type="text" class="form-control" id="studentMobile" ng-model="studentEdit.mobile"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="studentPersonalNumber">Personal number</label>
+                        <input type="text" class="form-control" id="studentPersonalNumber" ng-model="studentEdit.personId"/>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="datePickerInput">Birthday</label>
+                <div class="col-md-12 column">
+                    <div class="form-group">
+                        <label for="parentInformationInput">Parent information</label>
+                        <textarea ng-model="studentEdit.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
+                    </div>
 
-                    <div class='input-group date' id='dateTimePicker'>
-                        <input app-date-picker ng-value="selectedStudent.birthDate | date" picker-value='selectedStudent.birthDate' id="datePickerInput" type='text' class="form-control"/>
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    <div class="form-group">
+                        <label for="characteristicsInput">Characteristics</label>
+                        <textarea ng-model="studentEdit.characteristics" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
                     </div>
                 </div>
 
@@ -38,24 +43,31 @@
 
             <div class="col-md-6 column">
 
-                <div class="form-group">
-                    <label for="parentInformationInput">Parent information</label>
-                    <textarea ng-model="selectedStudent.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
-                </div>
+                <div class="col-md-12 column">
 
-                <div class="form-group">
-                    <label for="characteristicsInput">Characteristics</label>
-                    <textarea ng-model="selectedStudent.characteristics" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
+                    <div class="form-group">
+                        <label for="studentMail">e-mail</label>
+                        <input type="text" class="form-control" id="studentMail" ng-model="studentEdit.mail"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="datePickerInput">Birthday</label>
+
+                        <div class='input-group date' id='dateTimePicker'>
+                            <input app-date-picker ng-value="studentEdit.birthDate | date" picker-value='studentEdit.birthDate' id="datePickerInput" type='text' class="form-control"/>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="col-md-12 row">
-                    <photo-upload photo-id='selectedStudent.photoId' photo-update="true" photo-url="selectedStudent.photoUrl"></photo-upload>
+                    <photo-upload photo-id='studentEdit.photoId' photo-url="studentEdit.photoUrl"></photo-upload>
                 </div>
 
             </div>
 
             <div class="col-md-12 column" style="padding-top: 10px">
-                <button type="submit" class="btn btn-success btn-sm" ng-click="executeStudentUpdate(selectedStudent)">Update</button>
+                <button type="submit" class="btn btn-success btn-sm" ng-click="executeStudentUpdate(studentEdit)">Update</button>
             </div>
 
         </form>

@@ -2,5 +2,6 @@
 
 angular.module('edup.common', [
     'restangular',
-    'angularUtils.directives.dirPagination'
+    'angularUtils.directives.dirPagination',
+    'mgcrea.ngStrap'
 ]);

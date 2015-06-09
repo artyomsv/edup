@@ -21,6 +21,7 @@
                       style="cursor: pointer"
                       data-toggle="modal"
                       data-target="#addNewStudentModalView"
+                      ng-click="newStudent = null"
                     >
             </span></h4>
         </div>
@@ -71,7 +72,7 @@
 
     <student-details></student-details>
 
-    <new-student-record></new-student-record>
+    <new-student-record load-students="loadStudents" paging="paging"></new-student-record>
 </div>
 
 

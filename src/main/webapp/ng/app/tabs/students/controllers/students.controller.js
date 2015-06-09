@@ -3,7 +3,7 @@
 
 angular.module('edup.students')
 
-    .controller('StudentsController', function ($scope, $timeout, RestService, PaginationService) {
+    .controller('StudentsController', function ($scope, $timeout, RestService, PaginationService, NotificationService) {
 
         $scope.studentSelected = false;
         $scope.basicSearch = {
@@ -68,7 +68,9 @@ angular.module('edup.students')
             });
         };
 
-        $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+        if (!$scope.basicSearch.spin) {
+            $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+        }
 
         $scope.setSelected = function (studentId) {
             $scope.loadFullStudent(studentId);
@@ -111,6 +113,8 @@ angular.module('edup.students')
         };
 
         $scope.executeStudentUpdate = function (student) {
+            student.id = $scope.selectedStudent.id;
+            student.versionId = $scope.selectedStudent.versionId;
             if (student && student.name && student.lastName && student.id && student.versionId) {
                 RestService.Students.one(student.id.toString())
                     .customPUT(student)
@@ -119,6 +123,7 @@ angular.module('edup.students')
                         $scope.photoUrl = null;
                         $scope.photoUploaded = false;
                         student.versionId = response.payload;
+                        NotificationService.Success(student.name + ' ' + student.lastName + ' updated!');
                         $scope.loadStudents(student.id, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
                     });
             }

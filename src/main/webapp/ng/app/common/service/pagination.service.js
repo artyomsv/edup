@@ -5,11 +5,20 @@ angular.module('edup.common')
     .service('PaginationService', function () {
 
         var getTop = function (paging) {
-            return paging.page * paging.perPage;
+            if (paging.page) {
+                return paging.page * paging.perPage;
+            } else {
+                return 1 * paging.perPage;
+            }
+
         };
 
         var getSkip = function (paging) {
-            return (paging.page * paging.perPage) - paging.perPage;
+            if (paging.page) {
+                return (paging.page * paging.perPage) - paging.perPage;
+            } else {
+                return (1 * paging.perPage) - paging.perPage;
+            }
         };
 
         return {

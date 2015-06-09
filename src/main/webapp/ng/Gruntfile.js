@@ -106,11 +106,11 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-animate/angular-animate.min.js',
                     'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
                     'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js',
-                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
                     'vendor/bower_components/angular-file-upload/angular-file-upload.min.js',
                     'vendor/bower_components/angular-utils-pagination/dirPagination.js',
                     'vendor/bower_components/angular-money-directive/angular-money-directive.js',
-                    'vendor/bower_components/angular-modal-service/dst/angular-modal-service.min.js',
+                    'vendor/bower_components/angular-strap/dist/angular-strap.min.js',
+                    'vendor/bower_components/alertifyjs/dist/js/alertify.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

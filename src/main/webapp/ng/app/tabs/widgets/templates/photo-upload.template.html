@@ -1,5 +1,5 @@
 <div style="padding: 10px">
-    <div ng-show="!photoUploaded || photoUpdate">
+    <div>
         <div ng-if="uploader">
             <input type="file" nv-file-select uploader="uploader"/>
         </div>
@@ -38,8 +38,8 @@
         </table>
     </div>
 
-    <div ng-show="photoUploaded || photoUpdate">
-        <img alt="140x140" src="{{photoUrl}}" class="img-rounded pull-left"/>
+    <div ng-show="photoUploaded">
+        <img alt="140x140" src="{{photoUrl}}" class="img-rounded text-center"/>
     </div>
 
 </div>
