@@ -4,6 +4,8 @@ angular.module('edup.common')
 
     .service('NotificationService', function () {
 
+        /* jshint ignore:start */
+
         alertify.set('notifier', 'position', 'bottom-right');
 
         return {
@@ -17,11 +19,12 @@ angular.module('edup.common')
                 alertify.notify(msg, 'custom', 2);
             },
             Error: function (msg, title) {
-                Alertify.error(msg);
+                alertify.error(msg);
             }
 
-
         };
+
+        /* jshint ignore:end */
 
     }
 );

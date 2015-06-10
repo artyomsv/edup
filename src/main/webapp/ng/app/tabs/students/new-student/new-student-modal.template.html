@@ -1,4 +1,4 @@
-<div app-modal ng-controller="NewStudentModalController" id="addNewStudentModalView" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+<div app-modal id="addNewStudentModalView" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content modalViewPadding">
@@ -11,7 +11,7 @@
             <div style="padding-top: 20px; padding-bottom: 10px">
 
                 <div class="row clearfix">
-                    <form role="form">
+                    <form role="form" name=""studentCreatedForm>
                         <div class="col-md-6 column">
 
                             <div class="col-md-6 column">
@@ -62,13 +62,17 @@
                                     <input type="text" class="form-control" id="studentMail" ng-model="newStudent.mail"/>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group" ng-class="{'has-error': studentCreatedForm.date.$invalid}">
                                     <label for="datePickerInput">Birthday</label>
-
                                     <div class='input-group date' id='dateTimePicker'>
-                                        <input id='datePickerInput' type="datetime" date-time ng-model="newStudent.birthDate" view="year" max-view="year" min-view="date" auto-close="true">
-                                        <!--<input type="datetime" date-time ng-model="start">-->
-                                        <div date-picker="start" min-view="year"></div>
+                                        <input id="datePickerInput"
+                                               type="text"
+                                               class="form-control"
+                                               ng-model="newStudent.birthDate"
+                                               name="date"
+                                               bs-datepicker
+                                               data-date-format="yyyy-MM-dd"
+                                               data-autoclose="1">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>

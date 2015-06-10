@@ -1,6 +1,6 @@
 <div class="mainForm">
     <div class="row clearfix">
-        <form role="form">
+        <form role="form" name="studentUpdateForm">
             <div class="col-md-6 column">
 
                 <div class="col-md-6 column">
@@ -50,11 +50,17 @@
                         <input type="text" class="form-control" id="studentMail" ng-model="studentEdit.mail"/>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" ng-class="{'has-error': studentUpdateForm.date.$invalid}">
                         <label for="datePickerInput">Birthday</label>
-
                         <div class='input-group date' id='dateTimePicker'>
-                            <input app-date-picker ng-value="studentEdit.birthDate | date" picker-value='studentEdit.birthDate' id="datePickerInput" type='text' class="form-control"/>
+                            <input id="datePickerInput"
+                                   type="text"
+                                   class="form-control"
+                                   ng-model="studentEdit.birthDate"
+                                   name="date"
+                                   bs-datepicker
+                                   data-date-format="yyyy-MM-dd"
+                                   data-autoclose="1">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>

@@ -1,7 +1,8 @@
 'use strict';
 
 angular.module('edup.tabs', [
-    'edup.widgets',
+    'angularFileUpload',
+    'fiestah.money',
     'edup.calendar',
     'edup.students'
 ]);

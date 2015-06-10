@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('edup.widgets')
+angular.module('edup.students')
 
-    .directive('balanceModal', function (RestService) {
+    .directive('balanceModal', function (RestService, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'balance-modal',
@@ -25,7 +25,7 @@ angular.module('edup.widgets')
                                 scope.selectedStudent.balance += balance.amount;
                                 scope.balance = null;
                                 scope.dismissModal();
-                                //$('#addToBalanceModalView').modal('hide')
+                                NotificationService.Success(balance.amount + ' EUR was added to ' + scope.selectedStudent.name + ' ' + scope.selectedStudent.lastName + ' student!');
                             }
                         });
                     }

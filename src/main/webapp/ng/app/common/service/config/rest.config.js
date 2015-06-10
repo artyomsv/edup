@@ -5,7 +5,8 @@ angular.module('edup.common').run(function (Restangular, UrlService, Notificatio
     Restangular.setBaseUrl(UrlService.BaseUrl);
 
     Restangular.setErrorInterceptor(function (resp) {
-        NotificationService.Error(resp);
+        var msg = "Failed on: " + resp.config.method + " to: " + resp.config.url;
+        NotificationService.Error(msg);
         console.log(angular.toJson(resp, true));
         return false;
     });

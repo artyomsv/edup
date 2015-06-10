@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('edup.widgets')
+angular.module('edup.students')
 
     .directive('fileUpload', function (UrlService, FileUploader, $window) {
         return {

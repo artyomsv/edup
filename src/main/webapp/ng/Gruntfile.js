@@ -77,9 +77,6 @@ module.exports = function (grunt) {
                     'app/tabs/students/students.module.js',
                     'app/tabs/students/**/*.js',
 
-                    'app/tabs/widgets/widgets.module.js',
-                    'app/tabs/widgets/**/*.js',
-
                     'app/tabs/tabs.module.js',
 
                     'app/app.module.js',
@@ -110,6 +107,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-utils-pagination/dirPagination.js',
                     'vendor/bower_components/angular-money-directive/angular-money-directive.js',
                     'vendor/bower_components/angular-strap/dist/angular-strap.min.js',
+                    'vendor/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
                     'vendor/bower_components/alertifyjs/dist/js/alertify.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
