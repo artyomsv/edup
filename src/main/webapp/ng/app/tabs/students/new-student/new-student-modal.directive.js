@@ -2,17 +2,20 @@
 
 angular.module('edup.students')
 
-    .directive('newStudentRecord', function () {
+    .directive('newStudent', function () {
         return {
             restrict: 'E',
-            scope: {
-                loadStudents: '&',
-                paging: '='
-            },
             templateUrl: 'new-student-modal',
 
             controller: function ($scope, RestService, PaginationService, NotificationService) {
-                var reset = function () {
+                var dismiss = function() {
+                    var view = $('#addNewStudentModalView');
+                    if (view) {
+                        view.modal('hide');
+                    }
+                };
+
+                $scope.resetNewStudent = function () {
                     $scope.$broadcast('clearFileUploadQueue', {message: 'reset'});
 
                     if ($scope.newStudent) {
@@ -26,32 +29,32 @@ angular.module('edup.students')
                 };
 
                 $scope.executeStudentSave = function (student) {
-                    console.log(angular.toJson(student, true));
                     if (student && student.name && student.lastName) {
-                        student.photoId = $scope.id;
+                        student.birthDate = new Date(student.birthDateString);
                         RestService.Students.customPOST(student).then(function (response) {
                             NotificationService.Success('Student ' + student.name + ' ' + student.lastName + ' created!');
-                            $scope.dismissModal();
                             $scope.loadStudents(response.payload, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
-                            reset();
+                            $scope.resetNewStudent();
+                            dismiss();
                         });
                     }
                 };
 
                 $scope.executeReset = function () {
-                    reset();
+                    $scope.resetNewStudent();
                 };
 
                 $scope.executeCancel = function () {
-                    reset();
-                    $scope.dismissModal();
+                    $scope.resetNewStudent();
+                    dismiss();
                 };
 
             },
 
             link: function (scope) {
-
-
+                scope.dismissNewStudentModalDialog = function() {
+                    scope.dismissModal();
+                };
             }
         };
     }

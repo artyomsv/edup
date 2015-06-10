@@ -1,0 +1,32 @@
+<div>
+    <div class="row">
+        <div class="col-xs-8">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1"
+                      ng-class="{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}"></span>
+                <input type="text" class="form-control" placeholder="search" ng-model="searchValue" ng-keyup="executeSearch(searchValue)">
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="btn-group" role="group" aria-label="...">
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 10}" ng-click="setRecordsPerPage(10)">10</button>
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 25}" ng-click="setRecordsPerPage(25)">25</button>
+                <button type="button" class="btn btn-default" ng-class="{ active: paging.perPage === 50}" ng-click="setRecordsPerPage(50)">50</button>
+            </div>
+        </div>
+
+        <div class="col-xs-1">
+            <h4><span class="glyphicon glyphicon-plus pull-right"
+                      style="cursor: pointer"
+                      data-toggle="modal"
+                      data-target="#addNewStudentModalView"
+                      ng-click="resetNewStudent()"
+                    >
+            </span></h4>
+        </div>
+    </div>
+
+    <new-student></new-student>
+</div>
+
+

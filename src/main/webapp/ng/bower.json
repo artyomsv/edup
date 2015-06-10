@@ -21,8 +21,7 @@
     "angular-utils-pagination": "0.7.0",
     "angular-money-directive": "latest",
     "alertifyjs": "latest",
-    "ng-alertify": "latest",
-    "notifyjs" : "latest",
-    "angular-strap" : "2.2.4"
+    "angular-strap" : "2.2.4",
+    "eonasdan-bootstrap-datetimepicker": "latest"
   }
 }

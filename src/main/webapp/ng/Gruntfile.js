@@ -109,6 +109,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-strap/dist/angular-strap.min.js',
                     'vendor/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
                     'vendor/bower_components/alertifyjs/dist/js/alertify.js',
+                    'vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

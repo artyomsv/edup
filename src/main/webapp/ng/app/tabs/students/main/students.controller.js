@@ -3,7 +3,7 @@
 
 angular.module('edup.students')
 
-    .controller('StudentsController', function ($scope, $timeout, RestService, PaginationService, NotificationService) {
+    .controller('StudentsController', function ($scope, $timeout, $filter, RestService, PaginationService) {
 
         $scope.studentSelected = false;
         $scope.basicSearch = {
@@ -41,9 +41,17 @@ angular.module('edup.students')
                 $scope.basicSearch.spin = true;
                 RestService.Students.one(id.toString()).get().then(function (response) {
                     $scope.selectedStudent = response.payload;
-                    $scope.selectedStudent.balance = (response.payload.balance / 100);
-                    $scope.studentSelected = true;
-                    $scope.basicSearch.spin = false;
+                    if ($scope.selectedStudent) {
+                        $scope.studentEdit = _.cloneDeep($scope.selectedStudent);
+                        if ($scope.studentEdit.birthDate) {
+                            $scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd')
+                        }
+
+                        $scope.selectedStudent.balance = (response.payload.balance / 100);
+
+                        $scope.studentSelected = true;
+                        $scope.basicSearch.spin = false;
+                    }
                 });
             }
         };
@@ -112,24 +120,6 @@ angular.module('edup.students')
             }
         };
 
-        $scope.executeStudentUpdate = function (student) {
-            student.id = $scope.selectedStudent.id;
-            student.versionId = $scope.selectedStudent.versionId;
-            if (student && student.name && student.lastName && student.id && student.versionId) {
-                RestService.Students.one(student.id.toString())
-                    .customPUT(student)
-                    .then(function (response) {
-                        $scope.newStudent = null;
-                        $scope.photoUrl = null;
-                        $scope.photoUploaded = false;
-                        student.versionId = response.payload;
-                        NotificationService.Success(student.name + ' ' + student.lastName + ' updated!');
-                        $scope.loadStudents(student.id, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
-                    });
-            }
-        };
-
     }
-)
-;
+);
 

@@ -59,7 +59,7 @@
                          tooltip="{{ event.title }}"
                          tooltip-trigger="{{{true: 'mouseenter', false: 'never'}[myForm.username.$invalid]}}"
                             >
-                        ({{event.startsAt | date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}}) {{event.title | limitTo: 33}} {{event.title.length > 33 ? '...' : ''}}
+                        ({{event.startsAt| date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}}) {{event.title | limitTo: 33}} {{event.title.length > 33 ? '...' : ''}}
                     </div>
                 </h4>
             </div>

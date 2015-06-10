@@ -7,7 +7,7 @@ angular.module('edup.students')
             restrict: 'E',
             templateUrl: 'photo-upload',
             scope: {
-                id: '=photoId',
+                photoId: '=',
                 photoUrl: '='
             },
             priority: 10,
@@ -49,8 +49,8 @@ angular.module('edup.students')
                 //    console.info('onProgressAll', progress);
                 //};
                 scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                    scope.id = response.payload.id;
-                    scope.photoUrl = UrlService.Files.Download + '/' + scope.id;
+                    scope.photoId = response.payload.id;
+                    scope.photoUrl = UrlService.Files.Download + '/' + scope.photoId;
                     NotificationService.Success('Student photo uploaded!');
 
                     $timeout(function () {

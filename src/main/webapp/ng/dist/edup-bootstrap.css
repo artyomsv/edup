@@ -1,6 +1,7 @@
 @import "/vendor/bower_components/angular-bootstrap-calendar/dist/css/angular-bootstrap-calendar.css";
 @import "/vendor/bower_components/angular-bootstrap/ui-bootstrap-csp.css";
 @import "/vendor/bower_components/alertifyjs/dist/css/alertify-bootstrap-3.css";
+@import "/vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;

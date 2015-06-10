@@ -2,11 +2,12 @@
 
 angular.module('edup.students')
 
-    .directive('studentsList', function () {
+    .directive('studentsListHeader', function () {
         return {
             restrict: 'E',
-            templateUrl: 'students-list',
+            templateUrl: 'students-list-header',
             link : function (scope) {
+
             }
         };
     }
