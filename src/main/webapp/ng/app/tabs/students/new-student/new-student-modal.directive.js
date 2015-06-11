@@ -33,7 +33,7 @@ angular.module('edup.students')
                         student.birthDate = new Date(student.birthDateString);
                         RestService.Students.customPOST(student).then(function (response) {
                             NotificationService.Success('Student ' + student.name + ' ' + student.lastName + ' created!');
-                            $scope.loadStudents(response.payload, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                            $scope.loadStudents(response.payload, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);
                             $scope.resetNewStudent();
                             dismiss();
                         });

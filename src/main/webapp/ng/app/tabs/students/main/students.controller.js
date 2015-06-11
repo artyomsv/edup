@@ -9,7 +9,7 @@ angular.module('edup.students')
         $scope.basicSearch = {
             spin: false
         };
-        $scope.paging = {
+        $scope.studentPaging = {
             enabled: false,
             page: 1,
             perPage: 10,
@@ -61,7 +61,7 @@ angular.module('edup.students')
             var query = prepareQuery(top, skip, search, 'Created desc');
             RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
-                $scope.paging.totalRecords = result.count;
+                $scope.studentPaging.totalRecords = result.count;
                 if ($scope.students.length > 0) {
                     if (id) {
                         $scope.loadFullStudent(id);
@@ -77,7 +77,7 @@ angular.module('edup.students')
         };
 
         if (!$scope.basicSearch.spin) {
-            $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging));
+            $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging));
         }
 
         $scope.setSelected = function (studentId) {
@@ -90,12 +90,12 @@ angular.module('edup.students')
         };
 
         $scope.pageChanged = function (newPage, searchValue) {
-            $scope.paging.page = newPage;
-            $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+            $scope.studentPaging.page = newPage;
+            $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
         };
 
         $scope.setRecordsPerPage = function (newRecordsPerPageValue) {
-            $scope.paging.perPage = newRecordsPerPageValue;
+            $scope.studentPaging.perPage = newRecordsPerPageValue;
         };
 
         function isEmpty(str) {
@@ -107,14 +107,14 @@ angular.module('edup.students')
         $scope.executeSearch = function (searchValue) {
             if (searchValue && searchValue.length > 2) {
                 $timeout(function () {
-                    $scope.paging.page = 1;
-                    $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), searchValue);
+                    $scope.studentPaging.page = 1;
+                    $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
                     previousSearch = searchValue;
                 }, 300);
             } else if (isEmpty(searchValue) && previousSearch !== searchValue) {
                 $timeout(function () {
-                    $scope.paging.page = 1;
-                    $scope.loadStudents(null, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                    $scope.studentPaging.page = 1;
+                    $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);
                     previousSearch = searchValue;
                 }, 300);
             }

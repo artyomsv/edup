@@ -13,10 +13,7 @@ angular.module('edup.common')
                 alertify.success(msg);
             },
             Info: function (msg, title) {
-                alertify.info(msg);
-            },
-            Warn: function (msg, title) {
-                alertify.notify(msg, 'custom', 2);
+                alertify.message(msg);
             },
             Error: function (msg, title) {
                 alertify.error(msg);

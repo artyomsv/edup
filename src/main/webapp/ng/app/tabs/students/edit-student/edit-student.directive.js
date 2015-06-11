@@ -21,7 +21,7 @@ angular.module('edup.students')
                                 $scope.photoUploaded = false;
                                 student.versionId = response.payload;
                                 NotificationService.Success(student.name + ' ' + student.lastName + ' updated!');
-                                $scope.loadStudents(student.id, PaginationService.Top($scope.paging), PaginationService.Skip($scope.paging), null);
+                                $scope.loadStudents(student.id, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);
                             });
                     }
                 };

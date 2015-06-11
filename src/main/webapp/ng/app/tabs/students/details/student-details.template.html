@@ -1,19 +1,32 @@
 <div app-modal id="student-details-modal-view" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content modalViewPadding">
+
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">
-                    Student details
-                </h4>
+                <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><strong>×</strong></button>-->
+                <div class="parent modal-title" id="myModalLabel">
+                    <div class="child pull=left">
+                        <h4>{{selectedStudent.name}} {{selectedStudent.lastName}} </h4>
+                    </div>
+                    <div class="child pull-right">
+                        <h4 class="pull-right">
+                            <span class="label"
+                                  style="font-weight: 200 !important;"
+                                  ng-class="{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}">
+                                {{ selectedStudent.balance | number : 2}} EUR
+                            </span>
+                        </h4>
+                    </div>
+                </div>
             </div>
+
 
             <div role="tabpanel">
 
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" ng-class="{ active: isActive('/information')}"><a href="#information" aria-controls="home" role="tab" data-toggle="tab">Information</a></li>
-                    <li role="presentation" ng-class="{ active: isActive('/balance')}"><a href="#balance" aria-controls="profile" role="tab" data-toggle="tab">Balance</a></li>
+                    <li role="presentation" ng-class="{ active: isActive('/accounting')}"><a href="#accounting" aria-controls="profile" role="tab" data-toggle="tab">Accounting</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/documents')}"><a href="#documents" aria-controls="messages" role="tab" data-toggle="tab">Documents</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/attendance')}"><a href="#attendance" aria-controls="settings" role="tab" data-toggle="tab">Attendance</a></li>
                 </ul>
@@ -23,8 +36,8 @@
                     <div role="tabpanel" class="tab-pane active" id="information">
                         <edit-student></edit-student>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="balance">
-                        <student-balance></student-balance>
+                    <div role="tabpanel" class="tab-pane" id="accounting">
+                        <student-accounting></student-accounting>
                     </div>
                     <div role="tabpanel" class="tab-pane" id="documents">
                         <student-documents></student-documents>

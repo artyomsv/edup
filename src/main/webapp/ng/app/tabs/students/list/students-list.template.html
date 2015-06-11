@@ -14,9 +14,9 @@
         </thead>
         <tbody>
 
-        <tr dir-paginate="student in students | itemsPerPage: paging.perPage"
-            current-page="paging.page"
-            total-items="paging.totalRecords"
+        <tr dir-paginate="student in students | itemsPerPage: studentPaging.perPage"
+            current-page="studentPaging.page"
+            total-items="studentPaging.totalRecords"
             ng-class-odd="'success'"
             ng-class-even="'active'"
             ng-click="setSelected(student.id)"
