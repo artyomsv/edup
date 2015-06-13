@@ -1,8 +1,11 @@
 package lv.company.edup.services.students.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentDto extends BaseStudentDto {
 
     private Long photoId;

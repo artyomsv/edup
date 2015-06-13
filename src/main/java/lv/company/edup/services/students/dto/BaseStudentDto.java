@@ -1,5 +1,6 @@
 package lv.company.edup.services.students.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BaseStudentDto {
 
     private Long id;

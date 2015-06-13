@@ -1,5 +1,6 @@
 package lv.company.edup.services.students.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lv.company.edup.persistence.balance.BalanceStatus;
 
 import javax.validation.constraints.NotNull;
@@ -7,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class StudentBalanceDto {
 
     private Long id;
