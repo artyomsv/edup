@@ -2,7 +2,7 @@
 
 angular.module('edup.students')
 
-    .directive('fileUpload', function (UrlService, FileUploader, $window) {
+    .directive('fileUpload', function (UrlService, FileUploader, $window, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'file-upload',
@@ -10,7 +10,7 @@ angular.module('edup.students')
             priority: 10,
             link: function (scope) {
                 scope.uploader = new FileUploader({
-                    url: UrlService.BaseUrl + '/private/files/upload'
+                    url: UrlService.Files.Upload
                 });
                 scope.uploader.removeAfterUpload = true;
 
@@ -41,10 +41,10 @@ angular.module('edup.students')
                     console.info('onProgressAll', progress);
                 };
                 scope.uploader.onSuccessItem = function(fileItem, response, status, headers) {
-                    console.info('onSuccessItem', fileItem, response, status, headers);
+                    NotificationService.Success('Student photo uploaded!');
                 };
                 scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
-                    console.info('onErrorItem', fileItem, response, status, headers);
+                    NotificationService.Error('Failed to upload student photo!');
                 };
                 scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
                     console.info('onCancelItem', fileItem, response, status, headers);

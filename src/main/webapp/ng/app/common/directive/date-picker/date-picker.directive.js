@@ -25,7 +25,7 @@ angular.module('edup.common')
                     });
 
                     datePicker.on('dp.change', function (event) {
-                        scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd')
+                        scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd');
 
                     });
                 });

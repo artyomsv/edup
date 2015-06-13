@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content modalViewPadding">
 
-            <div class="modal-header">
+            <div class="modal-header" style="padding: 5px !important;border-bottom: none !important;">
                 <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><strong>×</strong></button>-->
                 <div class="parent modal-title" id="myModalLabel">
                     <div class="child pull=left">
@@ -24,25 +24,25 @@
             <div role="tabpanel">
 
                 <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" ng-class="{ active: isActive('/information')}"><a href="#information" aria-controls="home" role="tab" data-toggle="tab">Information</a></li>
+                <ul class="nav nav-tabs" role="tablist" style="border: none !important;">
+                    <li role="presentation" class="active" ng-class="{ active: isActive('/information')}"><a href="#information" aria-controls="home" role="tab" data-toggle="tab">Information</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/accounting')}"><a href="#accounting" aria-controls="profile" role="tab" data-toggle="tab">Accounting</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/documents')}"><a href="#documents" aria-controls="messages" role="tab" data-toggle="tab">Documents</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/attendance')}"><a href="#attendance" aria-controls="settings" role="tab" data-toggle="tab">Attendance</a></li>
                 </ul>
 
                 <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="information">
+                <div class="tab-content" style="margin-bottom: 10px">
+                    <div role="tabpanel" class="tab-pane active first-tab" id="information">
                         <edit-student></edit-student>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="accounting">
+                    <div role="tabpanel" class="tab-pane next-tab" id="accounting">
                         <student-accounting></student-accounting>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="documents">
+                    <div role="tabpanel" class="tab-pane next-tab" id="documents">
                         <student-documents></student-documents>
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="attendance">
+                    <div role="tabpanel" class="tab-pane next-tab" id="attendance">
                         <student-attendance></student-attendance>
                     </div>
                 </div>

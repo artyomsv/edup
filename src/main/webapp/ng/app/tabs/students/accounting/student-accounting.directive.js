@@ -27,40 +27,9 @@ angular.module('edup.students')
                         });
                     }
                 };
-
-                $scope.deactivateBalance = function(balance) {
-                    NotificationService.Success(balance.id + ' for deactivation');
-                };
-
-                $scope.balanceList = [
-                    {
-                        id: 1,
-                        amount: "10.00",
-                        comment: "heya",
-                        created: new Date()
-
-                    },
-                    {
-                        id: 2,
-                        amount: "15.00",
-                        comment: "heya2",
-                        created: new Date()
-
-                    },
-                    {
-                        id: 3,
-                        amount: "12.00",
-                        comment: "heya3",
-                        created: new Date()
-
-                    }
-                ]
-
             },
 
             link: function (scope) {
-
-
             }
         };
     }

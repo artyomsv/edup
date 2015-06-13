@@ -48,9 +48,56 @@ angular.module('edup.common')
                     });
 
                     datePicker.on('dp.change', function (event) {
-                        scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd')
+                        scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd');
 
                     });
+                });
+            }
+        };
+    }]
+);
+
+'use strict';
+
+angular.module('edup.common')
+
+    .directive('edupToggle', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'edup-toggle',
+            scope: {
+                onEvent: '&',
+                offEvent: '&',
+                onLabel: '@',
+                offLabel: '@',
+                toggleId: '@',
+                linkWidget: "="
+            },
+            controller: ['$scope', function ($scope) {
+
+            }],
+
+            link: function (scope) {
+                $timeout(function () {
+                    if (!scope.onLabel) {
+                        scope.onLabel = 'On'
+                    }
+                    if (!scope.offLabel) {
+                        scope.offLabel = 'Off'
+                    }
+
+                    var toggle = $('#' + scope.toggleId);
+
+                    toggle.bootstrapToggle();
+
+                    toggle.change(function () {
+                        if ($(this).prop('checked')) {
+                            scope.onEvent();
+                        } else {
+                            scope.offEvent();
+                        }
+                    })
+
                 });
             }
         };
@@ -452,40 +499,9 @@ angular.module('edup.students')
                         });
                     }
                 };
-
-                $scope.deactivateBalance = function(balance) {
-                    NotificationService.Success(balance.id + ' for deactivation');
-                };
-
-                $scope.balanceList = [
-                    {
-                        id: 1,
-                        amount: "10.00",
-                        comment: "heya",
-                        created: new Date()
-
-                    },
-                    {
-                        id: 2,
-                        amount: "15.00",
-                        comment: "heya2",
-                        created: new Date()
-
-                    },
-                    {
-                        id: 3,
-                        amount: "12.00",
-                        comment: "heya3",
-                        created: new Date()
-
-                    }
-                ]
-
             }],
 
             link: function (scope) {
-
-
             }
         };
     }
@@ -494,58 +510,51 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .controller('StudentAttendanceController', ['$scope', function ($scope) {
-
-        $scope.attendanceHistory = [
-            {
-                'subject' : 'Math',
-                'date' : '2015/03/03',
-                'amount' : 15
-            },
-            {
-                'subject' : 'Literature',
-                'date' : '2015/03/03',
-                'amount' : 15
-            },
-            {
-                'subject' : 'Sport',
-                'date' : '2015/03/04',
-                'amount' : 20
-            },
-            {
-                'subject' : 'History',
-                'date' : '2015/03/04',
-                'amount' : 10
-            },
-            {
-                'subject' : 'Math',
-                'date' : '2015/03/05',
-                'amount' : 15
-            },
-            {
-                'subject' : 'English',
-                'date' : '2015/03/07',
-                'amount' : 15
-            },
-            {
-                'subject' : 'Sport',
-                'date' : '2015/03/07',
-                'amount' : 20
-            }
-        ];
-    }]
-
-);
-
-
-'use strict';
-
-angular.module('edup.students')
-
     .directive('studentAttendance', function () {
         return {
             restrict: 'E',
             templateUrl: 'student-attendance',
+
+            controller: ['$scope', function ($scope) {
+                $scope.attendanceHistory = [
+                    {
+                        'subject' : 'Math',
+                        'date' : '2015/03/03',
+                        'amount' : 15
+                    },
+                    {
+                        'subject' : 'Literature',
+                        'date' : '2015/03/03',
+                        'amount' : 15
+                    },
+                    {
+                        'subject' : 'Sport',
+                        'date' : '2015/03/04',
+                        'amount' : 20
+                    },
+                    {
+                        'subject' : 'History',
+                        'date' : '2015/03/04',
+                        'amount' : 10
+                    },
+                    {
+                        'subject' : 'Math',
+                        'date' : '2015/03/05',
+                        'amount' : 15
+                    },
+                    {
+                        'subject' : 'English',
+                        'date' : '2015/03/07',
+                        'amount' : 15
+                    },
+                    {
+                        'subject' : 'Sport',
+                        'date' : '2015/03/07',
+                        'amount' : 20
+                    }
+                ];
+            }],
+
             link : function ($scope) {
                
             }
@@ -610,39 +619,53 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .controller('StudentDocumentsController', ['$scope', function ($scope) {
-
-        $scope.documents = [
-            {
-                'name': 'report.docx',
-                'date': '2015/03/03',
-                'link': 'https:/localhost:8443/edup/api/file/report.docx'
-            },
-            {
-                'name': 'balance.xls',
-                'date': '2015/03/04',
-                'link': 'https:/localhost:8443/edup/api/file/balance.xls'
-            },
-            {
-                'name': 'photo.jpg',
-                'date': '2015/03/04',
-                'link': 'https:/localhost:8443/edup/api/file/photo.jpg'
-            }
-        ];
-    }]
-);
-
-
-'use strict';
-
-angular.module('edup.students')
-
     .directive('studentDocuments', function () {
         return {
             restrict: 'E',
             templateUrl: 'student-documents',
-            link : function ($scope) {
-                $scope.directiveTest = 'Student tabbed pane directive';
+
+            controller: ['$scope', function ($scope) {
+
+                $scope.documents = [
+                    {
+                        'name': 'report.docx',
+                        'date': '2015/03/03',
+                        'link': 'https:/localhost:8443/edup/api/file/report.docx'
+                    },
+                    {
+                        'name': 'balance.xls',
+                        'date': '2015/03/04',
+                        'link': 'https:/localhost:8443/edup/api/file/balance.xls'
+                    },
+                    {
+                        'name': 'photo.jpg',
+                        'date': '2015/03/04',
+                        'link': 'https:/localhost:8443/edup/api/file/photo.jpg'
+                    }
+                ];
+            }],
+
+            link: function (scope) {
+                scope.onShowDownloadToggle = function () {
+                    scope.showDownloadSection = true;
+                    scope.documentsButtonLabel = 'Hide'
+                };
+
+                scope.offShowDownloadToggle = function () {
+                    scope.showDownloadSection = false;
+                    scope.documentsButtonLabel = 'Show'
+                };
+
+                scope.toggleDownloadSection = function () {
+                    scope.showDownloadSection = !scope.showDownloadSection;
+                    if (scope.showDownloadSection) {
+                        scope.onShowDownloadToggle();
+                    } else {
+                        scope.offShowDownloadToggle();
+                    }
+                };
+
+                scope.offShowDownloadToggle();
             }
         };
     }
@@ -686,7 +709,7 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('fileUpload', ['UrlService', 'FileUploader', '$window', function (UrlService, FileUploader, $window) {
+    .directive('fileUpload', ['UrlService', 'FileUploader', '$window', 'NotificationService', function (UrlService, FileUploader, $window, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'file-upload',
@@ -694,7 +717,7 @@ angular.module('edup.students')
             priority: 10,
             link: function (scope) {
                 scope.uploader = new FileUploader({
-                    url: UrlService.BaseUrl + '/private/files/upload'
+                    url: UrlService.Files.Upload
                 });
                 scope.uploader.removeAfterUpload = true;
 
@@ -725,10 +748,10 @@ angular.module('edup.students')
                     console.info('onProgressAll', progress);
                 };
                 scope.uploader.onSuccessItem = function(fileItem, response, status, headers) {
-                    console.info('onSuccessItem', fileItem, response, status, headers);
+                    NotificationService.Success('Student photo uploaded!');
                 };
                 scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
-                    console.info('onErrorItem', fileItem, response, status, headers);
+                    NotificationService.Error('Failed to upload student photo!');
                 };
                 scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
                     console.info('onCancelItem', fileItem, response, status, headers);
@@ -829,7 +852,7 @@ angular.module('edup.students')
                     if ($scope.selectedStudent) {
                         $scope.studentEdit = _.cloneDeep($scope.selectedStudent);
                         if ($scope.studentEdit.birthDate) {
-                            $scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd')
+                            $scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd');
                         }
 
                         $scope.selectedStudent.balance = (response.payload.balance / 100);
@@ -1045,7 +1068,6 @@ angular.module('edup.students')
                 };
                 scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
                     NotificationService.Error('Failed to upload student photo!');
-                    console.info('onErrorItem', fileItem, response, status, headers);
                 };
                 //scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
                 //    console.info('onCancelItem', fileItem, response, status, headers);
@@ -1110,6 +1132,11 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('edup-toggle',
+    "<input id={{toggleId}} type=checkbox data-toggle=toggle data-on={{onLabel}} data-off={{offLabel}} data-width=100 data-size=small>"
+  );
+
+
   $templateCache.put('edup-footer',
     "<div ng-controller=FooterController><nav class=\"navbar navbar-default\" style=\"margin-bottom: 0px !important; margin-top: auto !important\"><div class=\"navbar-text text-center\" style=\"width: 100%\">Application version: {{ appVersion }}</div></nav></div>"
   );
@@ -1131,12 +1158,12 @@ angular.module('edup')
 
 
   $templateCache.put('student-accounting',
-    "<div class=mainForm><div class=\"row clearfix\"><div class=\"col-md-12 column\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><fieldset><legend>Update balance</legend><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>€</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></fieldset></form></div></div></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>€</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></form></div></div></div>"
   );
 
 
   $templateCache.put('student-attendance',
-    "<div class=mainForm ng-controller=StudentAttendanceController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ selectedStudent.fullName }}</span></h3></td><td rowspan=2 style=\"border-top: none\" width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr class=active><td style=\"border-top: none\"><h3><span class=\"label pull-right\" ng-class=\"{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}\">{{ selectedStudent.balance }} EUR</span></h3></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>History of attendances</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Subject name</th><th>Date</th><th>Amount</th></tr></thead><tbody><tr ng-repeat=\"event in attendanceHistory\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ event.subject }}</td><td>{{ event.date }}</td><td>{{ event.amount }} EUR</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new attendance</button></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Subject name</th><th>Date</th><th>Amount</th></tr></thead><tbody><tr ng-repeat=\"event in attendanceHistory\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ event.subject }}</td><td>{{ event.date }}</td><td>{{ event.amount }} EUR</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new attendance</button></div></div></div></div>"
   );
 
 
@@ -1146,12 +1173,12 @@ angular.module('edup')
 
 
   $templateCache.put('student-details',
-    "<div app-modal id=student-details-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><div class=\"parent modal-title\" id=myModalLabel><div class=\"child pull=left\"><h4>{{selectedStudent.name}} {{selectedStudent.lastName}}</h4></div><div class=\"child pull-right\"><h4 class=pull-right><span class=label style=\"font-weight: 200 !important\" ng-class=\"{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}\">{{ selectedStudent.balance | number : 2}} EUR</span></h4></div></div></div><div role=tabpanel><ul class=\"nav nav-tabs\" role=tablist><li role=presentation ng-class=\"{ active: isActive('/information')}\"><a href=#information aria-controls=home role=tab data-toggle=tab>Information</a></li><li role=presentation ng-class=\"{ active: isActive('/accounting')}\"><a href=#accounting aria-controls=profile role=tab data-toggle=tab>Accounting</a></li><li role=presentation ng-class=\"{ active: isActive('/documents')}\"><a href=#documents aria-controls=messages role=tab data-toggle=tab>Documents</a></li><li role=presentation ng-class=\"{ active: isActive('/attendance')}\"><a href=#attendance aria-controls=settings role=tab data-toggle=tab>Attendance</a></li></ul><div class=tab-content><div role=tabpanel class=\"tab-pane active\" id=information><edit-student></edit-student></div><div role=tabpanel class=tab-pane id=accounting><student-accounting></student-accounting></div><div role=tabpanel class=tab-pane id=documents><student-documents></student-documents></div><div role=tabpanel class=tab-pane id=attendance><student-attendance></student-attendance></div></div></div></div></div></div>"
+    "<div app-modal id=student-details-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header style=\"padding: 5px !important;border-bottom: none !important\"><div class=\"parent modal-title\" id=myModalLabel><div class=\"child pull=left\"><h4>{{selectedStudent.name}} {{selectedStudent.lastName}}</h4></div><div class=\"child pull-right\"><h4 class=pull-right><span class=label style=\"font-weight: 200 !important\" ng-class=\"{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}\">{{ selectedStudent.balance | number : 2}} EUR</span></h4></div></div></div><div role=tabpanel><ul class=\"nav nav-tabs\" role=tablist style=\"border: none !important\"><li role=presentation class=active ng-class=\"{ active: isActive('/information')}\"><a href=#information aria-controls=home role=tab data-toggle=tab>Information</a></li><li role=presentation ng-class=\"{ active: isActive('/accounting')}\"><a href=#accounting aria-controls=profile role=tab data-toggle=tab>Accounting</a></li><li role=presentation ng-class=\"{ active: isActive('/documents')}\"><a href=#documents aria-controls=messages role=tab data-toggle=tab>Documents</a></li><li role=presentation ng-class=\"{ active: isActive('/attendance')}\"><a href=#attendance aria-controls=settings role=tab data-toggle=tab>Attendance</a></li></ul><div class=tab-content style=\"margin-bottom: 10px\"><div role=tabpanel class=\"tab-pane active first-tab\" id=information><edit-student></edit-student></div><div role=tabpanel class=\"tab-pane next-tab\" id=accounting><student-accounting></student-accounting></div><div role=tabpanel class=\"tab-pane next-tab\" id=documents><student-documents></student-documents></div><div role=tabpanel class=\"tab-pane next-tab\" id=attendance><student-attendance></student-attendance></div></div></div></div></div></div>"
   );
 
 
   $templateCache.put('student-documents',
-    "<div class=mainForm ng-controller=StudentDocumentsController><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=pull-right width=400px><tr><td style=\"border-top: none\"><h3><span class=\"label label-info pull-right\">{{ selectedStudent.fullName }}</span></h3></td><td style=\"border-top: none\" width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr></table></div></div><fieldset class=\"row clearfix scheduler-border\"><legend class=scheduler-border>List of documents</legend><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Document name</th><th>Date loaded</th><th></th></tr></thead><tbody><tr ng-repeat=\"document in documents\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ document.name }}</td><td>{{ document.date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div></fieldset><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new document</button></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Document name</th><th>Date loaded</th><th></th></tr></thead><tbody><tr ng-repeat=\"document in documents\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ document.name }}</td><td>{{ document.date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
   );
 
 
@@ -1161,7 +1188,7 @@ angular.module('edup')
 
 
   $templateCache.put('file-upload',
-    "<div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><h3>Upload queue</h3><p>Queue length: {{ uploader.queue.length }}</p><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel</button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=item.remove()><span class=\"glyphicon glyphicon-trash\"></span> Remove</button></td></tr></tbody></table><div><div>Queue progress:<div class=progress><div class=progress-bar role=progressbar ng-style=\"{ 'width': uploader.progress + '%' }\"></div></div></div><button type=button class=\"btn btn-success btn-sm\" ng-click=uploader.uploadAll() ng-disabled=!uploader.getNotUploadedItems().length><span class=\"glyphicon glyphicon-upload\"></span> Upload All</button> <button type=button class=\"btn btn-warning btn-sm\" ng-click=uploader.cancelAll() ng-disabled=!uploader.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel All</button> <button type=button class=\"btn btn-danger btn-sm\" ng-click=uploader.clearQueue() ng-disabled=!uploader.queue.length><span class=\"glyphicon glyphicon-trash\"></span> Remove All</button></div>"
+    "<div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel</button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=item.remove()><span class=\"glyphicon glyphicon-trash\"></span> Remove</button></td></tr></tbody></table><div><div>Queue progress:<div class=progress><div class=progress-bar role=progressbar ng-style=\"{ 'width': uploader.progress + '%' }\"></div></div></div><button type=button class=\"btn btn-success btn-sm\" ng-click=uploader.uploadAll() ng-disabled=!uploader.getNotUploadedItems().length><span class=\"glyphicon glyphicon-upload\"></span> Upload All</button> <button type=button class=\"btn btn-warning btn-sm\" ng-click=uploader.cancelAll() ng-disabled=!uploader.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel All</button> <button type=button class=\"btn btn-danger btn-sm\" ng-click=uploader.clearQueue() ng-disabled=!uploader.queue.length><span class=\"glyphicon glyphicon-trash\"></span> Remove All</button></div>"
   );
 
 

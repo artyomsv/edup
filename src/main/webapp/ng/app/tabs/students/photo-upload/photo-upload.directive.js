@@ -59,7 +59,6 @@ angular.module('edup.students')
                 };
                 scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
                     NotificationService.Error('Failed to upload student photo!');
-                    console.info('onErrorItem', fileItem, response, status, headers);
                 };
                 //scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
                 //    console.info('onCancelItem', fileItem, response, status, headers);

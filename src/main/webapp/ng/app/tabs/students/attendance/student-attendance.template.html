@@ -1,29 +1,6 @@
-<div class="mainForm" ng-controller="StudentAttendanceController">
-
+<div class="mainForm" style="margin-left: 30px; margin-right: 30px">
 
     <div class="row clearfix">
-        <div class="col-md-12 column">
-            <table class="pull-right" width="400px">
-                <tr>
-                    <td style="border-top: none">
-                        <h3><span class="label label-info pull-right">{{ selectedStudent.fullName }}</span></h3>
-                    </td>
-                    <td rowspan="2" style="border-top: none" width="180px">
-                        <img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>
-                    </td>
-                </tr>
-                <tr class="active">
-                    <td style="border-top: none">
-                        <h3><span class="label pull-right" ng-class="{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}">{{ selectedStudent.balance }} EUR</span></h3>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-    <fieldset class="row clearfix scheduler-border">
-        <legend class="scheduler-border">History of attendances</legend>
-
         <div class="col-md-12 column">
             <table class="table table-hover">
                 <thead>
@@ -54,10 +31,10 @@
                 </ul>
             </div>
         </div>
-    </fieldset>
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <button type="button" class="btn btn-success pull-right">Add new attendance</button>
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <button type="button" class="btn btn-success pull-right">Add new attendance</button>
+            </div>
         </div>
     </div>
 </div>

@@ -22,6 +22,7 @@
     "angular-money-directive": "latest",
     "alertifyjs": "latest",
     "angular-strap" : "2.2.4",
-    "eonasdan-bootstrap-datetimepicker": "latest"
+    "eonasdan-bootstrap-datetimepicker": "latest",
+    "bootstrap-toggle": "latest"
   }
 }

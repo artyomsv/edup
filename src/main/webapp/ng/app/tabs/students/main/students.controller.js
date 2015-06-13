@@ -44,7 +44,7 @@ angular.module('edup.students')
                     if ($scope.selectedStudent) {
                         $scope.studentEdit = _.cloneDeep($scope.selectedStudent);
                         if ($scope.studentEdit.birthDate) {
-                            $scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd')
+                            $scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd');
                         }
 
                         $scope.selectedStudent.balance = (response.payload.balance / 100);
