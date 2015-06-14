@@ -19,8 +19,8 @@
 
     <properties>
         <version.major>0</version.major>
-        <version.minor>1</version.minor>
-        <version.tag>1</version.tag>
+        <version.minor>2</version.minor>
+        <version.tag>0</version.tag>
     </properties>
 
     <profiles>
