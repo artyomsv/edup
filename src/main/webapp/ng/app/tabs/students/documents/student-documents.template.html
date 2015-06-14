@@ -6,22 +6,33 @@
                 <thead>
                 <tr>
                     <th>
-                        Document name
+                        Name
                     </th>
                     <th>
-                        Date loaded
+                        Size
+                    </th>
+                    <th>
+                        Created
                     </th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
+                <tr dir-paginate="document in documents | itemsPerPage: documentsPaging.perPage"
+                    current-page="documentsPaging.page"
+                    total-items="documentsPaging.totalRecords"
+                    ng-class-odd="'success'"
+                    ng-class-even="'active'"
+                    pagination-id="documentsPaginationId">
 
-                <tr ng-repeat="document in documents" ng-class-odd="'success'" ng-class-even="'active'">
                     <td>
-                        {{ document.name }}
+                        {{ document.fileName }}
                     </td>
                     <td>
-                        {{ document.date }}
+                        {{ document.size }}
+                    </td>
+                    <td>
+                        {{ document.created | date }}
                     </td>
                     <td>
                         <a href="{{ document.link }}">Download</a>
@@ -29,41 +40,23 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="text-center">
-                <ul class="pagination pagination-sm">
-                    <li>
-                        <a href="#">Prev</a>
-                    </li>
-                    <li>
-                        <a href="#">1</a>
-                    </li>
-                    <li>
-                        <a href="#">2</a>
-                    </li>
-                    <li>
-                        <a href="#">3</a>
-                    </li>
-                    <li>
-                        <a href="#">4</a>
-                    </li>
-                    <li>
-                        <a href="#">5</a>
-                    </li>
-                    <li>
-                        <a href="#">Next</a>
-                    </li>
-                </ul>
+
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <dir-pagination-controls on-page-change="documentsPageChanged(newPageNumber, searchValue)" pagination-id="documentsPaginationId"></dir-pagination-controls>
+                </div>
             </div>
+
         </div>
 
-<!--        <div style="padding-bottom: 20px">
-            <edup-toggle toggle-id="documentUploadShowHideToggle"
-                         on-label="Show"
-                         off-label="Hide"
-                         on-event="onShowDownloadToggle"
-                         off-event="offShowDownloadToggle"
-                    ></edup-toggle>
-        </div>-->
+        <!--        <div style="padding-bottom: 20px">
+                    <edup-toggle toggle-id="documentUploadShowHideToggle"
+                                 on-label="Show"
+                                 off-label="Hide"
+                                 on-event="onShowDownloadToggle"
+                                 off-event="offShowDownloadToggle"
+                            ></edup-toggle>
+                </div>-->
 
         <div style="padding-bottom: 20px">
             <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="toggleDownloadSection()">{{documentsButtonLabel}}</button>

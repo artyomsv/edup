@@ -8,7 +8,8 @@ angular.module('edup.common')
 
         return {
             Students: rpc.one('students'),
-            Balance: rpc.one('balance')
+            Balance: rpc.one('balance'),
+            Documents: rpc.one('documents')
         };
 
     }

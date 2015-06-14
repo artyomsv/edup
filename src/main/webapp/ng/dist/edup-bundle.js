@@ -52785,6 +52785,15 @@ null!==t.top&&(p.top=t.top-l.top+s),null!==t.left&&(p.left=t.left-l.left+i),'usi
  =========================================================
  */
 !function(a){"use strict";if("function"==typeof define&&define.amd)define(["jquery","moment"],a);else if("object"==typeof exports)a(require("jquery"),require("moment"));else{if("undefined"==typeof jQuery)throw"bootstrap-datetimepicker requires jQuery to be loaded first";if("undefined"==typeof moment)throw"bootstrap-datetimepicker requires Moment.js to be loaded first";a(jQuery,moment)}}(function(a,b){"use strict";if(!b)throw new Error("bootstrap-datetimepicker requires Moment.js to be loaded first");var c=function(c,d){var e,f,g,h,i,j={},k=b().startOf("d"),l=k.clone(),m=!0,n=!1,o=!1,p=0,q=[{clsName:"days",navFnc:"M",navStep:1},{clsName:"months",navFnc:"y",navStep:1},{clsName:"years",navFnc:"y",navStep:10}],r=["days","months","years"],s=["top","bottom","auto"],t=["left","right","auto"],u=["default","top","bottom"],v={up:38,38:"up",down:40,40:"down",left:37,37:"left",right:39,39:"right",tab:9,9:"tab",escape:27,27:"escape",enter:13,13:"enter",pageUp:33,33:"pageUp",pageDown:34,34:"pageDown",shift:16,16:"shift",control:17,17:"control",space:32,32:"space",t:84,84:"t","delete":46,46:"delete"},w={},x=function(a){if("string"!=typeof a||a.length>1)throw new TypeError("isEnabled expects a single character string parameter");switch(a){case"y":return-1!==g.indexOf("Y");case"M":return-1!==g.indexOf("M");case"d":return-1!==g.toLowerCase().indexOf("d");case"h":case"H":return-1!==g.toLowerCase().indexOf("h");case"m":return-1!==g.indexOf("m");case"s":return-1!==g.indexOf("s");default:return!1}},y=function(){return x("h")||x("m")||x("s")},z=function(){return x("y")||x("M")||x("d")},A=function(){var b=a("<thead>").append(a("<tr>").append(a("<th>").addClass("prev").attr("data-action","previous").append(a("<span>").addClass(d.icons.previous))).append(a("<th>").addClass("picker-switch").attr("data-action","pickerSwitch").attr("colspan",d.calendarWeeks?"6":"5")).append(a("<th>").addClass("next").attr("data-action","next").append(a("<span>").addClass(d.icons.next)))),c=a("<tbody>").append(a("<tr>").append(a("<td>").attr("colspan",d.calendarWeeks?"8":"7")));return[a("<div>").addClass("datepicker-days").append(a("<table>").addClass("table-condensed").append(b).append(a("<tbody>"))),a("<div>").addClass("datepicker-months").append(a("<table>").addClass("table-condensed").append(b.clone()).append(c.clone())),a("<div>").addClass("datepicker-years").append(a("<table>").addClass("table-condensed").append(b.clone()).append(c.clone()))]},B=function(){var b=a("<tr>"),c=a("<tr>"),e=a("<tr>");return x("h")&&(b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","incrementHours").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-hour").attr("data-time-component","hours").attr("data-action","showHours"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","decrementHours").append(a("<span>").addClass(d.icons.down))))),x("m")&&(x("h")&&(b.append(a("<td>").addClass("separator")),c.append(a("<td>").addClass("separator").html(":")),e.append(a("<td>").addClass("separator"))),b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","incrementMinutes").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-minute").attr("data-time-component","minutes").attr("data-action","showMinutes"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","decrementMinutes").append(a("<span>").addClass(d.icons.down))))),x("s")&&(x("m")&&(b.append(a("<td>").addClass("separator")),c.append(a("<td>").addClass("separator").html(":")),e.append(a("<td>").addClass("separator"))),b.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","incrementSeconds").append(a("<span>").addClass(d.icons.up)))),c.append(a("<td>").append(a("<span>").addClass("timepicker-second").attr("data-time-component","seconds").attr("data-action","showSeconds"))),e.append(a("<td>").append(a("<a>").attr({href:"#",tabindex:"-1"}).addClass("btn").attr("data-action","decrementSeconds").append(a("<span>").addClass(d.icons.down))))),f||(b.append(a("<td>").addClass("separator")),c.append(a("<td>").append(a("<button>").addClass("btn btn-primary").attr("data-action","togglePeriod"))),e.append(a("<td>").addClass("separator"))),a("<div>").addClass("timepicker-picker").append(a("<table>").addClass("table-condensed").append([b,c,e]))},C=function(){var b=a("<div>").addClass("timepicker-hours").append(a("<table>").addClass("table-condensed")),c=a("<div>").addClass("timepicker-minutes").append(a("<table>").addClass("table-condensed")),d=a("<div>").addClass("timepicker-seconds").append(a("<table>").addClass("table-condensed")),e=[B()];return x("h")&&e.push(b),x("m")&&e.push(c),x("s")&&e.push(d),e},D=function(){var b=[];return d.showTodayButton&&b.push(a("<td>").append(a("<a>").attr("data-action","today").append(a("<span>").addClass(d.icons.today)))),!d.sideBySide&&z()&&y()&&b.push(a("<td>").append(a("<a>").attr("data-action","togglePicker").append(a("<span>").addClass(d.icons.time)))),d.showClear&&b.push(a("<td>").append(a("<a>").attr("data-action","clear").append(a("<span>").addClass(d.icons.clear)))),d.showClose&&b.push(a("<td>").append(a("<a>").attr("data-action","close").append(a("<span>").addClass(d.icons.close)))),a("<table>").addClass("table-condensed").append(a("<tbody>").append(a("<tr>").append(b)))},E=function(){var b=a("<div>").addClass("bootstrap-datetimepicker-widget dropdown-menu"),c=a("<div>").addClass("datepicker").append(A()),e=a("<div>").addClass("timepicker").append(C()),g=a("<ul>").addClass("list-unstyled"),h=a("<li>").addClass("picker-switch"+(d.collapse?" accordion-toggle":"")).append(D());return d.inline&&b.removeClass("dropdown-menu"),f&&b.addClass("usetwentyfour"),d.sideBySide&&z()&&y()?(b.addClass("timepicker-sbs"),b.append(a("<div>").addClass("row").append(c.addClass("col-sm-6")).append(e.addClass("col-sm-6"))),b.append(h),b):("top"===d.toolbarPlacement&&g.append(h),z()&&g.append(a("<li>").addClass(d.collapse&&y()?"collapse in":"").append(c)),"default"===d.toolbarPlacement&&g.append(h),y()&&g.append(a("<li>").addClass(d.collapse&&z()?"collapse":"").append(e)),"bottom"===d.toolbarPlacement&&g.append(h),b.append(g))},F=function(){var b,e={};return b=c.is("input")||d.inline?c.data():c.find("input").data(),b.dateOptions&&b.dateOptions instanceof Object&&(e=a.extend(!0,e,b.dateOptions)),a.each(d,function(a){var c="date"+a.charAt(0).toUpperCase()+a.slice(1);void 0!==b[c]&&(e[a]=b[c])}),e},G=function(){var b,e=(n||c).position(),f=(n||c).offset(),g=d.widgetPositioning.vertical,h=d.widgetPositioning.horizontal;if(d.widgetParent)b=d.widgetParent.append(o);else if(c.is("input"))b=c.parent().append(o);else{if(d.inline)return void(b=c.append(o));b=c,c.children().first().after(o)}if("auto"===g&&(g=f.top+1.5*o.height()>=a(window).height()+a(window).scrollTop()&&o.height()+c.outerHeight()<f.top?"top":"bottom"),"auto"===h&&(h=b.width()<f.left+o.outerWidth()/2&&f.left+o.outerWidth()>a(window).width()?"right":"left"),"top"===g?o.addClass("top").removeClass("bottom"):o.addClass("bottom").removeClass("top"),"right"===h?o.addClass("pull-right"):o.removeClass("pull-right"),"relative"!==b.css("position")&&(b=b.parents().filter(function(){return"relative"===a(this).css("position")}).first()),0===b.length)throw new Error("datetimepicker component should be placed within a relative positioned container");o.css({top:"top"===g?"auto":e.top+c.outerHeight(),bottom:"top"===g?e.top+c.outerHeight():"auto",left:"left"===h?b.css("padding-left"):"auto",right:"left"===h?"auto":b.width()-c.outerWidth()})},H=function(a){"dp.change"===a.type&&(a.date&&a.date.isSame(a.oldDate)||!a.date&&!a.oldDate)||c.trigger(a)},I=function(a){o&&(a&&(i=Math.max(p,Math.min(2,i+a))),o.find(".datepicker > div").hide().filter(".datepicker-"+q[i].clsName).show())},J=function(){var b=a("<tr>"),c=l.clone().startOf("w");for(d.calendarWeeks===!0&&b.append(a("<th>").addClass("cw").text("#"));c.isBefore(l.clone().endOf("w"));)b.append(a("<th>").addClass("dow").text(c.format("dd"))),c.add(1,"d");o.find(".datepicker-days thead").append(b)},K=function(a){return d.disabledDates[a.format("YYYY-MM-DD")]===!0},L=function(a){return d.enabledDates[a.format("YYYY-MM-DD")]===!0},M=function(a,b){return a.isValid()?d.disabledDates&&K(a)&&"M"!==b?!1:d.enabledDates&&!L(a)&&"M"!==b?!1:d.minDate&&a.isBefore(d.minDate,b)?!1:d.maxDate&&a.isAfter(d.maxDate,b)?!1:"d"===b&&-1!==d.daysOfWeekDisabled.indexOf(a.day())?!1:!0:!1},N=function(){for(var b=[],c=l.clone().startOf("y").hour(12);c.isSame(l,"y");)b.push(a("<span>").attr("data-action","selectMonth").addClass("month").text(c.format("MMM"))),c.add(1,"M");o.find(".datepicker-months td").empty().append(b)},O=function(){var b=o.find(".datepicker-months"),c=b.find("th"),d=b.find("tbody").find("span");b.find(".disabled").removeClass("disabled"),M(l.clone().subtract(1,"y"),"y")||c.eq(0).addClass("disabled"),c.eq(1).text(l.year()),M(l.clone().add(1,"y"),"y")||c.eq(2).addClass("disabled"),d.removeClass("active"),k.isSame(l,"y")&&d.eq(k.month()).addClass("active"),d.each(function(b){M(l.clone().month(b),"M")||a(this).addClass("disabled")})},P=function(){var a=o.find(".datepicker-years"),b=a.find("th"),c=l.clone().subtract(5,"y"),e=l.clone().add(6,"y"),f="";for(a.find(".disabled").removeClass("disabled"),d.minDate&&d.minDate.isAfter(c,"y")&&b.eq(0).addClass("disabled"),b.eq(1).text(c.year()+"-"+e.year()),d.maxDate&&d.maxDate.isBefore(e,"y")&&b.eq(2).addClass("disabled");!c.isAfter(e,"y");)f+='<span data-action="selectYear" class="year'+(c.isSame(k,"y")?" active":"")+(M(c,"y")?"":" disabled")+'">'+c.year()+"</span>",c.add(1,"y");a.find("td").html(f)},Q=function(){var c,e,f,g=o.find(".datepicker-days"),h=g.find("th"),i=[];if(z()){for(g.find(".disabled").removeClass("disabled"),h.eq(1).text(l.format(d.dayViewHeaderFormat)),M(l.clone().subtract(1,"M"),"M")||h.eq(0).addClass("disabled"),M(l.clone().add(1,"M"),"M")||h.eq(2).addClass("disabled"),c=l.clone().startOf("M").startOf("week");!l.clone().endOf("M").endOf("w").isBefore(c,"d");)0===c.weekday()&&(e=a("<tr>"),d.calendarWeeks&&e.append('<td class="cw">'+c.week()+"</td>"),i.push(e)),f="",c.isBefore(l,"M")&&(f+=" old"),c.isAfter(l,"M")&&(f+=" new"),c.isSame(k,"d")&&!m&&(f+=" active"),M(c,"d")||(f+=" disabled"),c.isSame(b(),"d")&&(f+=" today"),(0===c.day()||6===c.day())&&(f+=" weekend"),e.append('<td data-action="selectDay" class="day'+f+'">'+c.date()+"</td>"),c.add(1,"d");g.find("tbody").empty().append(i),O(),P()}},R=function(){var b=o.find(".timepicker-hours table"),c=l.clone().startOf("d"),d=[],e=a("<tr>");for(l.hour()>11&&!f&&c.hour(12);c.isSame(l,"d")&&(f||l.hour()<12&&c.hour()<12||l.hour()>11);)c.hour()%4===0&&(e=a("<tr>"),d.push(e)),e.append('<td data-action="selectHour" class="hour'+(M(c,"h")?"":" disabled")+'">'+c.format(f?"HH":"hh")+"</td>"),c.add(1,"h");b.empty().append(d)},S=function(){for(var b=o.find(".timepicker-minutes table"),c=l.clone().startOf("h"),e=[],f=a("<tr>"),g=1===d.stepping?5:d.stepping;l.isSame(c,"h");)c.minute()%(4*g)===0&&(f=a("<tr>"),e.push(f)),f.append('<td data-action="selectMinute" class="minute'+(M(c,"m")?"":" disabled")+'">'+c.format("mm")+"</td>"),c.add(g,"m");b.empty().append(e)},T=function(){for(var b=o.find(".timepicker-seconds table"),c=l.clone().startOf("m"),d=[],e=a("<tr>");l.isSame(c,"m");)c.second()%20===0&&(e=a("<tr>"),d.push(e)),e.append('<td data-action="selectSecond" class="second'+(M(c,"s")?"":" disabled")+'">'+c.format("ss")+"</td>"),c.add(5,"s");b.empty().append(d)},U=function(){var a=o.find(".timepicker span[data-time-component]");f||o.find(".timepicker [data-action=togglePeriod]").text(k.format("A")),a.filter("[data-time-component=hours]").text(k.format(f?"HH":"hh")),a.filter("[data-time-component=minutes]").text(k.format("mm")),a.filter("[data-time-component=seconds]").text(k.format("ss")),R(),S(),T()},V=function(){o&&(Q(),U())},W=function(a){var b=m?null:k;return a?(a=a.clone().locale(d.locale),1!==d.stepping&&a.minutes(Math.round(a.minutes()/d.stepping)*d.stepping%60).seconds(0),void(M(a)?(k=a,l=k.clone(),e.val(k.format(g)),c.data("date",k.format(g)),V(),m=!1,H({type:"dp.change",date:k.clone(),oldDate:b})):(d.keepInvalid||e.val(m?"":k.format(g)),H({type:"dp.error",date:a})))):(m=!0,e.val(""),c.data("date",""),H({type:"dp.change",date:null,oldDate:b}),void V())},X=function(){var b=!1;return o?(o.find(".collapse").each(function(){var c=a(this).data("collapse");return c&&c.transitioning?(b=!0,!1):!0}),b?j:(n&&n.hasClass("btn")&&n.toggleClass("active"),o.hide(),a(window).off("resize",G),o.off("click","[data-action]"),o.off("mousedown",!1),o.remove(),o=!1,H({type:"dp.hide",date:k.clone()}),j)):j},Y=function(){W(null)},Z={next:function(){l.add(q[i].navStep,q[i].navFnc),Q()},previous:function(){l.subtract(q[i].navStep,q[i].navFnc),Q()},pickerSwitch:function(){I(1)},selectMonth:function(b){var c=a(b.target).closest("tbody").find("span").index(a(b.target));l.month(c),i===p?(W(k.clone().year(l.year()).month(l.month())),d.inline||X()):(I(-1),Q())},selectYear:function(b){var c=parseInt(a(b.target).text(),10)||0;l.year(c),i===p?(W(k.clone().year(l.year())),d.inline||X()):(I(-1),Q())},selectDay:function(b){var c=l.clone();a(b.target).is(".old")&&c.subtract(1,"M"),a(b.target).is(".new")&&c.add(1,"M"),W(c.date(parseInt(a(b.target).text(),10))),y()||d.keepOpen||d.inline||X()},incrementHours:function(){W(k.clone().add(1,"h"))},incrementMinutes:function(){W(k.clone().add(d.stepping,"m"))},incrementSeconds:function(){W(k.clone().add(1,"s"))},decrementHours:function(){W(k.clone().subtract(1,"h"))},decrementMinutes:function(){W(k.clone().subtract(d.stepping,"m"))},decrementSeconds:function(){W(k.clone().subtract(1,"s"))},togglePeriod:function(){W(k.clone().add(k.hours()>=12?-12:12,"h"))},togglePicker:function(b){var c,e=a(b.target),f=e.closest("ul"),g=f.find(".in"),h=f.find(".collapse:not(.in)");if(g&&g.length){if(c=g.data("collapse"),c&&c.transitioning)return;g.collapse?(g.collapse("hide"),h.collapse("show")):(g.removeClass("in"),h.addClass("in")),e.is("span")?e.toggleClass(d.icons.time+" "+d.icons.date):e.find("span").toggleClass(d.icons.time+" "+d.icons.date)}},showPicker:function(){o.find(".timepicker > div:not(.timepicker-picker)").hide(),o.find(".timepicker .timepicker-picker").show()},showHours:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-hours").show()},showMinutes:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-minutes").show()},showSeconds:function(){o.find(".timepicker .timepicker-picker").hide(),o.find(".timepicker .timepicker-seconds").show()},selectHour:function(b){var c=parseInt(a(b.target).text(),10);f||(k.hours()>=12?12!==c&&(c+=12):12===c&&(c=0)),W(k.clone().hours(c)),Z.showPicker.call(j)},selectMinute:function(b){W(k.clone().minutes(parseInt(a(b.target).text(),10))),Z.showPicker.call(j)},selectSecond:function(b){W(k.clone().seconds(parseInt(a(b.target).text(),10))),Z.showPicker.call(j)},clear:Y,today:function(){W(b())},close:X},$=function(b){return a(b.currentTarget).is(".disabled")?!1:(Z[a(b.currentTarget).data("action")].apply(j,arguments),!1)},_=function(){var c,f={year:function(a){return a.month(0).date(1).hours(0).seconds(0).minutes(0)},month:function(a){return a.date(1).hours(0).seconds(0).minutes(0)},day:function(a){return a.hours(0).seconds(0).minutes(0)},hour:function(a){return a.seconds(0).minutes(0)},minute:function(a){return a.seconds(0)}};return e.prop("disabled")||!d.ignoreReadonly&&e.prop("readonly")||o?j:(d.useCurrent&&m&&(e.is("input")&&0===e.val().trim().length||d.inline)&&(c=b(),"string"==typeof d.useCurrent&&(c=f[d.useCurrent](c)),W(c)),o=E(),J(),N(),o.find(".timepicker-hours").hide(),o.find(".timepicker-minutes").hide(),o.find(".timepicker-seconds").hide(),V(),I(),a(window).on("resize",G),o.on("click","[data-action]",$),o.on("mousedown",!1),n&&n.hasClass("btn")&&n.toggleClass("active"),o.show(),G(),e.is(":focus")||e.focus(),H({type:"dp.show"}),j)},ab=function(){return o?X():_()},bb=function(a){return a=b.isMoment(a)||a instanceof Date?b(a):b(a,h,d.useStrict),a.locale(d.locale),a},cb=function(a){var b,c,e,f,g=null,h=[],i={},k=a.which,l="p";w[k]=l;for(b in w)w.hasOwnProperty(b)&&w[b]===l&&(h.push(b),parseInt(b,10)!==k&&(i[b]=!0));for(b in d.keyBinds)if(d.keyBinds.hasOwnProperty(b)&&"function"==typeof d.keyBinds[b]&&(e=b.split(" "),e.length===h.length&&v[k]===e[e.length-1])){for(f=!0,c=e.length-2;c>=0;c--)if(!(v[e[c]]in i)){f=!1;break}if(f){g=d.keyBinds[b];break}}g&&(g.call(j,o),a.stopPropagation(),a.preventDefault())},db=function(a){w[a.which]="r",a.stopPropagation(),a.preventDefault()},eb=function(b){var c=a(b.target).val().trim(),d=c?bb(c):null;return W(d),b.stopImmediatePropagation(),!1},fb=function(){e.on({change:eb,blur:d.debug?"":X,keydown:cb,keyup:db}),c.is("input")?e.on({focus:_}):n&&(n.on("click",ab),n.on("mousedown",!1))},gb=function(){e.off({change:eb,blur:X,keydown:cb,keyup:db}),c.is("input")?e.off({focus:_}):n&&(n.off("click",ab),n.off("mousedown",!1))},hb=function(b){var c={};return a.each(b,function(){var a=bb(this);a.isValid()&&(c[a.format("YYYY-MM-DD")]=!0)}),Object.keys(c).length?c:!1},ib=function(){var a=d.format||"L LT";g=a.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,function(a){var b=k.localeData().longDateFormat(a)||a;return b.replace(/(\[[^\[]*\])|(\\)?(LTS|LT|LL?L?L?|l{1,4})/g,function(a){return k.localeData().longDateFormat(a)||a})}),h=d.extraFormats?d.extraFormats.slice():[],h.indexOf(a)<0&&h.indexOf(g)<0&&h.push(g),f=g.toLowerCase().indexOf("a")<1&&g.indexOf("h")<1,x("y")&&(p=2),x("M")&&(p=1),x("d")&&(p=0),i=Math.max(p,i),m||W(k)};if(j.destroy=function(){X(),gb(),c.removeData("DateTimePicker"),c.removeData("date")},j.toggle=ab,j.show=_,j.hide=X,j.disable=function(){return X(),n&&n.hasClass("btn")&&n.addClass("disabled"),e.prop("disabled",!0),j},j.enable=function(){return n&&n.hasClass("btn")&&n.removeClass("disabled"),e.prop("disabled",!1),j},j.ignoreReadonly=function(a){if(0===arguments.length)return d.ignoreReadonly;if("boolean"!=typeof a)throw new TypeError("ignoreReadonly () expects a boolean parameter");return d.ignoreReadonly=a,j},j.options=function(b){if(0===arguments.length)return a.extend(!0,{},d);if(!(b instanceof Object))throw new TypeError("options() options parameter should be an object");return a.extend(!0,d,b),a.each(d,function(a,b){if(void 0===j[a])throw new TypeError("option "+a+" is not recognized!");j[a](b)}),j},j.date=function(a){if(0===arguments.length)return m?null:k.clone();if(!(null===a||"string"==typeof a||b.isMoment(a)||a instanceof Date))throw new TypeError("date() parameter must be one of [null, string, moment or Date]");return W(null===a?null:bb(a)),j},j.format=function(a){if(0===arguments.length)return d.format;if("string"!=typeof a&&("boolean"!=typeof a||a!==!1))throw new TypeError("format() expects a sting or boolean:false parameter "+a);return d.format=a,g&&ib(),j},j.dayViewHeaderFormat=function(a){if(0===arguments.length)return d.dayViewHeaderFormat;if("string"!=typeof a)throw new TypeError("dayViewHeaderFormat() expects a string parameter");return d.dayViewHeaderFormat=a,j},j.extraFormats=function(a){if(0===arguments.length)return d.extraFormats;if(a!==!1&&!(a instanceof Array))throw new TypeError("extraFormats() expects an array or false parameter");return d.extraFormats=a,h&&ib(),j},j.disabledDates=function(b){if(0===arguments.length)return d.disabledDates?a.extend({},d.disabledDates):d.disabledDates;if(!b)return d.disabledDates=!1,V(),j;if(!(b instanceof Array))throw new TypeError("disabledDates() expects an array parameter");return d.disabledDates=hb(b),d.enabledDates=!1,V(),j},j.enabledDates=function(b){if(0===arguments.length)return d.enabledDates?a.extend({},d.enabledDates):d.enabledDates;if(!b)return d.enabledDates=!1,V(),j;if(!(b instanceof Array))throw new TypeError("enabledDates() expects an array parameter");return d.enabledDates=hb(b),d.disabledDates=!1,V(),j},j.daysOfWeekDisabled=function(a){if(0===arguments.length)return d.daysOfWeekDisabled.splice(0);if(!(a instanceof Array))throw new TypeError("daysOfWeekDisabled() expects an array parameter");return d.daysOfWeekDisabled=a.reduce(function(a,b){return b=parseInt(b,10),b>6||0>b||isNaN(b)?a:(-1===a.indexOf(b)&&a.push(b),a)},[]).sort(),V(),j},j.maxDate=function(a){if(0===arguments.length)return d.maxDate?d.maxDate.clone():d.maxDate;if("boolean"==typeof a&&a===!1)return d.maxDate=!1,V(),j;"string"==typeof a&&("now"===a||"moment"===a)&&(a=b());var c=bb(a);if(!c.isValid())throw new TypeError("maxDate() Could not parse date parameter: "+a);if(d.minDate&&c.isBefore(d.minDate))throw new TypeError("maxDate() date parameter is before options.minDate: "+c.format(g));return d.maxDate=c,d.maxDate.isBefore(a)&&W(d.maxDate),l.isAfter(c)&&(l=c.clone()),V(),j},j.minDate=function(a){if(0===arguments.length)return d.minDate?d.minDate.clone():d.minDate;if("boolean"==typeof a&&a===!1)return d.minDate=!1,V(),j;"string"==typeof a&&("now"===a||"moment"===a)&&(a=b());var c=bb(a);if(!c.isValid())throw new TypeError("minDate() Could not parse date parameter: "+a);if(d.maxDate&&c.isAfter(d.maxDate))throw new TypeError("minDate() date parameter is after options.maxDate: "+c.format(g));return d.minDate=c,d.minDate.isAfter(a)&&W(d.minDate),l.isBefore(c)&&(l=c.clone()),V(),j},j.defaultDate=function(a){if(0===arguments.length)return d.defaultDate?d.defaultDate.clone():d.defaultDate;if(!a)return d.defaultDate=!1,j;"string"==typeof a&&("now"===a||"moment"===a)&&(a=b());var c=bb(a);if(!c.isValid())throw new TypeError("defaultDate() Could not parse date parameter: "+a);if(!M(c))throw new TypeError("defaultDate() date passed is invalid according to component setup validations");return d.defaultDate=c,d.defaultDate&&""===e.val().trim()&&void 0===e.attr("placeholder")&&W(d.defaultDate),j},j.locale=function(a){if(0===arguments.length)return d.locale;if(!b.localeData(a))throw new TypeError("locale() locale "+a+" is not loaded from moment locales!");return d.locale=a,k.locale(d.locale),l.locale(d.locale),g&&ib(),o&&(X(),_()),j},j.stepping=function(a){return 0===arguments.length?d.stepping:(a=parseInt(a,10),(isNaN(a)||1>a)&&(a=1),d.stepping=a,j)},j.useCurrent=function(a){var b=["year","month","day","hour","minute"];if(0===arguments.length)return d.useCurrent;if("boolean"!=typeof a&&"string"!=typeof a)throw new TypeError("useCurrent() expects a boolean or string parameter");if("string"==typeof a&&-1===b.indexOf(a.toLowerCase()))throw new TypeError("useCurrent() expects a string parameter of "+b.join(", "));return d.useCurrent=a,j},j.collapse=function(a){if(0===arguments.length)return d.collapse;if("boolean"!=typeof a)throw new TypeError("collapse() expects a boolean parameter");return d.collapse===a?j:(d.collapse=a,o&&(X(),_()),j)},j.icons=function(b){if(0===arguments.length)return a.extend({},d.icons);if(!(b instanceof Object))throw new TypeError("icons() expects parameter to be an Object");return a.extend(d.icons,b),o&&(X(),_()),j},j.useStrict=function(a){if(0===arguments.length)return d.useStrict;if("boolean"!=typeof a)throw new TypeError("useStrict() expects a boolean parameter");return d.useStrict=a,j},j.sideBySide=function(a){if(0===arguments.length)return d.sideBySide;if("boolean"!=typeof a)throw new TypeError("sideBySide() expects a boolean parameter");return d.sideBySide=a,o&&(X(),_()),j},j.viewMode=function(a){if(0===arguments.length)return d.viewMode;if("string"!=typeof a)throw new TypeError("viewMode() expects a string parameter");if(-1===r.indexOf(a))throw new TypeError("viewMode() parameter must be one of ("+r.join(", ")+") value");return d.viewMode=a,i=Math.max(r.indexOf(a),p),I(),j},j.toolbarPlacement=function(a){if(0===arguments.length)return d.toolbarPlacement;if("string"!=typeof a)throw new TypeError("toolbarPlacement() expects a string parameter");if(-1===u.indexOf(a))throw new TypeError("toolbarPlacement() parameter must be one of ("+u.join(", ")+") value");return d.toolbarPlacement=a,o&&(X(),_()),j},j.widgetPositioning=function(b){if(0===arguments.length)return a.extend({},d.widgetPositioning);if("[object Object]"!=={}.toString.call(b))throw new TypeError("widgetPositioning() expects an object variable");if(b.horizontal){if("string"!=typeof b.horizontal)throw new TypeError("widgetPositioning() horizontal variable must be a string");if(b.horizontal=b.horizontal.toLowerCase(),-1===t.indexOf(b.horizontal))throw new TypeError("widgetPositioning() expects horizontal parameter to be one of ("+t.join(", ")+")");d.widgetPositioning.horizontal=b.horizontal}if(b.vertical){if("string"!=typeof b.vertical)throw new TypeError("widgetPositioning() vertical variable must be a string");if(b.vertical=b.vertical.toLowerCase(),-1===s.indexOf(b.vertical))throw new TypeError("widgetPositioning() expects vertical parameter to be one of ("+s.join(", ")+")");d.widgetPositioning.vertical=b.vertical}return V(),j},j.calendarWeeks=function(a){if(0===arguments.length)return d.calendarWeeks;if("boolean"!=typeof a)throw new TypeError("calendarWeeks() expects parameter to be a boolean value");return d.calendarWeeks=a,V(),j},j.showTodayButton=function(a){if(0===arguments.length)return d.showTodayButton;if("boolean"!=typeof a)throw new TypeError("showTodayButton() expects a boolean parameter");return d.showTodayButton=a,o&&(X(),_()),j},j.showClear=function(a){if(0===arguments.length)return d.showClear;if("boolean"!=typeof a)throw new TypeError("showClear() expects a boolean parameter");return d.showClear=a,o&&(X(),_()),j},j.widgetParent=function(b){if(0===arguments.length)return d.widgetParent;if("string"==typeof b&&(b=a(b)),null!==b&&"string"!=typeof b&&!(b instanceof a))throw new TypeError("widgetParent() expects a string or a jQuery object parameter");return d.widgetParent=b,o&&(X(),_()),j},j.keepOpen=function(a){if(0===arguments.length)return d.keepOpen;if("boolean"!=typeof a)throw new TypeError("keepOpen() expects a boolean parameter");return d.keepOpen=a,j},j.inline=function(a){if(0===arguments.length)return d.inline;if("boolean"!=typeof a)throw new TypeError("inline() expects a boolean parameter");return d.inline=a,j},j.clear=function(){return Y(),j},j.keyBinds=function(a){return d.keyBinds=a,j},j.debug=function(a){if("boolean"!=typeof a)throw new TypeError("debug() expects a boolean parameter");return d.debug=a,j},j.showClose=function(a){if(0===arguments.length)return d.showClose;if("boolean"!=typeof a)throw new TypeError("showClose() expects a boolean parameter");return d.showClose=a,j},j.keepInvalid=function(a){if(0===arguments.length)return d.keepInvalid;if("boolean"!=typeof a)throw new TypeError("keepInvalid() expects a boolean parameter");return d.keepInvalid=a,j},j.datepickerInput=function(a){if(0===arguments.length)return d.datepickerInput;if("string"!=typeof a)throw new TypeError("datepickerInput() expects a string parameter");return d.datepickerInput=a,j},c.is("input"))e=c;else if(e=c.find(d.datepickerInput),0===e.size())e=c.find("input");else if(!e.is("input"))throw new Error('CSS class "'+d.datepickerInput+'" cannot be applied to non input element');if(c.hasClass("input-group")&&(n=c.find(0===c.find(".datepickerbutton").size()?'[class^="input-group-"]':".datepickerbutton")),!d.inline&&!e.is("input"))throw new Error("Could not initialize DateTimePicker without an input element");return a.extend(!0,d,F()),j.options(d),ib(),fb(),e.prop("disabled")&&j.disable(),e.is("input")&&0!==e.val().trim().length?W(bb(e.val().trim())):d.defaultDate&&void 0===e.attr("placeholder")&&W(d.defaultDate),d.inline&&_(),j};a.fn.datetimepicker=function(b){return this.each(function(){var d=a(this);d.data("DateTimePicker")||(b=a.extend(!0,{},a.fn.datetimepicker.defaults,b),d.data("DateTimePicker",c(d,b)))})},a.fn.datetimepicker.defaults={format:!1,dayViewHeaderFormat:"MMMM YYYY",extraFormats:!1,stepping:1,minDate:!1,maxDate:!1,useCurrent:!0,collapse:!0,locale:b.locale(),defaultDate:!1,disabledDates:!1,enabledDates:!1,icons:{time:"glyphicon glyphicon-time",date:"glyphicon glyphicon-calendar",up:"glyphicon glyphicon-chevron-up",down:"glyphicon glyphicon-chevron-down",previous:"glyphicon glyphicon-chevron-left",next:"glyphicon glyphicon-chevron-right",today:"glyphicon glyphicon-screenshot",clear:"glyphicon glyphicon-trash",close:"glyphicon glyphicon-remove"},useStrict:!1,sideBySide:!1,daysOfWeekDisabled:[],calendarWeeks:!1,viewMode:"days",toolbarPlacement:"default",showTodayButton:!1,showClear:!1,showClose:!1,widgetPositioning:{horizontal:"auto",vertical:"auto"},widgetParent:null,ignoreReadonly:!1,keepOpen:!1,inline:!1,keepInvalid:!1,datepickerInput:".datepickerinput",keyBinds:{up:function(a){if(a){var c=this.date()||b();this.date(a.find(".datepicker").is(":visible")?c.clone().subtract(7,"d"):c.clone().add(1,"m"))}},down:function(a){if(!a)return void this.show();var c=this.date()||b();this.date(a.find(".datepicker").is(":visible")?c.clone().add(7,"d"):c.clone().subtract(1,"m"))},"control up":function(a){if(a){var c=this.date()||b();this.date(a.find(".datepicker").is(":visible")?c.clone().subtract(1,"y"):c.clone().add(1,"h"))}},"control down":function(a){if(a){var c=this.date()||b();this.date(a.find(".datepicker").is(":visible")?c.clone().add(1,"y"):c.clone().subtract(1,"h"))}},left:function(a){if(a){var c=this.date()||b();a.find(".datepicker").is(":visible")&&this.date(c.clone().subtract(1,"d"))}},right:function(a){if(a){var c=this.date()||b();a.find(".datepicker").is(":visible")&&this.date(c.clone().add(1,"d"))}},pageUp:function(a){if(a){var c=this.date()||b();a.find(".datepicker").is(":visible")&&this.date(c.clone().subtract(1,"M"))}},pageDown:function(a){if(a){var c=this.date()||b();a.find(".datepicker").is(":visible")&&this.date(c.clone().add(1,"M"))}},enter:function(){this.hide()},escape:function(){this.hide()},"control space":function(a){a.find(".timepicker").is(":visible")&&a.find('.btn[data-action="togglePeriod"]').click()},t:function(){this.date(b())},"delete":function(){this.clear()}},debug:!1}});
+/*! ========================================================================
+ * Bootstrap Toggle: bootstrap-toggle.js v2.2.0
+ * http://www.bootstraptoggle.com
+ * ========================================================================
+ * Copyright 2014 Min Hur, The New York Times Company
+ * Licensed under MIT
+ * ======================================================================== */
++function(a){"use strict";function b(b){return this.each(function(){var d=a(this),e=d.data("bs.toggle"),f="object"==typeof b&&b;e||d.data("bs.toggle",e=new c(this,f)),"string"==typeof b&&e[b]&&e[b]()})}var c=function(b,c){this.$element=a(b),this.options=a.extend({},this.defaults(),c),this.render()};c.VERSION="2.2.0",c.DEFAULTS={on:"On",off:"Off",onstyle:"primary",offstyle:"default",size:"normal",style:"",width:null,height:null},c.prototype.defaults=function(){return{on:this.$element.attr("data-on")||c.DEFAULTS.on,off:this.$element.attr("data-off")||c.DEFAULTS.off,onstyle:this.$element.attr("data-onstyle")||c.DEFAULTS.onstyle,offstyle:this.$element.attr("data-offstyle")||c.DEFAULTS.offstyle,size:this.$element.attr("data-size")||c.DEFAULTS.size,style:this.$element.attr("data-style")||c.DEFAULTS.style,width:this.$element.attr("data-width")||c.DEFAULTS.width,height:this.$element.attr("data-height")||c.DEFAULTS.height}},c.prototype.render=function(){this._onstyle="btn-"+this.options.onstyle,this._offstyle="btn-"+this.options.offstyle;var b="large"===this.options.size?"btn-lg":"small"===this.options.size?"btn-sm":"mini"===this.options.size?"btn-xs":"",c=a('<label class="btn">').html(this.options.on).addClass(this._onstyle+" "+b),d=a('<label class="btn">').html(this.options.off).addClass(this._offstyle+" "+b+" active"),e=a('<span class="toggle-handle btn btn-default">').addClass(b),f=a('<div class="toggle-group">').append(c,d,e),g=a('<div class="toggle btn" data-toggle="toggle">').addClass(this.$element.prop("checked")?this._onstyle:this._offstyle+" off").addClass(b).addClass(this.options.style);this.$element.wrap(g),a.extend(this,{$toggle:this.$element.parent(),$toggleOn:c,$toggleOff:d,$toggleGroup:f}),this.$toggle.append(f);var h=this.options.width||Math.max(c.outerWidth(),d.outerWidth())+e.outerWidth()/2,i=this.options.height||Math.max(c.outerHeight(),d.outerHeight());c.addClass("toggle-on"),d.addClass("toggle-off"),this.$toggle.css({width:h,height:i}),this.options.height&&(c.css("line-height",c.height()+"px"),d.css("line-height",d.height()+"px")),this.update(!0),this.trigger(!0)},c.prototype.toggle=function(){this.$element.prop("checked")?this.off():this.on()},c.prototype.on=function(a){return this.$element.prop("disabled")?!1:(this.$toggle.removeClass(this._offstyle+" off").addClass(this._onstyle),this.$element.prop("checked",!0),void(a||this.trigger()))},c.prototype.off=function(a){return this.$element.prop("disabled")?!1:(this.$toggle.removeClass(this._onstyle).addClass(this._offstyle+" off"),this.$element.prop("checked",!1),void(a||this.trigger()))},c.prototype.enable=function(){this.$toggle.removeAttr("disabled"),this.$element.prop("disabled",!1)},c.prototype.disable=function(){this.$toggle.attr("disabled","disabled"),this.$element.prop("disabled",!0)},c.prototype.update=function(a){this.$element.prop("disabled")?this.disable():this.enable(),this.$element.prop("checked")?this.on(a):this.off(a)},c.prototype.trigger=function(b){this.$element.off("change.bs.toggle"),b||this.$element.change(),this.$element.on("change.bs.toggle",a.proxy(function(){this.update()},this))},c.prototype.destroy=function(){this.$element.off("change.bs.toggle"),this.$toggleGroup.remove(),this.$element.removeData("bs.toggle"),this.$element.unwrap()};var d=a.fn.bootstrapToggle;a.fn.bootstrapToggle=b,a.fn.bootstrapToggle.Constructor=c,a.fn.toggle.noConflict=function(){return a.fn.bootstrapToggle=d,this},a(function(){a("input[type=checkbox][data-toggle^=toggle]").bootstrapToggle()}),a(document).on("click.bs.toggle","div[data-toggle^=toggle]",function(b){var c=a(this).find("input[type=checkbox]");c.bootstrapToggle("toggle"),b.preventDefault()})}(jQuery);
+//# sourceMappingURL=bootstrap-toggle.min.js.map
 'use strict';
 
 angular.module('edup.common', [
@@ -52802,6 +52811,10 @@ angular.module('edup.common')
             link: function (scope, element) {
                 scope.dismissModal = function () {
                     element.modal('hide');
+                };
+
+                scope.showModal = function () {
+                    element.modal('show');
                 };
             }
         };
@@ -52838,6 +52851,53 @@ angular.module('edup.common')
                         scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd');
 
                     });
+                });
+            }
+        };
+    }]
+);
+
+'use strict';
+
+angular.module('edup.common')
+
+    .directive('edupToggle', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'edup-toggle',
+            scope: {
+                onEvent: '&',
+                offEvent: '&',
+                onLabel: '@',
+                offLabel: '@',
+                toggleId: '@',
+                linkWidget: '='
+            },
+            controller: ['$scope', function ($scope) {
+
+            }],
+
+            link: function (scope) {
+                $timeout(function () {
+                    if (!scope.onLabel) {
+                        scope.onLabel = 'On';
+                    }
+                    if (!scope.offLabel) {
+                        scope.offLabel = 'Off';
+                    }
+
+                    var toggle = $('#' + scope.toggleId);
+
+                    toggle.bootstrapToggle();
+
+                    toggle.change(function () {
+                        if ($(this).prop('checked')) {
+                            scope.onEvent();
+                        } else {
+                            scope.offEvent();
+                        }
+                    });
+
                 });
             }
         };
@@ -52960,13 +53020,49 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
+    .service('QueryService', function () {
+
+        var prepareQuery = function (top, skip, search, orderBy, filters) {
+            var queries = {};
+
+            queries.$count = true;
+
+            if (top) {
+                queries.$top = top;
+            }
+            if (top) {
+                queries.$skip = skip;
+            }
+            if (top) {
+                queries.$search = search;
+            }
+            if (orderBy) {
+                queries.$orderby = orderBy;
+            }
+            if (filters) {
+                queries.$filter = filters;
+            }
+
+            return queries;
+        };
+
+        return {
+            Query: prepareQuery
+        };
+    }
+);
+'use strict';
+
+angular.module('edup.common')
+
     .service('RestService', ['Restangular', function (Restangular) {
 
         var rpc = Restangular.one('private');
 
         return {
             Students: rpc.one('students'),
-            Balance: rpc.one('balance')
+            Balance: rpc.one('balance'),
+            Documents: rpc.one('documents')
         };
 
     }]
@@ -53028,8 +53124,8 @@ angular.module('edup.header')
             return viewLocation === $location.path();
         };
 
-        $scope.downloadDocument = function () {
-            window.open('https://172.20.10.4:8443/edup/api/documents');
+        $scope.downloadReport = function () {
+            window.open('https://172.20.10.4:8443/edup/api/private/reports');
         };
     }]
 );
@@ -53364,28 +53460,90 @@ angular.module('edup.students')
             restrict: 'E',
             templateUrl: 'student-documents',
 
-            controller: ['$scope', function($scope) {
-                $scope.documents = [
-                    {
-                        'name': 'report.docx',
-                        'date': '2015/03/03',
-                        'link': 'https:/localhost:8443/edup/api/file/report.docx'
-                    },
-                    {
-                        'name': 'balance.xls',
-                        'date': '2015/03/04',
-                        'link': 'https:/localhost:8443/edup/api/file/balance.xls'
-                    },
-                    {
-                        'name': 'photo.jpg',
-                        'date': '2015/03/04',
-                        'link': 'https:/localhost:8443/edup/api/file/photo.jpg'
+            controller: ['$scope', 'QueryService', 'RestService', 'PaginationService', 'UrlService', function ($scope, QueryService, RestService, PaginationService, UrlService) {
+
+                $scope.initDocumentsPagination = function () {
+                    $scope.documentsPaging = {
+                        enabled: false,
+                        page: 1,
+                        perPage: 5,
+                        totalRecords: 0
+                    };
+                };
+
+                $scope.initDocumentsPagination();
+
+                $scope.documentsSearch = {
+                    spin: false
+                };
+
+                $scope.loadDocuments = function (top, skip, search) {
+                    $scope.basicSearch.spin = true;
+                    var query = QueryService.Query(top, skip, search, 'Created desc', 'StudentId eq ' + $scope.selectedStudent.id);
+                    RestService.Documents.get(query).then(function (result) {
+                        $scope.documentsSearch.spin = false;
+                        $scope.documentsPaging.totalRecords = result.count;
+                        $scope.documents = result.values;
+                        _.forEach($scope.documents, function (document) {
+                            document.link = UrlService.Files.Download + '/' + document.fileId;
+                        });
+                    });
+                };
+
+                $scope.refreshDocumentsList = function () {
+                    $scope.documents = null;
+                    $scope.initDocumentsPagination();
+                    $scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging));
+                };
+
+                $scope.documentsPageChanged = function (newPage, searchValue) {
+                    if (!$scope.documentsSearch.spin) {
+                        $scope.documentsPaging.page = newPage;
+                        $scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging), searchValue);
                     }
-                ];
+                };
+
+
+                //$scope.documents = [
+                //    {
+                //        'name': 'report.docx',
+                //        'date': '2015/03/03',
+                //        'link': 'https:/localhost:8443/edup/api/file/report.docx'
+                //    },
+                //    {
+                //        'name': 'balance.xls',
+                //        'date': '2015/03/04',
+                //        'link': 'https:/localhost:8443/edup/api/file/balance.xls'
+                //    },
+                //    {
+                //        'name': 'photo.jpg',
+                //        'date': '2015/03/04',
+                //        'link': 'https:/localhost:8443/edup/api/file/photo.jpg'
+                //    }
+                //];
             }],
 
-            link : function ($scope) {
-                $scope.directiveTest = 'Student tabbed pane directive';
+            link: function (scope) {
+                scope.onShowDownloadToggle = function () {
+                    scope.showDownloadSection = true;
+                    scope.documentsButtonLabel = 'Hide';
+                };
+
+                scope.offShowDownloadToggle = function () {
+                    scope.showDownloadSection = false;
+                    scope.documentsButtonLabel = 'Show';
+                };
+
+                scope.toggleDownloadSection = function () {
+                    scope.showDownloadSection = !scope.showDownloadSection;
+                    if (scope.showDownloadSection) {
+                        scope.onShowDownloadToggle();
+                    } else {
+                        scope.offShowDownloadToggle();
+                    }
+                };
+
+                scope.offShowDownloadToggle();
             }
         };
     }
@@ -53429,12 +53587,28 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('fileUpload', ['UrlService', 'FileUploader', '$window', 'NotificationService', function (UrlService, FileUploader, $window, NotificationService) {
+    .directive('fileUpload', ['$window', '$timeout', 'UrlService', 'FileUploader', 'NotificationService', function ($window, $timeout, UrlService, FileUploader, NotificationService) {
         return {
             restrict: 'E',
             templateUrl: 'file-upload',
             scope: false,
             priority: 10,
+            controller: ['$scope', '$timeout', 'RestService', function ($scope, $timeout, RestService) {
+                $scope.executeDocumentSave = function (studentId, fileId, fileName) {
+                    if (studentId && fileId) {
+
+                        var body = {
+                            fileId: fileId,
+                            studentId: studentId
+                        };
+
+                        RestService.Documents.customPOST(body).then(function (response) {
+                            NotificationService.Success('Document ' + fileName + ' uploaded!');
+                        });
+                    }
+                };
+
+            }],
             link: function (scope) {
                 scope.uploader = new FileUploader({
                     url: UrlService.Files.Upload
@@ -53449,38 +53623,41 @@ angular.module('edup.students')
                     $window.open(url, '_blank');
                 };
 
-                scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
-                    console.info('onWhenAddingFileFailed', item, filter, options);
+                //scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+                //    console.info('onWhenAddingFileFailed', item, filter, options);
+                //};
+                //scope.uploader.onAfterAddingFile = function (fileItem) {
+                //    console.info('onAfterAddingFile', fileItem);
+                //};
+                //scope.uploader.onAfterAddingAll = function (addedFileItems) {
+                //    console.info('onAfterAddingAll', addedFileItems);
+                //};
+                //scope.uploader.onBeforeUploadItem = function (item) {
+                //    console.info('onBeforeUploadItem', item);
+                //};
+                //scope.uploader.onProgressItem = function (fileItem, progress) {
+                //    console.info('onProgressItem', fileItem, progress);
+                //};
+                //scope.uploader.onProgressAll = function (progress) {
+                //    console.info('onProgressAll', progress);
+                //};
+                scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+                    var fileId = response.payload.id;
+                    scope.executeDocumentSave(scope.selectedStudent.id, fileId, fileItem._file.name);
                 };
-                scope.uploader.onAfterAddingFile = function(fileItem) {
-                    console.info('onAfterAddingFile', fileItem);
+                scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+                    NotificationService.Error('Failed to upload ' + fileItem._file.name);
                 };
-                scope.uploader.onAfterAddingAll = function(addedFileItems) {
-                    console.info('onAfterAddingAll', addedFileItems);
-                };
-                scope.uploader.onBeforeUploadItem = function(item) {
-                    console.info('onBeforeUploadItem', item);
-                };
-                scope.uploader.onProgressItem = function(fileItem, progress) {
-                    console.info('onProgressItem', fileItem, progress);
-                };
-                scope.uploader.onProgressAll = function(progress) {
-                    console.info('onProgressAll', progress);
-                };
-                scope.uploader.onSuccessItem = function(fileItem, response, status, headers) {
-                    NotificationService.Success('Student photo uploaded!');
-                };
-                scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
-                    NotificationService.Error('Failed to upload student photo!');
-                };
-                scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
-                    console.info('onCancelItem', fileItem, response, status, headers);
-                };
-                scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
-                    console.info('onCompleteItem', fileItem, response, status, headers);
-                };
-                scope.uploader.onCompleteAll = function() {
-                    console.info('onCompleteAll');
+                //scope.uploader.onCancelItem = function (fileItem, response, status, headers) {
+                //    console.info('onCancelItem', fileItem, response, status, headers);
+                //};
+                //scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
+                //    console.info('onCompleteItem', fileItem, response, status, headers);
+                //};
+                scope.uploader.onCompleteAll = function () {
+                    $timeout(function() {
+                        scope.refreshDocumentsList();
+                    }, 1000);
                 };
             }
         };
@@ -53521,7 +53698,12 @@ angular.module('edup.students')
         return {
             restrict: 'E',
             templateUrl: 'students-list',
-            link : function (scope) {
+            link: function (scope) {
+
+                scope.openStudentDetailModal = function (student) {
+                    $('#student-details-modal-view').modal('show');
+                    $('.nav-tabs a[href="#information"]').tab('show');
+                };
             }
         };
     }
@@ -53531,7 +53713,7 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .controller('StudentsController', ['$scope', '$timeout', '$filter', 'RestService', 'PaginationService', function ($scope, $timeout, $filter, RestService, PaginationService) {
+    .controller('StudentsController', ['$scope', '$timeout', '$filter', 'RestService', 'PaginationService', 'QueryService', function ($scope, $timeout, $filter, RestService, PaginationService, QueryService) {
 
         $scope.studentSelected = false;
         $scope.basicSearch = {
@@ -53542,26 +53724,6 @@ angular.module('edup.students')
             page: 1,
             perPage: 10,
             totalRecords: 0
-        };
-
-        var prepareQuery = function (top, skip, search, orderBy) {
-            var queries = {};
-
-            queries.$count = true;
-
-            if (top) {
-                queries.$top = top;
-            }
-            if (top) {
-                queries.$skip = skip;
-            }
-            if (top) {
-                queries.$search = search;
-            }
-            if (orderBy) {
-                queries.$orderby = orderBy;
-            }
-            return queries;
         };
 
         $scope.loadFullStudent = function (id) {
@@ -53586,7 +53748,7 @@ angular.module('edup.students')
 
         $scope.loadStudents = function (id, top, skip, search) {
             $scope.basicSearch.spin = true;
-            var query = prepareQuery(top, skip, search, 'Created desc');
+            var query = QueryService.Query(top, skip, search, 'Created desc');
             RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
                 $scope.studentPaging.totalRecords = result.count;
@@ -53617,9 +53779,11 @@ angular.module('edup.students')
             //$scope.selectedStudent.balance += parseInt(value);
         };
 
-        $scope.pageChanged = function (newPage, searchValue) {
-            $scope.studentPaging.page = newPage;
-            $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
+        $scope.studentsPageChanged = function (newPage, searchValue) {
+            if (!$scope.basicSearch.spin) {
+                $scope.studentPaging.page = newPage;
+                $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
+            }
         };
 
         $scope.setRecordsPerPage = function (newRecordsPerPageValue) {
@@ -53731,7 +53895,7 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('photoUpload', ['UrlService', 'FileUploader', '$window', '$timeout', 'NotificationService', function (UrlService, FileUploader, $window, $timeout, NotificationService) {
+    .directive('photoUpload', ['UrlService', 'FileUploader', '$window', '$timeout', 'NotificationService', 'RestService', function (UrlService, FileUploader, $window, $timeout, NotificationService, RestService) {
         return {
             restrict: 'E',
             templateUrl: 'photo-upload',
@@ -53852,13 +54016,18 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('edup-toggle',
+    "<input id={{toggleId}} type=checkbox data-toggle=toggle data-on={{onLabel}} data-off={{offLabel}} data-width=100 data-size=small>"
+  );
+
+
   $templateCache.put('edup-footer',
     "<div ng-controller=FooterController><nav class=\"navbar navbar-default\" style=\"margin-bottom: 0px !important; margin-top: auto !important\"><div class=\"navbar-text text-center\" style=\"width: 100%\">Application version: {{ appVersion }}</div></nav></div>"
   );
 
 
   $templateCache.put('edup-header',
-    "<div ng-controller=HeaderController><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a class=navbar-brand href=\"\">Educational planning application</a></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/calendar')}\"><a href=#calendar>Calendar</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadDocument()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=#>Log out</a></li></ul></div></div></nav></div>"
+    "<div ng-controller=HeaderController><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a class=navbar-brand href=\"\">Educational planning application</a></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/calendar')}\"><a href=#calendar>Calendar</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=#>Log out</a></li></ul></div></div></nav></div>"
   );
 
 
@@ -53888,22 +54057,22 @@ angular.module('edup')
 
 
   $templateCache.put('student-details',
-    "<div app-modal id=student-details-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header style=\"padding: 5px !important;border-bottom: none !important\"><div class=\"parent modal-title\" id=myModalLabel><div class=\"child pull=left\"><h4>{{selectedStudent.name}} {{selectedStudent.lastName}}</h4></div><div class=\"child pull-right\"><h4 class=pull-right><span class=label style=\"font-weight: 200 !important\" ng-class=\"{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}\">{{ selectedStudent.balance | number : 2}} EUR</span></h4></div></div></div><div role=tabpanel><ul class=\"nav nav-tabs\" role=tablist style=\"border: none !important\"><li role=presentation class=active ng-class=\"{ active: isActive('/information')}\"><a href=#information aria-controls=home role=tab data-toggle=tab>Information</a></li><li role=presentation ng-class=\"{ active: isActive('/accounting')}\"><a href=#accounting aria-controls=profile role=tab data-toggle=tab>Accounting</a></li><li role=presentation ng-class=\"{ active: isActive('/documents')}\"><a href=#documents aria-controls=messages role=tab data-toggle=tab>Documents</a></li><li role=presentation ng-class=\"{ active: isActive('/attendance')}\"><a href=#attendance aria-controls=settings role=tab data-toggle=tab>Attendance</a></li></ul><div class=tab-content style=\"margin-bottom: 10px\"><div role=tabpanel class=\"tab-pane active first-tab\" id=information><edit-student></edit-student></div><div role=tabpanel class=\"tab-pane next-tab\" id=accounting><student-accounting></student-accounting></div><div role=tabpanel class=\"tab-pane next-tab\" id=documents><student-documents></student-documents></div><div role=tabpanel class=\"tab-pane next-tab\" id=attendance><student-attendance></student-attendance></div></div></div></div></div></div>"
+    "<div app-modal id=student-details-modal-view class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header style=\"padding: 5px !important;border-bottom: none !important\"><div class=\"parent modal-title\" id=myModalLabel><div class=\"child pull=left\"><h4>{{selectedStudent.name}} {{selectedStudent.lastName}}</h4></div><div class=\"child pull-right\"><h4 class=pull-right><span class=label style=\"font-weight: 200 !important\" ng-class=\"{'label-danger' :  selectedStudent.balance < 0, 'label-success' :  selectedStudent.balance > 0, 'label-primary' :  selectedStudent.balance == 0}\">{{ selectedStudent.balance | number : 2}} EUR</span></h4></div></div></div><div role=tabpanel><ul class=\"nav nav-tabs\" role=tablist style=\"border: none !important\"><li role=presentation class=active ng-class=\"{ active: isActive('/information')}\"><a href=#information aria-controls=home role=tab data-toggle=tab>Information</a></li><li role=presentation ng-class=\"{ active: isActive('/accounting')}\"><a href=#accounting aria-controls=profile role=tab data-toggle=tab>Accounting</a></li><li role=presentation ng-class=\"{ active: isActive('/documents')}\" ng-click=refreshDocumentsList()><a href=#documents aria-controls=messages role=tab data-toggle=tab>Documents</a></li><li role=presentation ng-class=\"{ active: isActive('/attendance')}\"><a href=#attendance aria-controls=settings role=tab data-toggle=tab>Attendance</a></li></ul><div class=tab-content style=\"margin-bottom: 10px\"><div role=tabpanel class=\"tab-pane active first-tab\" id=information><edit-student></edit-student></div><div role=tabpanel class=\"tab-pane next-tab\" id=accounting><student-accounting></student-accounting></div><div role=tabpanel class=\"tab-pane next-tab\" id=documents><student-documents></student-documents></div><div role=tabpanel class=\"tab-pane next-tab\" id=attendance><student-attendance></student-attendance></div></div></div></div></div></div>"
   );
 
 
   $templateCache.put('student-documents',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Document name</th><th>Date loaded</th><th></th></tr></thead><tbody><tr ng-repeat=\"document in documents\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ document.name }}</td><td>{{ document.date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div><file-upload></file-upload></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Size</th><th>Created</th><th></th></tr></thead><tbody><tr dir-paginate=\"document in documents | itemsPerPage: documentsPaging.perPage\" current-page=documentsPaging.page total-items=documentsPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" pagination-id=documentsPaginationId><td>{{ document.fileName }}</td><td>{{ document.size }}</td><td>{{ document.created | date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"documentsPageChanged(newPageNumber, searchValue)\" pagination-id=documentsPaginationId></dir-pagination-controls></div></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
   );
 
 
   $templateCache.put('edit-student',
-    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=editStudentDatePicker input-field=studentEdit.birthDateString label=Birthday></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
+    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=editStudentDatePicker input-field=studentEdit.birthDateString label=Birthday></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"margin-top: 10px; margin-left: 17px\"><button type=submit class=\"btn btn-primary btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
   );
 
 
   $templateCache.put('file-upload',
-    "<div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel</button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=item.remove()><span class=\"glyphicon glyphicon-trash\"></span> Remove</button></td></tr></tbody></table><div><div>Queue progress:<div class=progress><div class=progress-bar role=progressbar ng-style=\"{ 'width': uploader.progress + '%' }\"></div></div></div><button type=button class=\"btn btn-success btn-sm\" ng-click=uploader.uploadAll() ng-disabled=!uploader.getNotUploadedItems().length><span class=\"glyphicon glyphicon-upload\"></span> Upload All</button> <button type=button class=\"btn btn-warning btn-sm\" ng-click=uploader.cancelAll() ng-disabled=!uploader.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel All</button> <button type=button class=\"btn btn-danger btn-sm\" ng-click=uploader.clearQueue() ng-disabled=!uploader.queue.length><span class=\"glyphicon glyphicon-trash\"></span> Remove All</button></div>"
+    "<div ng-if=uploader><input type=file nv-file-select uploader=uploader multiple></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel</button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=item.remove()><span class=\"glyphicon glyphicon-trash\"></span> Remove</button></td></tr></tbody></table><div><div>Queue progress:<div class=progress><div class=progress-bar role=progressbar ng-style=\"{ 'width': uploader.progress + '%' }\"></div></div></div><button type=button class=\"btn btn-success btn-sm\" ng-click=uploader.uploadAll() ng-disabled=!uploader.getNotUploadedItems().length><span class=\"glyphicon glyphicon-upload\"></span> Upload All</button> <button type=button class=\"btn btn-warning btn-sm\" ng-click=uploader.cancelAll() ng-disabled=!uploader.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span> Cancel All</button> <button type=button class=\"btn btn-danger btn-sm\" ng-click=uploader.clearQueue() ng-disabled=!uploader.queue.length><span class=\"glyphicon glyphicon-trash\"></span> Remove All</button></div>"
   );
 
 
@@ -53918,7 +54087,7 @@ angular.module('edup')
 
 
   $templateCache.put('students-list',
-    "<div style=\"padding-top: 20px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: studentPaging.perPage\" current-page=studentPaging.page total-items=studentPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'selected': student.id === selectedStudent.id}\"><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button type=button class=\"btn btn-primary btn-xs\" data-toggle=modal data-target=#student-details-modal-view>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"pageChanged(newPageNumber, searchValue)\"></dir-pagination-controls></div></div><student-details></student-details></div>"
+    "<div style=\"padding-top: 20px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: studentPaging.perPage\" current-page=studentPaging.page total-items=studentPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'selected': student.id === selectedStudent.id}\" pagination-id=studentsPaginationId><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button href=#information type=button class=\"btn btn-primary btn-xs\" ng-click=openStudentDetailModal(student)>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"studentsPageChanged(newPageNumber, searchValue)\" pagination-id=studentsPaginationId></dir-pagination-controls></div></div><student-details></student-details></div>"
   );
 
 

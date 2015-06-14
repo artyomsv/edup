@@ -9,6 +9,10 @@ angular.module('edup.common')
                 scope.dismissModal = function () {
                     element.modal('hide');
                 };
+
+                scope.showModal = function () {
+                    element.modal('show');
+                };
             }
         };
     }

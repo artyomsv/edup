@@ -2,7 +2,7 @@
 
 angular.module('edup.students')
 
-    .directive('photoUpload', function (UrlService, FileUploader, $window, $timeout, NotificationService) {
+    .directive('photoUpload', function (UrlService, FileUploader, $window, $timeout, NotificationService, RestService) {
         return {
             restrict: 'E',
             templateUrl: 'photo-upload',

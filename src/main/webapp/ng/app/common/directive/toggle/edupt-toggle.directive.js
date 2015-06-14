@@ -12,7 +12,7 @@ angular.module('edup.common')
                 onLabel: '@',
                 offLabel: '@',
                 toggleId: '@',
-                linkWidget: "="
+                linkWidget: '='
             },
             controller: function ($scope) {
 
@@ -21,10 +21,10 @@ angular.module('edup.common')
             link: function (scope) {
                 $timeout(function () {
                     if (!scope.onLabel) {
-                        scope.onLabel = 'On'
+                        scope.onLabel = 'On';
                     }
                     if (!scope.offLabel) {
-                        scope.offLabel = 'Off'
+                        scope.offLabel = 'Off';
                     }
 
                     var toggle = $('#' + scope.toggleId);
@@ -37,7 +37,7 @@ angular.module('edup.common')
                         } else {
                             scope.offEvent();
                         }
-                    })
+                    });
 
                 });
             }

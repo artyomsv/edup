@@ -3,7 +3,7 @@
 
 angular.module('edup.students')
 
-    .controller('StudentsController', function ($scope, $timeout, $filter, RestService, PaginationService) {
+    .controller('StudentsController', function ($scope, $timeout, $filter, RestService, PaginationService, QueryService) {
 
         $scope.studentSelected = false;
         $scope.basicSearch = {
@@ -14,26 +14,6 @@ angular.module('edup.students')
             page: 1,
             perPage: 10,
             totalRecords: 0
-        };
-
-        var prepareQuery = function (top, skip, search, orderBy) {
-            var queries = {};
-
-            queries.$count = true;
-
-            if (top) {
-                queries.$top = top;
-            }
-            if (top) {
-                queries.$skip = skip;
-            }
-            if (top) {
-                queries.$search = search;
-            }
-            if (orderBy) {
-                queries.$orderby = orderBy;
-            }
-            return queries;
         };
 
         $scope.loadFullStudent = function (id) {
@@ -58,7 +38,7 @@ angular.module('edup.students')
 
         $scope.loadStudents = function (id, top, skip, search) {
             $scope.basicSearch.spin = true;
-            var query = prepareQuery(top, skip, search, 'Created desc');
+            var query = QueryService.Query(top, skip, search, 'Created desc');
             RestService.Students.get(query).then(function (result) {
                 $scope.students = result.values;
                 $scope.studentPaging.totalRecords = result.count;
@@ -89,9 +69,11 @@ angular.module('edup.students')
             //$scope.selectedStudent.balance += parseInt(value);
         };
 
-        $scope.pageChanged = function (newPage, searchValue) {
-            $scope.studentPaging.page = newPage;
-            $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
+        $scope.studentsPageChanged = function (newPage, searchValue) {
+            if (!$scope.basicSearch.spin) {
+                $scope.studentPaging.page = newPage;
+                $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
+            }
         };
 
         $scope.setRecordsPerPage = function (newRecordsPerPageValue) {

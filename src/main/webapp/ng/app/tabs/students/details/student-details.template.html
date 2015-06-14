@@ -27,7 +27,7 @@
                 <ul class="nav nav-tabs" role="tablist" style="border: none !important;">
                     <li role="presentation" class="active" ng-class="{ active: isActive('/information')}"><a href="#information" aria-controls="home" role="tab" data-toggle="tab">Information</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/accounting')}"><a href="#accounting" aria-controls="profile" role="tab" data-toggle="tab">Accounting</a></li>
-                    <li role="presentation" ng-class="{ active: isActive('/documents')}"><a href="#documents" aria-controls="messages" role="tab" data-toggle="tab">Documents</a></li>
+                    <li role="presentation" ng-class="{ active: isActive('/documents')}" ng-click="refreshDocumentsList()"><a href="#documents" aria-controls="messages" role="tab" data-toggle="tab">Documents</a></li>
                     <li role="presentation" ng-class="{ active: isActive('/attendance')}"><a href="#attendance" aria-controls="settings" role="tab" data-toggle="tab">Attendance</a></li>
                 </ul>
 

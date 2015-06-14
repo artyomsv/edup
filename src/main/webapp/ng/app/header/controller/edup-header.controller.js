@@ -7,8 +7,8 @@ angular.module('edup.header')
             return viewLocation === $location.path();
         };
 
-        $scope.downloadDocument = function () {
-            window.open('https://172.20.10.4:8443/edup/api/documents');
+        $scope.downloadReport = function () {
+            window.open('https://172.20.10.4:8443/edup/api/private/reports');
         };
     }
 );
