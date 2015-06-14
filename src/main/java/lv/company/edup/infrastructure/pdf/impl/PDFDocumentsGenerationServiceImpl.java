@@ -2,7 +2,7 @@ package lv.company.edup.infrastructure.pdf.impl;
 
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
-import lv.company.edup.infrastructure.pdf.api.DocumentsGenerationService;
+import lv.company.edup.infrastructure.pdf.api.ReportGenerationService;
 import org.apache.commons.io.IOUtils;
 import org.xhtmlrenderer.layout.SharedContext;
 import org.xhtmlrenderer.pdf.ITextRenderer;
@@ -11,13 +11,12 @@ import javax.enterprise.context.ApplicationScoped;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class PDFDocumentsGenerationServiceImpl implements DocumentsGenerationService {
+public class PDFDocumentsGenerationServiceImpl implements ReportGenerationService {
 
     private Logger logger = Logger.getLogger(PDFDocumentsGenerationServiceImpl.class.getSimpleName());
 

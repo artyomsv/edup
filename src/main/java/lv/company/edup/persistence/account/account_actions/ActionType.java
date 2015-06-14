@@ -1,4 +1,4 @@
-package lv.company.edup.persistence.account_actions;
+package lv.company.edup.persistence.account.account_actions;
 
 public enum ActionType {
     REGISTRATION_REQUEST,

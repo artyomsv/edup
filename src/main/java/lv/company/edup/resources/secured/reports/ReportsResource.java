@@ -1,4 +1,4 @@
-package lv.company.edup.resources.exposed.documents;
+package lv.company.edup.resources.secured.reports;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,15 +10,14 @@ import javax.ws.rs.core.Response;
 
 
 @ApplicationScoped
-@Path("public/documents")
-public class DocumentsResource {
+@Path("private/reports")
+public class ReportsResource {
 
-    @Inject DocumentsFacade facade;
-
+    @Inject ReportsFacade facade;
 
     @GET
     @Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getDocument() {
-        return facade.streamDocument();
+    public Response getReport() {
+        return facade.streamReport();
     }
 }

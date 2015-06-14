@@ -30,6 +30,9 @@ public abstract class EdupRepository<Entity> {
     }
 
     public Entity find(Object primaryKey) {
+        if (primaryKey == null) {
+            return null;
+        }
         return em.find(getEntityClass(), primaryKey);
     }
 

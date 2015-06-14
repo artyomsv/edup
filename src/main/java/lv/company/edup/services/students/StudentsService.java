@@ -66,12 +66,12 @@ public class StudentsService {
     @Inject UriUtils utils;
 
     public ODataResult<BaseStudentDto> search() {
-        ODataCriteria critetia = new ODataCriteria(utils.getQueryParameters());
+        ODataCriteria criteria = new ODataCriteria(utils.getQueryParameters());
 
-        if (!critetia.isNotEmpty()) {
-            critetia.setSearch("*");
+        if (!criteria.isNotEmpty()) {
+            criteria.setSearch("*");
         }
-        ODataResult<StudentDto> result = searcher.search(critetia);
+        ODataResult<StudentDto> result = searcher.search(criteria);
 
         List<BaseStudentDto> dtos = mapper.map(result.getValues(), BaseStudentDto.class);
         return result.cloneFromValues(dtos);
@@ -254,7 +254,7 @@ public class StudentsService {
     public Student fetchLeanStudent(Long id) {
         Student student = currentStudentVersionRepository.find(id);
         if (student == null) {
-            throw new NotFoundException();
+            throw new NotFoundException("Student with ID:" + id + " not found!");
         }
 
         student.setRootUrl(utils.getRootUrl() + SECURED_FILES_DOWNLOAD);

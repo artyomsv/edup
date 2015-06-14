@@ -10,9 +10,9 @@ public class FileDto {
     private String name;
     private String contentType;
     private Long size;
-    private String uploadedBy;
     private Date date;
     private Long checkSum;
+    private Boolean linked;
 
     public Long getId() {
         return id;
@@ -46,14 +46,6 @@ public class FileDto {
         this.size = size;
     }
 
-    public String getUploadedBy() {
-        return uploadedBy;
-    }
-
-    public void setUploadedBy(String uploadedBy) {
-        this.uploadedBy = uploadedBy;
-    }
-
     public Date getDate() {
         return date;
     }
@@ -68,5 +60,13 @@ public class FileDto {
 
     public void setCheckSum(Long checkSum) {
         this.checkSum = checkSum;
+    }
+
+    public Boolean getLinked() {
+        return linked;
+    }
+
+    public void setLinked(Boolean linked) {
+        this.linked = linked;
     }
 }

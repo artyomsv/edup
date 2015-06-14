@@ -1,8 +1,8 @@
-package lv.company.edup.resources.exposed.documents;
+package lv.company.edup.resources.secured.reports;
 
 import com.github.javafaker.Faker;
 import com.lowagie.text.DocumentException;
-import lv.company.edup.infrastructure.pdf.api.DocumentsGenerationService;
+import lv.company.edup.infrastructure.pdf.api.ReportGenerationService;
 import lv.company.edup.infrastructure.templates.api.Template;
 import lv.company.edup.infrastructure.templates.api.TemplateEngine;
 import lv.company.edup.infrastructure.templates.api.TemplateName;
@@ -22,16 +22,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ApplicationScoped
-public class DocumentsFacade extends ApplicationFacade {
+public class ReportsFacade extends ApplicationFacade {
 
-    private Logger logger = Logger.getLogger(DocumentsFacade.class.getSimpleName());
+    private Logger logger = Logger.getLogger(ReportsFacade.class.getSimpleName());
 
     @Inject TemplateCache cache;
     @Inject VisitorJournalContextCreator contextCreator;
     @Inject @VelocityEngine TemplateEngine engine;
-    @Inject DocumentsGenerationService service;
+    @Inject ReportGenerationService service;
 
-    public Response streamDocument() {
+    public Response streamReport() {
         Faker faker = new Faker();
         VisitingJournalDto from = new VisitingJournalDto();
         from.setSubject("Jaunais gads un Ziemassvētki vesturiskā ieskatā");

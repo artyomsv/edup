@@ -54,9 +54,6 @@ public class FileEntity {
     @Column(name = "SIZE")
     private Long size;
 
-    @Column(name = "UPLOADED_BY")
-    private String uploadedBy;
-
     @Column(name = "CREATED")
     private Date date;
 
@@ -99,14 +96,6 @@ public class FileEntity {
 
     public void setSize(Long size) {
         this.size = size;
-    }
-
-    public String getUploadedBy() {
-        return uploadedBy;
-    }
-
-    public void setUploadedBy(String uploadedBy) {
-        this.uploadedBy = uploadedBy;
     }
 
     public Date getDate() {

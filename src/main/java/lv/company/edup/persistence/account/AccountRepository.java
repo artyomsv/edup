@@ -1,6 +1,6 @@
-package lv.company.edup.persistence;
+package lv.company.edup.persistence.account;
 
-import lv.company.edup.persistence.account.Account;
+import lv.company.edup.persistence.EdupRepository;
 
 import javax.ejb.Stateless;
 

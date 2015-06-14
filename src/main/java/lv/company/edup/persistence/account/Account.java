@@ -1,12 +1,22 @@
 package lv.company.edup.persistence.account;
 
-import lv.company.edup.persistence.account_version.AccountVersion;
-import lv.company.edup.persistence.credential_version.CredentialVersion;
-import lv.company.edup.persistence.user_role.UserRole;
+import lv.company.edup.persistence.account.account_version.AccountVersion;
+import lv.company.edup.persistence.account.credential_version.CredentialVersion;
+import lv.company.edup.persistence.account.user_role.UserRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;

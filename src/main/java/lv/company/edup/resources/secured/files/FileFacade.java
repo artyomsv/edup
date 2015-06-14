@@ -53,7 +53,7 @@ public class FileFacade extends ApplicationFacade {
 
 
     public Response getFilesInformation() {
-        return ok(service.findFiles());
+        return ok(service.search());
     }
 
     public Response getFileInformation(Long id) {

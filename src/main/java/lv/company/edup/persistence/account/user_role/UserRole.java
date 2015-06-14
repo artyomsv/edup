@@ -1,18 +1,22 @@
-package lv.company.edup.persistence.credential_version;
+package lv.company.edup.persistence.account.user_role;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "CREDENTIAL_VERSION")
-@SequenceGenerator(sequenceName = "credential_version_id_seq", name = CredentialVersion.Sequence.SEQUENCE, allocationSize = 1)
-public class CredentialVersion {
+@Table(name = "USER_ROLE")
+@SequenceGenerator(sequenceName = "user_role_id_seq", name = UserRole.Sequence.SEQUENCE, allocationSize = 1)
+public class UserRole {
 
     interface Sequence {
-        String SEQUENCE = "sCredentialVersion";
+        String SEQUENCE = "sUserRole";
     }
 
     @Id
@@ -22,8 +26,8 @@ public class CredentialVersion {
     @Column(name = "ACCOUNT_FK")
     private Long accountId;
 
-    @Column(name = "PASSWORD")
-    private String password;
+    @Column(name = "ROLE")
+    private String role;
 
     @Column(name = "CREATED")
     private Date created;
@@ -40,12 +44,12 @@ public class CredentialVersion {
         this.accountId = accountId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Date getCreated() {
@@ -61,8 +65,9 @@ public class CredentialVersion {
         return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
                 .append("id", id)
                 .append("accountId", accountId)
-                .append("password", password)
+                .append("role", role)
                 .append("created", created)
                 .toString();
     }
+
 }

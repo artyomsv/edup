@@ -3,9 +3,13 @@ package lv.company.edup.services.files;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.persistence.files.FileEntity;
+import lv.company.edup.persistence.files.FileEntity_;
 import lv.company.edup.persistence.files.FileRepository;
 import lv.company.edup.persistence.files.FileType;
 import lv.company.edup.services.files.dto.FileDto;
+import lv.company.odata.api.ODataResult;
+import lv.company.odata.api.ODataSearchService;
+import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
@@ -28,6 +32,12 @@ public class FileService {
 
     @Inject FileRepository repository;
     @Inject ObjectMapper mapper;
+    @Inject @JPA ODataSearchService searchService;
+
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public ODataResult<FileDto> search() {
+        return null;
+    }
 
     public FileDto persistFile(FileItem item) throws IOException {
 
@@ -68,8 +78,10 @@ public class FileService {
         return file;
     }
 
-    public Collection<FileDto> findFiles() {
-        List<FileEntity> files = repository.findAll();
-        return mapper.map(files, FileDto.class);
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public Collection<FileDto> findFiles(Collection<Long> ids) {
+        List<FileEntity> entities = repository.findByAttribute(ids, FileEntity_.id);
+        return mapper.map(entities, FileDto.class);
     }
+
 }

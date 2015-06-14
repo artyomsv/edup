@@ -1,18 +1,22 @@
-package lv.company.edup.persistence.user_role;
+package lv.company.edup.persistence.account.credential_version;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "USER_ROLE")
-@SequenceGenerator(sequenceName = "user_role_id_seq", name = UserRole.Sequence.SEQUENCE, allocationSize = 1)
-public class UserRole {
+@Table(name = "CREDENTIAL_VERSION")
+@SequenceGenerator(sequenceName = "credential_version_id_seq", name = CredentialVersion.Sequence.SEQUENCE, allocationSize = 1)
+public class CredentialVersion {
 
     interface Sequence {
-        String SEQUENCE = "sUserRole";
+        String SEQUENCE = "sCredentialVersion";
     }
 
     @Id
@@ -22,8 +26,8 @@ public class UserRole {
     @Column(name = "ACCOUNT_FK")
     private Long accountId;
 
-    @Column(name = "ROLE")
-    private String role;
+    @Column(name = "PASSWORD")
+    private String password;
 
     @Column(name = "CREATED")
     private Date created;
@@ -40,12 +44,12 @@ public class UserRole {
         this.accountId = accountId;
     }
 
-    public String getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getCreated() {
@@ -61,9 +65,8 @@ public class UserRole {
         return new ToStringBuilder(this, ToStringStyle.SIMPLE_STYLE)
                 .append("id", id)
                 .append("accountId", accountId)
-                .append("role", role)
+                .append("password", password)
                 .append("created", created)
                 .toString();
     }
-
 }
