@@ -40,7 +40,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -203,7 +202,6 @@ public class StudentsService {
     public Boolean fillFakeData(int count) {
         Faker faker = new Faker();
 
-        List<StudentDto> dtos = new ArrayList<StudentDto>();
         for (int i = 0; i < count; i++) {
             StudentDto dto = new StudentDto();
             Name name = faker.name();
@@ -227,9 +225,8 @@ public class StudentsService {
 
             }
             createStudentVersion(dto);
-            dtos.add(dto);
+            indexer.add(dto);
         }
-        indexer.add(dtos);
         return true;
     }
 

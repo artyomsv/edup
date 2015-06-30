@@ -14,7 +14,9 @@ public enum StudentIndexAttribute implements IndexAttribute {
     CREATED("Created", "Format"),
     UPDATED("Updated", "Format"),
     MOBILE("Mobile", ""),
-    PERSON_ID("PersonId", "");
+    PERSON_ID("PersonId", ""),
+    PARENTS_INFO("ParentInfo", ""),
+    CHARACTERISTICS("Characteristics", "");
 
     private final String value;
     private final String postFix;

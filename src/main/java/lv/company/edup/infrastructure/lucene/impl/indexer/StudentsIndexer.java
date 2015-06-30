@@ -80,6 +80,9 @@ public class StudentsIndexer extends AbstractIndexer<StudentDto> {
         builder.add(StudentIndexAttribute.UPDATED, dto.getUpdated());
         builder.add(StudentIndexAttribute.MOBILE, dto.getMobile());
 
+        builder.add(StudentIndexAttribute.PARENTS_INFO, dto.getParentsInfo());
+        builder.add(StudentIndexAttribute.CHARACTERISTICS, dto.getCharacteristics());
+
         builder.addFullTextSearch(configProvider.getFullTextSearchAttributes(getType()));
 
         return builder.build();

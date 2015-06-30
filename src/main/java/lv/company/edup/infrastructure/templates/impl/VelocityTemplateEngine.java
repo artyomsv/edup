@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class VelocityTemplateEngine implements TemplateEngine {
 
-    @Inject @VelocityProperties Properties properties;
+    private Properties properties;
     private Logger logger = Logger.getLogger(VelocityTemplateEngine.class.getSimpleName());
 
     @PostConstruct
@@ -47,7 +47,10 @@ public class VelocityTemplateEngine implements TemplateEngine {
         StringWriter writer = new StringWriter();
         Velocity.evaluate(context, writer, template.getName().name(), template.getTemplate());
         return writer.toString();
-
     }
 
+    @Inject
+    public void setProperties(@VelocityProperties Properties properties) {
+        this.properties = properties;
+    }
 }

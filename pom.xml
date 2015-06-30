@@ -91,27 +91,56 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>
-                        ng/.idea/,
-                        ng/app/,
-                        ng/node_modules/,
-                        ng/standalone/,
-                        ng/test/,
-                        ng/vendor/,
-                        ng/*.*,
-                        ng/dist/edup-bootstrap.css,
-                        ng/dist/edup-bundle.js,
-                        ng/dist/edup.css,
-                        ng/dist/edup.js
-                    </packagingExcludes>
+                    <!--<packagingExcludes>-->
+                    <!--ng/.idea/,-->
+                    <!--ng/app/,-->
+                    <!--ng/node_modules/,-->
+                    <!--ng/standalone/,-->
+                    <!--ng/test/,-->
+                    <!--ng/vendor/,-->
+                    <!--ng/*.*,-->
+                    <!--ng/dist/edup-bootstrap.css,-->
+                    <!--ng/dist/edup-bundle.js,-->
+                    <!--ng/dist/edup.css,-->
+                    <!--ng/dist/edup.js-->
+                    <!--</packagingExcludes>-->
+
+                    <webResources>
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>src/main/webapp</directory>
+                            <!-- there's no default value for this -->
+                            <excludes>
+                                <exclude>**</exclude>
+                            </excludes>
+                        </resource>
+                    </webResources>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.basedir}/src/main/webapp/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                                      tofile="${project.basedir}/target/edup/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

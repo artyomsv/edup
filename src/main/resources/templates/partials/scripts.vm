@@ -1,0 +1,2 @@
+<script type="text/javascript" src="$page.getHost()ng/dist/edup-bundle.min.js"></script>
+<script type="text/javascript" src="$page.getHost()ng/dist/edup.min.js"></script>

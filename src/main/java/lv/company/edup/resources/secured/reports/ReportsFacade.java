@@ -10,7 +10,7 @@ import lv.company.edup.infrastructure.templates.api.VelocityEngine;
 import lv.company.edup.infrastructure.templates.impl.TemplateCache;
 import lv.company.edup.infrastructure.templates.impl.templates.VisitorJournalContextCreator;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentTemplateData;
-import lv.company.edup.infrastructure.templates.impl.templates.dto.VisitingJournalDto;
+import lv.company.edup.infrastructure.templates.impl.templates.dto.VisitingJournalData;
 import lv.company.edup.resources.ApplicationFacade;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -27,20 +27,20 @@ public class ReportsFacade extends ApplicationFacade {
     private Logger logger = Logger.getLogger(ReportsFacade.class.getSimpleName());
 
     @Inject TemplateCache cache;
-    @Inject VisitorJournalContextCreator contextCreator;
+    @Inject VisitorJournalContextCreator journalContextCreator;
     @Inject @VelocityEngine TemplateEngine engine;
     @Inject ReportGenerationService service;
 
     public Response streamReport() {
         Faker faker = new Faker();
-        VisitingJournalDto from = new VisitingJournalDto();
+        VisitingJournalData from = new VisitingJournalData();
         from.setSubject("Jaunais gads un Ziemassvētki vesturiskā ieskatā");
         from.setDate("22/01/2015");
         from.setTime("10:50");
         for (int i = 0; i < 25; i++) {
             from.getStudents().add(new StudentTemplateData(String.valueOf(i + 1), faker.name().fullName()));
         }
-        Map<String, Object> context = contextCreator.create(from);
+        Map<String, Object> context = journalContextCreator.create(from);
 
         Template template = cache.getTemplate(TemplateName.VisitorJournal);
 
@@ -53,4 +53,5 @@ public class ReportsFacade extends ApplicationFacade {
             throw new RuntimeException(e);
         }
     }
+
 }

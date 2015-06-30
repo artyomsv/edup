@@ -20,7 +20,7 @@
             ng-class-odd="'success'"
             ng-class-even="'active'"
             ng-click="setSelected(student.id)"
-            ng-class="{'selected': student.id === selectedStudent.id}"
+            ng-class="{'missing-data-row': !student.mobile, 'selected-row': student.id === selectedStudent.id}"
             pagination-id="studentsPaginationId"
                 >
 

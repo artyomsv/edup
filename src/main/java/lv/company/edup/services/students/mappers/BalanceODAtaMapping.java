@@ -11,10 +11,10 @@ public class BalanceODAtaMapping extends AbstractODataJPAMapping<Balance> {
     public BalanceODAtaMapping() {
         mapAttribute("Id").to(Balance_.id);
         mapAttribute("Amount").to(Balance_.amount);
-        mapAttribute("Created").toParent(Balance_.created);
-        mapAttribute("Status").toParent(Balance_.status);
-        mapAttribute("StudentId").toParent(Balance_.studentId);
-        mapAttribute("Comments").toParent(Balance_.comments);
+        mapAttribute("Created").to(Balance_.created);
+        mapAttribute("Status").to(Balance_.status);
+        mapAttribute("StudentId").to(Balance_.studentId);
+        mapAttribute("Comments").to(Balance_.comments);
     }
 
     @Override

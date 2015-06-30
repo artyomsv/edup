@@ -11,9 +11,9 @@ public class StudentODataMapping extends AbstractODataJPAMapping<CurrentStudentV
     public StudentODataMapping() {
         mapAttribute("Id").to(CurrentStudentVersion_.id);
         mapAttribute("VersionId").to(CurrentStudentVersion_.versionId);
-        mapAttribute("Name").toParent(CurrentStudentVersion_.name);
-        mapAttribute("LastName").toParent(CurrentStudentVersion_.lastName);
-        mapAttribute("Created").toParent(CurrentStudentVersion_.created);
+        mapAttribute("Name").to(CurrentStudentVersion_.name);
+        mapAttribute("LastName").to(CurrentStudentVersion_.lastName);
+        mapAttribute("Created").to(CurrentStudentVersion_.created);
     }
 
     @Override

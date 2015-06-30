@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
-public class VisitingJournalDto {
+public class VisitingJournalData {
 
     private String date;
     private String time;
