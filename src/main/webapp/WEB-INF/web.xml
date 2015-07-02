@@ -9,7 +9,7 @@
     </welcome-file-list>
 
     <session-config>
-        <session-timeout>1</session-timeout>
+        <session-timeout>5</session-timeout>
         <tracking-mode>SSL</tracking-mode>
     </session-config>
 
@@ -18,7 +18,7 @@
         <realm-name>EdupSecureDomain</realm-name>
         <form-login-config>
             <form-login-page>/login.html</form-login-page>
-            <form-error-page>/error.html</form-error-page>
+            <form-error-page>/login.html</form-error-page>
         </form-login-config>
     </login-config>
 
@@ -99,6 +99,12 @@
         <error-code>404</error-code>
         <location>/not_found.html</location>
     </error-page>
+
+    <error-page>
+        <error-code>405</error-code>
+        <location>/not_found.html</location>
+    </error-page>
+
     <error-page>
         <error-code>401</error-code>
         <location>/error.html</location>

@@ -111,16 +111,16 @@
                     <!--ng/dist/edup.js-->
                     <!--</packagingExcludes>-->
 
-                    <webResources>
-                        <resource>
-                            <!-- this is relative to the pom.xml directory -->
-                            <directory>src/main/webapp</directory>
-                            <!-- there's no default value for this -->
-                            <excludes>
-                                <exclude>**</exclude>
-                            </excludes>
-                        </resource>
-                    </webResources>
+                    <!--<webResources>-->
+                    <!--<resource>-->
+                    <!--&lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;-->
+                    <!--<directory>src/main/webapp</directory>-->
+                    <!--&lt;!&ndash; there's no default value for this &ndash;&gt;-->
+                    <!--<excludes>-->
+                    <!--<exclude>**</exclude>-->
+                    <!--</excludes>-->
+                    <!--</resource>-->
+                    <!--</webResources>-->
                 </configuration>
             </plugin>
             <plugin>
@@ -129,11 +129,29 @@
                 <version>1.8</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <phase>process-resources</phase>
                         <configuration>
                             <tasks>
-                                <copy file="${project.basedir}/src/main/webapp/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                                <copy file="${project.basedir}/src/main/web/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
                                       tofile="${project.basedir}/target/edup/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"/>
+
+                                <copy todir="${project.basedir}/target/edup/ng//vendor/bower_components/bootstrap/dist/fonts">
+                                    <fileset dir="${project.basedir}/src/main/web/ng/vendor/bower_components/bootstrap/dist/fonts">
+                                        <include name="*.*"/>
+                                    </fileset>
+                                </copy>
+
+                                <copy todir="${project.basedir}/target/edup/ng/dist/">
+                                    <fileset dir="${project.basedir}/src/main/web/ng/dist/">
+                                        <include name="*.*"/>
+                                    </fileset>
+                                </copy>
+                                <!--<copy todir="${project.basedir}/target/edup/">-->
+                                <!--<fileset dir="${project.basedir}/src/main/web/">-->
+                                <!--<include name="*.html"/>-->
+                                <!--</fileset>-->
+                                <!--</copy>-->
+
                             </tasks>
                         </configuration>
                         <goals>

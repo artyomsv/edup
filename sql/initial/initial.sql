@@ -1,3 +1,9 @@
+CREATE DATABASE edup OWNER postgres;
+
+
+DROP TABLE public.t_file;
+DROP SEQUENCE public.file_sequence RESTRICT;
+
 DROP VIEW public.v_student_balance RESTRICT;
 DROP TABLE public.student_balance;
 DROP SEQUENCE public.student_balance_sequence RESTRICT;
@@ -5,6 +11,7 @@ DROP SEQUENCE public.student_balance_sequence RESTRICT;
 DROP VIEW public.v_students RESTRICT;
 DROP TABLE public.student_properties;
 DROP TABLE public.students_version_mapping;
+DROP TABLE public.student_properties;
 DROP TABLE public.students;
 
 DROP SEQUENCE public.student_id_sequence RESTRICT;
@@ -16,16 +23,42 @@ DROP FUNCTION public.update_current_student_version();
 DROP TABLE public.STUDENT_DOCUMENTS;
 DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE RESTRICT;
 
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.0.2 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+-- Create sequence for files.
+CREATE SEQUENCE FILE_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+-- Create file table.
+CREATE TABLE T_FILE
+(
+  FILE_ID      BIGINT       NOT NULL,
+  NAME         VARCHAR(256) NOT NULL,
+  CONTENT_TYPE VARCHAR(256) NOT NULL,
+  SIZE         BIGINT       NOT NULL,
+  UPLOADED_BY  VARCHAR(64),
+  CREATED      TIMESTAMP WITH TIME ZONE,
+  DATA         BYTEA,
+  CHECKSUM     BIGINT       NOT NULL,
+  CONSTRAINT FILE_PKEY PRIMARY KEY (FILE_ID)
+);
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
+
+
+
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.0.3 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 -- Create sequence for students.
 CREATE SEQUENCE STUDENT_ID_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
-
 -- Create sequence for students.
 CREATE SEQUENCE STUDENT_VERSION_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 -- Create file table.
 CREATE TABLE STUDENTS
 (
-  STUDENT_VERSION_ID BIGINT NOT NULL DEFAULT NEXTVAL('STUDENT_VERSION_SEQUENCE'),
+  STUDENT_VERSION_ID BIGINT      NOT NULL DEFAULT NEXTVAL('STUDENT_VERSION_SEQUENCE'),
   STUDENT_ID         BIGINT      NOT NULL,
   NAME               VARCHAR(64) NOT NULL,
   LAST_NAME          VARCHAR(64) NOT NULL,
@@ -36,11 +69,11 @@ CREATE TABLE STUDENTS
 -- Create sequence for student properties.
 CREATE SEQUENCE STUDENT_PROPERTY_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 CREATE TABLE STUDENT_PROPERTIES (
-  PROPERTY_ID        BIGINT NOT NULL DEFAULT NEXTVAL('STUDENT_PROPERTY_SEQUENCE'),
-  STUDENT_VERSION_FK BIGINT NOT NULL REFERENCES STUDENTS (STUDENT_VERSION_ID),
+  PROPERTY_ID        BIGINT      NOT NULL DEFAULT NEXTVAL('STUDENT_PROPERTY_SEQUENCE'),
+  STUDENT_VERSION_FK BIGINT      NOT NULL REFERENCES STUDENTS (STUDENT_VERSION_ID),
   NAME               VARCHAR(64) NOT NULL,
   VALUE              VARCHAR(512),
-  ORDER_NUMBER       INTEGER         DEFAULT 0,
+  ORDER_NUMBER       INTEGER              DEFAULT 0,
   REFERENCE_ID       BIGINT,
   CONSTRAINT STUDENT_PROPERTY_PKEY PRIMARY KEY (PROPERTY_ID)
 );
@@ -48,8 +81,8 @@ CREATE TABLE STUDENT_PROPERTIES (
 CREATE TABLE STUDENTS_VERSION_MAPPING (
   STUDENT_FK         BIGINT NOT NULL UNIQUE,
   STUDENT_VERSION_FK BIGINT NOT NULL UNIQUE REFERENCES STUDENTS (STUDENT_VERSION_ID),
-  CREATED TIMESTAMP WITH TIME ZONE DEFAULT now(),
-  UPDATED TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  CREATED            TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  UPDATED            TIMESTAMP WITH TIME ZONE DEFAULT now(),
   CONSTRAINT STUDENT_ID_PKEY PRIMARY KEY (STUDENT_FK)
 );
 
@@ -100,8 +133,16 @@ CREATE OR REPLACE FUNCTION getStudentId()
     RETURN nextval('student_id_sequence');
   END;
   $$ LANGUAGE plpgsql;
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
 
+
+
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.0.4 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 -- Create sequence for balance.
 CREATE SEQUENCE STUDENT_BALANCE_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
@@ -126,7 +167,16 @@ CREATE OR REPLACE VIEW v_student_balance AS
   FROM student_balance
   WHERE STATUS = 'SUBMITTED'
   GROUP BY student_fk;
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 
+
+
+
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.2.0 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
 -- Create sequence for balance.
 CREATE SEQUENCE STUDENT_DOCUMENTS_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 
@@ -154,3 +204,6 @@ CREATE OR REPLACE VIEW V_STUDENT_DOCUMENTS AS
   WHERE
     s.FILE_FK = t.file_id
     AND s.status = 'SAVED';
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------

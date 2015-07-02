@@ -9,23 +9,24 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URI;
 
-@Path("private/logout")
 @Stateless
+@Path("private/logout")
 public class LogoutResource {
 
     @Context UriInfo uriInfo;
 
     @POST
     public Response logout(@Context HttpServletRequest request,
-                           @Context HttpServletResponse response) throws ServletException, MalformedURLException {
+                           @Context HttpServletResponse response) throws ServletException, IOException {
         request.logout();
         URI requestUri = uriInfo.getRequestUri();
         StringBuilder builder = new StringBuilder();
         builder.append(request.getScheme()).append("://").append(requestUri.getAuthority()).append("/edup");
-        return Response.seeOther(URI.create(builder.toString())).build();
+        response.sendRedirect(builder.toString());
+        return Response.ok().build();
     }
 
 }
