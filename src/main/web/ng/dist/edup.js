@@ -963,7 +963,6 @@ angular.module('edup.students')
 );
 'use strict';
 
-
 angular.module('edup.students')
 
     .controller('StudentsController', ['$scope', '$timeout', '$filter', 'RestService', 'PaginationService', 'QueryService', function ($scope, $timeout, $filter, RestService, PaginationService, QueryService) {
