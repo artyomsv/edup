@@ -1,0 +1,11 @@
+<div class="login-container">
+    <div id="output"></div>
+    <div class="avatar"></div>
+    <div class="form-box">
+        <form name="form" method="post">
+            <input name="j_username" type="text" placeholder="username" id="text" ng-model="username" required/>
+            <input type="password" name="j_password" placeholder="password" id="password" ng-model="password" required/>
+            <button class="btn btn-info btn-block login" type="submit" ng-click="submitLogin(username, password)">Login</button>
+        </form>
+    </div>
+</div>
