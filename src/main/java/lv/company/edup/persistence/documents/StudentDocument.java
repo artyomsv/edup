@@ -9,9 +9,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.Date;
+
+@NamedStoredProcedureQuery(name = StudentDocument.Procedure.GENERATE_FAKTURA_ID, procedureName = "getfakturaid")
 
 @Entity
 @Table(name = "STUDENT_DOCUMENTS")
@@ -19,6 +22,10 @@ import java.util.Date;
 public class StudentDocument {
 
     public static final String SEQUENCE = "sStudentDocument";
+
+    public interface Procedure {
+        String GENERATE_FAKTURA_ID = "w";
+    }
 
     @Id
     @Column(name = "DOCUMENT_ID")

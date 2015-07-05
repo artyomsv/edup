@@ -2,8 +2,7 @@ package lv.company.edup.infrastructure.templates.api;
 
 public enum TemplateName {
 
-    VisitorJournal("/templates/visiting_journal.vm"),
-    Faktura("/templates/faktura.vm");
+    FakturaJasper("/templates/faktura.xml");
 
     public String file;
 

@@ -69,6 +69,24 @@ public class FileService {
         return mapper.map(entity, FileDto.class);
     }
 
+    public FileDto persistFile(byte[] data, String fileName, FileType contentType) {
+        Checksum checksum = new CRC32();
+        checksum.update(data, 0, data.length);
+        Long value = checksum.getValue();
+
+        FileEntity entity = new FileEntity();
+        entity.setName(fileName);
+        entity.setContentType(contentType);
+        entity.setDate(new Date());
+        entity.setSize((long) data.length);
+        entity.setData(data);
+        entity.setCheckSum(value);
+
+        repository.persist(entity);
+
+        return mapper.map(entity, FileDto.class);
+    }
+
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public FileEntity getFile(Long id) {
         FileEntity file = repository.find(id);

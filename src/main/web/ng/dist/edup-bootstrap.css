@@ -2,7 +2,7 @@
 @import "/vendor/bower_components/angular-bootstrap/ui-bootstrap-csp.css";
 @import "/vendor/bower_components/alertifyjs/dist/css/alertify-bootstrap-3.css";
 @import "/vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css";
-@import "/vendor/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css";
+@import "/vendor/bower_components/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html {
   font-family: sans-serif;

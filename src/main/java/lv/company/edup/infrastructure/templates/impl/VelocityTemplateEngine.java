@@ -1,7 +1,9 @@
 package lv.company.edup.infrastructure.templates.impl;
 
+import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.templates.api.Template;
 import lv.company.edup.infrastructure.templates.api.TemplateEngine;
+import lv.company.edup.infrastructure.templates.api.Type;
 import lv.company.edup.infrastructure.templates.api.VelocityEngine;
 import lv.company.edup.infrastructure.templates.api.VelocityProperties;
 import org.apache.velocity.VelocityContext;
@@ -11,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -33,7 +36,10 @@ public class VelocityTemplateEngine implements TemplateEngine {
     }
 
     @Override
-    public String render(Template template, Map<String, Object> objects) {
+    public byte[] render(Template template, Map<String, Object> objects, Type type) {
+        if (type != Type.HTML) {
+            throw new InternalException("Velocity supports onlu html rendering");
+        }
         VelocityContext context = new VelocityContext();
 
         for (Map.Entry<String, Object> entry : objects.entrySet()) {
@@ -46,11 +52,12 @@ public class VelocityTemplateEngine implements TemplateEngine {
 
         StringWriter writer = new StringWriter();
         Velocity.evaluate(context, writer, template.getName().name(), template.getTemplate());
-        return writer.toString();
+        return writer.toString().getBytes(Charset.forName("UTF-8"));
     }
 
     @Inject
     public void setProperties(@VelocityProperties Properties properties) {
         this.properties = properties;
     }
+
 }

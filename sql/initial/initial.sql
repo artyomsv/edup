@@ -1,7 +1,9 @@
-CREATE DATABASE edup OWNER postgres;
+-- CREATE DATABASE edup OWNER postgres;
 
+DROP VIEW public.V_STUDENT_DOCUMENTS;
+DROP TABLE public.STUDENT_DOCUMENTS;
 
-DROP TABLE public.t_file;
+DROP TABLE public.t_file ;
 DROP SEQUENCE public.file_sequence RESTRICT;
 
 DROP VIEW public.v_student_balance RESTRICT;
@@ -11,7 +13,6 @@ DROP SEQUENCE public.student_balance_sequence RESTRICT;
 DROP VIEW public.v_students RESTRICT;
 DROP TABLE public.student_properties;
 DROP TABLE public.students_version_mapping;
-DROP TABLE public.student_properties;
 DROP TABLE public.students;
 
 DROP SEQUENCE public.student_id_sequence RESTRICT;
@@ -20,8 +21,9 @@ DROP SEQUENCE public.student_version_sequence RESTRICT;
 DROP FUNCTION public.getstudentid();
 DROP FUNCTION public.update_current_student_version();
 
-DROP TABLE public.STUDENT_DOCUMENTS;
+
 DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE RESTRICT;
+DROP SEQUENCE public.FAKTURA_REPORT_ID_SEQUENCE RESTRICT;
 
 ------------------------------------------------------------------------------------------------------
 -------------------------------------- 0.0.2 ---------------------------------------------------------
@@ -204,6 +206,26 @@ CREATE OR REPLACE VIEW V_STUDENT_DOCUMENTS AS
   WHERE
     s.FILE_FK = t.file_id
     AND s.status = 'SAVED';
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+
+
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.3.0 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+-- Create sequence for faktura id.
+CREATE SEQUENCE FAKTURA_REPORT_ID_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+
+CREATE OR REPLACE FUNCTION getFakturaId()
+  RETURNS BIGINT AS
+  $$
+  BEGIN
+    RETURN nextval('FAKTURA_REPORT_ID_SEQUENCE');
+  END;
+  $$ LANGUAGE plpgsql;
+
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------

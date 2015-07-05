@@ -15,7 +15,7 @@ import java.util.List;
 @ApplicationScoped
 public class ObjectMapper {
 
-    MappersProvider provider;
+    private MappersProvider provider;
 
     private MapperFacade facade;
 

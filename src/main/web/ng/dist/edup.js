@@ -575,7 +575,8 @@ angular.module('edup.students')
                         var balanceDto = {
                             studentId: student.id,
                             amount: balance.amount * 100,
-                            comments: balance.comment
+                            comments: balance.comment,
+                            cash: balance.cash ? balance.cash : true
                         };
 
                         RestService.Private.Balance.customPOST(balanceDto).then(function (response) {
@@ -660,7 +661,8 @@ angular.module('edup.students')
             templateUrl: 'balance-modal',
             link: function (scope) {
                 scope.price = {
-                    amount: 0
+                    amount: 0,
+                    cash: true
                 };
 
                 scope.saving = function (balance) {
@@ -668,7 +670,8 @@ angular.module('edup.students')
                         var balanceDto = {
                             studentId: scope.selectedStudent.id,
                             amount: balance.amount * 100,
-                            comments: balance.comment
+                            comments: balance.comment,
+                            cash: balance.cash ? balance.cash : true
                         };
 
                         RestService.Private.Balance.customPOST(balanceDto).then(function (response) {
@@ -1294,7 +1297,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-accounting',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></form></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></form></div></div></div>"
   );
 
 
@@ -1304,7 +1307,7 @@ angular.module('edup')
 
 
   $templateCache.put('balance-modal',
-    "<div app-modal id=addToBalanceModalView class=\"modal fade bs-example-modal-sm\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form class=form-horizontal><fieldset><legend>Add money to account</legend><form class=\"ng-valid ng-dirty\"><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div></form><div class=\"form-group text-center\"><button ng-click=saving(balance) id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button> <button id=cancelBalanceUpdate class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-click=\"balance = null\">Cancel</button></div></fieldset></form></div></div></div>"
+    "<div app-modal id=addToBalanceModalView class=\"modal fade bs-example-modal-sm\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form><fieldset><legend>Add money to account</legend><form class=\"ng-valid ng-dirty\"><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div></form><div class=\"form-group text-center\"><button ng-click=saving(balance) id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button> <button id=cancelBalanceUpdate class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-click=\"balance = null\">Cancel</button></div></fieldset></form></div></div></div>"
   );
 
 
@@ -1314,7 +1317,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-documents',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Size</th><th>Created</th><th></th></tr></thead><tbody><tr dir-paginate=\"document in documents | itemsPerPage: documentsPaging.perPage\" current-page=documentsPaging.page total-items=documentsPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" pagination-id=documentsPaginationId><td>{{ document.fileName }}</td><td>{{ document.size }}</td><td>{{ document.created | date }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"documentsPageChanged(newPageNumber, searchValue)\" pagination-id=documentsPaginationId></dir-pagination-controls></div></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Size</th><th>Created</th><th></th></tr></thead><tbody><tr dir-paginate=\"document in documents | itemsPerPage: documentsPaging.perPage\" current-page=documentsPaging.page total-items=documentsPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" pagination-id=documentsPaginationId><td>{{ document.fileName }}</td><td>{{ document.size }}</td><td>{{ document.created | date:'MMM d, y hh:mm' }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"documentsPageChanged(newPageNumber, searchValue)\" pagination-id=documentsPaginationId></dir-pagination-controls></div></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
   );
 
 

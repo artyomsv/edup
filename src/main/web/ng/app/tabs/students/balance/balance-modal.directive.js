@@ -8,7 +8,8 @@ angular.module('edup.students')
             templateUrl: 'balance-modal',
             link: function (scope) {
                 scope.price = {
-                    amount: 0
+                    amount: 0,
+                    cash: true
                 };
 
                 scope.saving = function (balance) {
@@ -16,7 +17,8 @@ angular.module('edup.students')
                         var balanceDto = {
                             studentId: scope.selectedStudent.id,
                             amount: balance.amount * 100,
-                            comments: balance.comment
+                            comments: balance.comment,
+                            cash: balance.cash ? balance.cash : true
                         };
 
                         RestService.Private.Balance.customPOST(balanceDto).then(function (response) {

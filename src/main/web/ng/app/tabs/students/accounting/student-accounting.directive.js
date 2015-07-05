@@ -14,7 +14,8 @@ angular.module('edup.students')
                         var balanceDto = {
                             studentId: student.id,
                             amount: balance.amount * 100,
-                            comments: balance.comment
+                            comments: balance.comment,
+                            cash: balance.cash ? balance.cash : true
                         };
 
                         RestService.Private.Balance.customPOST(balanceDto).then(function (response) {

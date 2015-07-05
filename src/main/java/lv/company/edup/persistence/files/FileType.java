@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum FileType {
 
+    PDF("pdf", "application/pdf"),
     DOC("doc", "application/msword"),
     DOCX("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"),
     PPT("ppt", "application/vnd.ms-powerpoint"),

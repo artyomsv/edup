@@ -19,6 +19,7 @@ public class StudentBalanceDto {
     private String comments;
     private BalanceStatus status;
     private Date created;
+    private Boolean cash;
 
     public Long getStudentId() {
         return studentId;
@@ -66,5 +67,13 @@ public class StudentBalanceDto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public Boolean getCash() {
+        return cash;
+    }
+
+    public void setCash(Boolean cash) {
+        this.cash = cash;
     }
 }

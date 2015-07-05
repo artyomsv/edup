@@ -1,7 +1,7 @@
 <div app-modal id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content modalViewPadding">
-            <form class="form-horizontal">
+            <form>
                 <fieldset>
                     <!-- Form Name -->
                     <legend>Add money to account</legend>
@@ -24,6 +24,21 @@
                         <div class="form-group">
                             <label for="comments">Comments</label>
                             <textarea ng-model="balance.comment" class="form-control fixedTextArea" id="comments" name="comments"></textarea>
+                        </div>
+
+                        <div class="form-group col-md-12 column">
+                            <div class="col-md-6 column">
+                                <label>
+                                    <input type="radio" name="operationType" value="true" ng-model="balance.cash" ng-checked="true">
+                                    Cash
+                                </label>
+                            </div>
+                            <div class="col-md-6 column">
+                                <label>
+                                    <input type="radio" name="operationType" value="false" ng-model="balance.cash">
+                                    Transfer
+                                </label>
+                            </div>
                         </div>
 
                     </form>

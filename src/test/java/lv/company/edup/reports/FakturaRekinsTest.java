@@ -1,41 +1,52 @@
 package lv.company.edup.reports;
 
-import lv.company.edup.infrastructure.response.UriUtils;
+import lv.company.edup.infrastructure.templates.api.ContextCreator;
+import lv.company.edup.infrastructure.templates.api.TemplateEngine;
+import lv.company.edup.infrastructure.templates.api.TemplateName;
+import lv.company.edup.infrastructure.templates.api.Type;
+import lv.company.edup.infrastructure.templates.impl.JasperTemplateEngine;
 import lv.company.edup.infrastructure.templates.impl.TemplateCache;
-import lv.company.edup.infrastructure.templates.impl.VelocityPropertiesProducer;
-import lv.company.edup.infrastructure.templates.impl.VelocityTemplateEngine;
 import lv.company.edup.infrastructure.templates.impl.templates.FakturaContextCreator;
-import lv.company.edup.services.reports.FakturaRekinsService;
+import lv.company.edup.infrastructure.templates.impl.templates.dto.FakturaData;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
+import java.io.File;
+import java.util.Map;
+
 public class FakturaRekinsTest {
 
-    @Mock UriUtils utils;
-    @Spy VelocityPropertiesProducer properties;
-    @Spy VelocityTemplateEngine engine;
-    @Spy TemplateCache cache;
-    @Spy FakturaContextCreator fakturaContextCreator;
-    @InjectMocks FakturaRekinsService service;
+    ContextCreator<FakturaData> creator = new FakturaContextCreator();
+    TemplateEngine engine = new JasperTemplateEngine();
+    TemplateCache cache;
 
     @Before
     public void setUp() throws Exception {
+        cache = new TemplateCache();
         cache.init();
-        engine.setProperties(properties.getVelocityProperties());
-        engine.init();
-        Mockito.when(utils.getRootUrl()).thenReturn("https://192.168.1.101:8443/edup/");
+        creator = new FakturaContextCreator();
+        engine = new JasperTemplateEngine();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        cache = null;
+        creator = null;
+        engine = null;
     }
 
     @Test
     public void testName() throws Exception {
-        String fakturaRekins = service.prepareFakturaRekins();
-        System.out.println(fakturaRekins);
+        FakturaData from = new FakturaData();
+        from.setPaymentDescription("This is some description");
+        from.setPaymentId(1L);
+        from.setPaymentTotal(256L);
+        Map<String, Object> context = creator.create(from);
+        FileUtils.writeByteArrayToFile(new File("faktura.pdf"), engine.render(cache.getTemplate(TemplateName.FakturaJasper), context, Type.PDF));
+//        FileUtils.writeByteArrayToFile(new File("faktura.html"), engine.render(cache.getTemplate(TemplateName.FakturaJasper), context, Type.HTML));
+//        FileUtils.writeByteArrayToFile(new File("faktura.xlsX"), engine.render(cache.getTemplate(TemplateName.FakturaJasper), context, Type.XLSX));
+
     }
 }

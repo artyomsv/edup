@@ -23,6 +23,22 @@
                     <label for="comments">Comments</label>
                     <textarea ng-model="balance.comment" class="form-control fixedTextArea" id="comments" name="comments"></textarea>
                 </div>
+
+                <div class="form-group col-md-12 column">
+                    <div class="col-md-6 column">
+                        <label>
+                            <input type="radio" name="operationType" value="true" ng-model="balance.cash" ng-checked="true">
+                            Cash
+                        </label>
+                    </div>
+                    <div class="col-md-6 column">
+                        <label>
+                            <input type="radio" name="operationType" value="false" ng-model="balance.cash">
+                            Transfer
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Button -->
                 <div class="form-group text-center">
                     <button ng-click="updateStudentBalance(balance, selectedStudent)"
