@@ -1,6 +1,7 @@
 package lv.company.edup.infrastructure.lucene.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.text.StrBuilder;
 import org.apache.lucene.queryparser.flexible.standard.QueryParserUtil;
 
 import java.util.Arrays;
@@ -11,6 +12,10 @@ public class LuceneDocumentUtils {
     public static final String TECHNICAL_ID = "TechnicalId";
     public static final String ALL = "all";
     public static final String RELEVANCE = "Relevance";
+
+    public static final int MAX_CHAR = 0xDB99;
+    public static final int LOW_PRIORITY_BORDERLINE = 0xC000;
+    public static final String LOWEST_PRIORITY_STRING = String.valueOf((char) MAX_CHAR) + String.valueOf((char) MAX_CHAR);
 
     public static String getSortableField(String field) {
         return field + "_sort";
@@ -41,22 +46,32 @@ public class LuceneDocumentUtils {
     }
 
     public static String getSortValue(String value) {
-        if (StringUtils.isEmpty(value) || value.trim().isEmpty()) {
-            return String.valueOf(Character.MAX_VALUE) + String.valueOf(Character.MAX_VALUE);
+        if (StringUtils.isBlank(value)) {
+            return LOWEST_PRIORITY_STRING;
         }
 
-        value = StringUtils.lowerCase(value);
-        value = StringUtils.replacePattern(value, "[\\p{Punct}]", "");
-        value = StringUtils.trim(value);
+        return lowerPriorityForNonLetters(StringUtils.lowerCase(value));
+    }
 
-        if (StringUtils.isEmpty(value)) {
-            return String.valueOf(Character.MAX_VALUE) + String.valueOf(Character.MAX_VALUE);
+    public static String lowerPriorityForNonLetters(String input) {
+        int length = StringUtils.length(input);
+
+        StrBuilder builder = new StrBuilder(length);
+        for (int i = 0; i < length; i++) {
+            char charToCheck = input.charAt(i);
+            if (Character.isLetter(charToCheck)) {
+                builder.append(charToCheck);
+            } else {
+                int proposeCode = (int) charToCheck + LOW_PRIORITY_BORDERLINE;
+                if (proposeCode <= MAX_CHAR) {
+                    builder.append((char) proposeCode);
+                } else {
+                    builder.append(charToCheck);
+                }
+            }
         }
 
-        if (value.matches("^[\\d\\p{Punct}].*")) {
-            value = Character.MAX_VALUE + value;
-        }
-        return value;
+        return builder.toString();
     }
 
     public static Collection<String> extractTerms(String query) {
