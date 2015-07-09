@@ -1,7 +1,6 @@
 package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lv.company.edup.persistence.balance.BalanceStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,7 +16,6 @@ public class StudentBalanceDto {
     @NotNull
     private Long amount;
     private String comments;
-    private BalanceStatus status;
     private Date created;
     private Boolean cash;
 
@@ -51,14 +49,6 @@ public class StudentBalanceDto {
 
     public void setComments(String comments) {
         this.comments = comments;
-    }
-
-    public BalanceStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(BalanceStatus status) {
-        this.status = status;
     }
 
     public Date getCreated() {

@@ -4,8 +4,8 @@ import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
-import lv.company.edup.services.students.BalanceService;
 import lv.company.edup.services.students.StudentsService;
+import lv.company.edup.services.students.TransactionService;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentDto;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +22,7 @@ public class StudentsFacade extends ApplicationFacade {
     private final Logger logger = Logger.getLogger(StudentsFacade.class.getSimpleName());
 
     @Inject StudentsService studentsService;
-    @Inject BalanceService balanceService;
+    @Inject TransactionService transactionService;
 
     public Response search() {
         return ok(studentsService.search());
@@ -76,12 +76,12 @@ public class StudentsFacade extends ApplicationFacade {
         if (studentsService.fetchLeanStudent(id) == null) {
             throw new NotFoundException("Missing student with [" + id + "] id.");
         }
-        return ok(balanceService.currentStudentBalance(id));
+        return ok(transactionService.currentStudentBalance(id));
     }
 
     private void fetchStudentBalance(Long id, StudentDto student) {
         if (student != null) {
-            CurrentBalanceDto balance = balanceService.currentStudentBalance(id);
+            CurrentBalanceDto balance = transactionService.currentStudentBalance(id);
             student.setBalance(balance != null ? balance.getAmount() : 0L);
         }
     }

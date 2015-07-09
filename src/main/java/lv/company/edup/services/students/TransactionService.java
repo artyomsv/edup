@@ -1,15 +1,12 @@
 package lv.company.edup.services.students;
 
-import lv.company.edup.infrastructure.exceptions.BadRequestException;
-import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
-import lv.company.edup.persistence.balance.Balance;
-import lv.company.edup.persistence.balance.BalanceRepository;
-import lv.company.edup.persistence.balance.BalanceStatus;
 import lv.company.edup.persistence.balance.CurrentBalance;
 import lv.company.edup.persistence.balance.CurrentBalanceRepository;
 import lv.company.edup.persistence.balance.CurrentBalance_;
+import lv.company.edup.persistence.balance.Transaction;
+import lv.company.edup.persistence.balance.TransactionRepository;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentBalanceDto;
 import lv.company.odata.api.ODataCriteria;
@@ -31,13 +28,16 @@ import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-public class BalanceService {
+public class TransactionService {
 
+    public static final String CASH = "D1";
+    public static final String BANK = "D2";
     @Inject @JPA ODataSearchService searchService;
     @Inject UriUtils utils;
     @Inject CurrentBalanceRepository currentRepository;
-    @Inject BalanceRepository repository;
+    @Inject TransactionRepository repository;
     @Inject ObjectMapper mapper;
+    @Inject TransactionTypeService typeService;
 
     public CurrentBalanceDto currentStudentBalance(Long id) {
         CurrentBalance balance = currentRepository.find(id);
@@ -75,33 +75,21 @@ public class BalanceService {
 
     public ODataResult<StudentBalanceDto> search() {
         MultivaluedMap<String, String> queryParameters = utils.getQueryParameters();
-        ODataResult<Balance> search = searchService.search(new ODataCriteria(queryParameters), Balance.class);
-        List<Balance> values = search.getValues();
+        ODataResult<Transaction> search = searchService.search(new ODataCriteria(queryParameters), Transaction.class);
+        List<Transaction> values = search.getValues();
         return search.cloneFromValues(mapper.map(values, StudentBalanceDto.class));
     }
 
-    public Long save(StudentBalanceDto dto) {
-        Balance balance = new Balance();
-        balance.setAmount(dto.getAmount());
-        balance.setCreated(new Date());
-        balance.setComments(dto.getComments());
-        balance.setStatus(BalanceStatus.SUBMITTED);
-        balance.setStudentId(dto.getStudentId());
-        repository.persist(balance);
-        return balance.getId();
+    public Long debitTransaction(StudentBalanceDto dto) {
+        Transaction transaction = new Transaction();
+        transaction.setDebit(dto.getAmount());
+        transaction.setCredit(0L);
+        transaction.setCreated(new Date());
+        transaction.setDescription(dto.getComments());
+        transaction.setType(dto.getCash() ? typeService.getType(CASH).getId() : typeService.getType(BANK).getId());
+        transaction.setStudentId(dto.getStudentId());
+        repository.persist(transaction);
+        return transaction.getId();
     }
 
-    @TransactionAttribute(TransactionAttributeType.REQUIRED)
-    public void deactivateRecord(Long id) {
-        Balance balance = repository.find(id);
-        if (balance == null) {
-            throw new NotFoundException("Missing balance record with id [" + id + "]");
-        }
-
-        if (balance.getStatus() == BalanceStatus.DELETED) {
-            throw new BadRequestException("Balance record already deleted");
-        }
-        balance.setUpdated(new Date());
-        balance.setStatus(BalanceStatus.DELETED);
-    }
 }

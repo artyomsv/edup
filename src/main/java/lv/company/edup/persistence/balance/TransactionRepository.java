@@ -5,11 +5,11 @@ import lv.company.edup.persistence.EdupRepository;
 import javax.ejb.Stateless;
 
 @Stateless
-public class BalanceRepository extends EdupRepository<Balance> {
+public class TransactionRepository extends EdupRepository<Transaction> {
 
     @Override
-    public Class<Balance> getEntityClass() {
-        return Balance.class;
+    public Class<Transaction> getEntityClass() {
+        return Transaction.class;
     }
 
 }

@@ -4,8 +4,8 @@ import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.persistence.students.Student;
 import lv.company.edup.resources.ApplicationFacade;
 import lv.company.edup.services.documents.DocumentsService;
-import lv.company.edup.services.students.BalanceService;
 import lv.company.edup.services.students.StudentsService;
+import lv.company.edup.services.students.TransactionService;
 import lv.company.edup.services.students.dto.StudentBalanceDto;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,12 +15,12 @@ import javax.ws.rs.core.Response;
 @ApplicationScoped
 public class BalanceFacade extends ApplicationFacade {
 
-    @Inject BalanceService balanceService;
+    @Inject TransactionService transactionService;
     @Inject StudentsService studentsService;
     @Inject DocumentsService documentsService;
 
     public Response search() {
-        return ok(balanceService.search());
+        return ok(transactionService.search());
     }
 
     public Response saveBalance(StudentBalanceDto dto) {
@@ -29,7 +29,7 @@ public class BalanceFacade extends ApplicationFacade {
             throw new NotFoundException("Missing student id");
         }
 
-        Long save = balanceService.save(dto);
+        Long save = transactionService.debitTransaction(dto);
         if (dto.getCash()) {
             documentsService.addDocument(student, dto.getAmount(), dto.getComments());
         }
@@ -37,8 +37,4 @@ public class BalanceFacade extends ApplicationFacade {
         return created(save);
     }
 
-    public Response deactivateBalanceRecord(Long id) {
-        balanceService.deactivateRecord(id);
-        return ok();
-    }
 }
