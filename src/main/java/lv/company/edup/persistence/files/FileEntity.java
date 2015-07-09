@@ -23,8 +23,8 @@ import java.util.Date;
 })
 
 @Entity
-@Table(name = "T_FILE")
-@SequenceGenerator(sequenceName = "file_sequence", name = FileEntity.Sequence.SEQUENCE, allocationSize = 1)
+@Table(name = "files")
+@SequenceGenerator(sequenceName = "files_sequence", name = FileEntity.Sequence.SEQUENCE, allocationSize = 1)
 public class FileEntity {
 
     public interface Query {
