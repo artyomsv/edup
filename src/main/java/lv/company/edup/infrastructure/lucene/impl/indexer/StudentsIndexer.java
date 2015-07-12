@@ -2,8 +2,8 @@ package lv.company.edup.infrastructure.lucene.impl.indexer;
 
 import lv.company.edup.infrastructure.lucene.api.config.IndexConfigProvider;
 import lv.company.edup.infrastructure.lucene.api.config.IndexType;
-import lv.company.edup.infrastructure.lucene.api.config.StudentWriter;
 import lv.company.edup.infrastructure.lucene.api.indexer.AbstractIndexer;
+import lv.company.edup.infrastructure.lucene.api.indexer.StudentWriter;
 import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentBuilder;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.persistence.students.current.CurrentStudentVersion;

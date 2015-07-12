@@ -35,13 +35,17 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
             Query searchQuery = buildSearchQuery(criteria);
             Sort sort = buildSort(criteria);
 
-            Collection<Document> documents = find(criteria.getTop(), criteria.getSkip(), sort, searchQuery, searcher);
-            List<Long> ids = getDocumentIds(documents);
-
-            List<T> values = load(ids);
-
             ODataResult<T> result = new ODataResult<T>();
-            result.setValues(sortResult(ids, values));
+
+            if (!criteria.isHead()) {
+                Collection<Document> documents = find(criteria.getTop(), criteria.getSkip(), sort, searchQuery, searcher);
+                List<Long> ids = getDocumentIds(documents);
+
+                List<T> values = load(ids);
+
+                result.setValues(sortResult(ids, values));
+
+            }
 
             if (criteria.isCount()) {
                 result.setCount(count(searchQuery, searcher));

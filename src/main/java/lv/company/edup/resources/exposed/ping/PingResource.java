@@ -1,7 +1,7 @@
 package lv.company.edup.resources.exposed.ping;
 
 import lv.company.edup.infrastructure.lucene.api.config.IndexType;
-import lv.company.edup.infrastructure.lucene.api.config.StudentWriter;
+import lv.company.edup.infrastructure.lucene.api.indexer.StudentWriter;
 import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;
 
 import javax.enterprise.context.ApplicationScoped;

@@ -3,6 +3,8 @@ package lv.company.edup.infrastructure.lucene.api.config;
 import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.lucene.api.indexer.IndexAttribute;
 import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils;
+import lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute;
+import lv.company.edup.infrastructure.lucene.impl.indexer.SubjectsIndexAttribute;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,17 +26,11 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
-
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.BIRTH_DATE;
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.LAST_NAME;
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.MAIL;
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.MOBILE;
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.NAME;
-import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.PERSON_ID;
 
 @ApplicationScoped
 public class IndexConfigProvider {
@@ -49,7 +45,16 @@ public class IndexConfigProvider {
     @PostConstruct
     public void init() {
         fullTextSearchAttributes = new ConcurrentHashMap<IndexType, Collection<? extends IndexAttribute>>();
-        fullTextSearchAttributes.put(IndexType.STUDENT, Arrays.asList(NAME, LAST_NAME, PERSON_ID, MAIL, MOBILE, BIRTH_DATE));
+
+        fullTextSearchAttributes.put(IndexType.STUDENT, Arrays.asList(
+                StudentIndexAttribute.NAME,
+                StudentIndexAttribute.LAST_NAME,
+                StudentIndexAttribute.PERSON_ID,
+                StudentIndexAttribute.MAIL,
+                StudentIndexAttribute.MOBILE,
+                StudentIndexAttribute.BIRTH_DATE));
+
+        fullTextSearchAttributes.put(IndexType.SUBJECT, Collections.singletonList(SubjectsIndexAttribute.NAME));
     }
 
     public IndexWriter buildWriter(IndexType type) throws IOException {

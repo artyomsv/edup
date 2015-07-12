@@ -1,4 +1,4 @@
-package lv.company.edup.infrastructure.lucene.api.config;
+package lv.company.edup.infrastructure.lucene.api.indexer;
 
 import javax.inject.Qualifier;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import static java.lang.annotation.ElementType.TYPE;
 @Qualifier
 @Retention(RetentionPolicy.RUNTIME)
 @Target({TYPE, FIELD})
-public @interface StudentWriter {
+public @interface SubjectWriter {
 }
