@@ -77,6 +77,9 @@ module.exports = function (grunt) {
                     'app/tabs/students/students.module.js',
                     'app/tabs/students/**/*.js',
 
+                    'app/tabs/subjects/subjects.module.js',
+                    'app/tabs/subjects/**/*.js',
+
                     'app/tabs/tabs.module.js',
 
                     'app/app.module.js',

@@ -369,16 +369,16 @@ angular.module('edup.header', ['ui.router']);
 angular.module('edup.header')
 
     .controller('NavbarController', ['$scope', '$state', function ($scope, $state) {
-        $scope.calendarModel = {
-            items: ['Students', 'Calendar'],
-            states: ['students', 'calendar'],
+        $scope.appModel = {
+            items: ['Students', 'Subjects', 'Calendar'],
+            states: ['students', 'subjects', 'calendar'],
             current: 0
         };
 
         $scope.$watch(function () {
-            return $scope.calendarModel.current;
+            return $scope.appModel.current;
         }, function (index) {
-            $state.go($scope.calendarModel.states[index]);
+            $state.go($scope.appModel.states[index]);
         });
 
     }]
@@ -1225,10 +1225,41 @@ angular.module('edup.students')
 );
 'use strict';
 
+angular.module('edup.subjects', []);
+'use strict';
+
+angular.module('edup.subjects')
+
+    .controller('SubjectsController', ['$scope', function ($scope) {
+
+       $scope.subjectsView1 = 'subjectsView1';
+       $scope.subjectsView2 = 'subjectsView2';
+
+    }]
+);
+
+
+'use strict';
+
+angular.module('edup.subjects')
+
+    .directive('subjects', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'subjects',
+            link: function (scope) {
+
+            }
+        };
+    }
+);
+'use strict';
+
 angular.module('edup.tabs', [
     'angularFileUpload',
     'fiestah.money',
     'edup.calendar',
+    'edup.subjects',
     'edup.students'
 ]);
 'use strict';
@@ -1254,6 +1285,11 @@ angular.module('edup')
                 templateUrl: 'students',
                 url: '/students',
                 controller: 'StudentsController'
+            })
+            .state('subjects', {
+                templateUrl: 'subjects',
+                url: '/subjects',
+                controller: 'SubjectsController'
             })
             .state('calendar', {
                 templateUrl: 'calendar',
@@ -1282,7 +1318,7 @@ angular.module('edup')
 
 
   $templateCache.put('edup-header',
-    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a class=navbar-brand href=\"\">Educational planning application</a></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/calendar')}\"><a href=#calendar>Calendar</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div>"
+    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a class=navbar-brand href=\"\">Educational planning application</a></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/subjects')}\"><a href=#subjects>Subjects</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div>"
   );
 
 
@@ -1358,6 +1394,11 @@ angular.module('edup')
 
   $templateCache.put('photo-upload',
     "<div style=\"padding: 10px\"><div><div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button></td></tr></tbody></table></div><div ng-show=photoUrl><img alt=140x140 src={{photoUrl}} class=\"img-rounded text-center\"></div></div>"
+  );
+
+
+  $templateCache.put('subjects',
+    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\">{{subjectsView1}}</div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
   );
 
 }]);

@@ -10,6 +10,11 @@ angular.module('edup')
                 url: '/students',
                 controller: 'StudentsController'
             })
+            .state('subjects', {
+                templateUrl: 'subjects',
+                url: '/subjects',
+                controller: 'SubjectsController'
+            })
             .state('calendar', {
                 templateUrl: 'calendar',
                 url: '/calendar',
