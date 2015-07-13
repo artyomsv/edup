@@ -52,7 +52,7 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
             }
 
             return result;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

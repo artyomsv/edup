@@ -114,6 +114,9 @@ module.exports = function (grunt) {
                     'vendor/bower_components/alertifyjs/dist/js/alertify.js',
                     'vendor/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
                     'vendor/bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
+                    'vendor/bower_components/typeahead.js/dist/bloodhound.min.js',
+                    'vendor/bower_components/typeahead.js/dist/typeahead.bundle.min.js',
+                    'vendor/bower_components/typeahead.js/dist/typeahead.jquery.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

@@ -17,12 +17,14 @@ import org.apache.lucene.search.IndexSearcher;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.CREATED;
 import static lv.company.edup.infrastructure.lucene.impl.indexer.StudentIndexAttribute.ID;
 
 @SubjectSearcher
@@ -76,7 +78,7 @@ public class SubjectIndexSearcher extends AbstractSearcher<SubjectDto> {
 
     @Override
     public Collection<String> getNumericFields() {
-        return Collections.singletonList(ID.getValue());
+        return Arrays.asList(ID.getValue(), CREATED.getValue());
     }
 
     @Override

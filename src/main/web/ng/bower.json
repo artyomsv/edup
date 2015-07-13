@@ -23,6 +23,7 @@
     "alertifyjs": "latest",
     "angular-strap" : "2.2.4",
     "eonasdan-bootstrap-datetimepicker": "latest",
-    "bootstrap-switch": "latest"
+    "bootstrap-switch": "latest",
+    "typeahead.js": "latest"
   }
 }

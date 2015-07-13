@@ -246,9 +246,90 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
+    .service('QueryBuilderService', function () {
+
+        function QueryBuilder() {
+
+            var $top = 10;
+            var $skip = 0;
+            var $search = '';
+            var $orderby = '';
+            var $filters = '';
+            var $count = false;
+            var $all = false;
+            var $head = false;
+
+            var top = function (top) {
+                $top = top;
+                return this;
+            };
+
+            var skip = function (skip) {
+                $skip = skip;
+                return this;
+            };
+
+            var search = function (search) {
+                $search = search;
+                return this;
+            };
+
+            var count = function () {
+                $count = true;
+                return this;
+            };
+
+            var all = function () {
+                $all = true;
+                return this;
+            };
+
+            var orderby = function (parameter, order) {
+                if (_.isBlankString($orderby)) {
+                    $orderby += parameter + ' ' + order;
+                } else {
+                    $orderby += ',' + parameter + ' ' + order;
+                }
+                return this;
+            };
+
+            var filter = function (filter) {
+                $filter = filter;
+                return this;
+            };
+
+            var build = function () {
+                var query = {};
+                query.$top = $top;
+                query.$skip = $skip;
+                query.$count = $count;
+                query.$all = $all;
+                query.$head = $head;
+                if (!_.isBlankString($search)) {
+                    query.$search = $search;
+                }
+                if (!_.isBlankString($orderby)) {
+                    query.$orderby = $orderby;
+                }
+                if (!_.isBlankString($filters)) {
+                    query.$filter = $filters;
+                }
+
+            }
+
+        }
+
+
+        return new QueryBuilder()
+    }
+);
+'use strict';
+
+angular.module('edup.common')
+
     .service('QueryService', function () {
 
-        var prepareQuery = function (top, skip, search, orderBy, filters) {
+        var prepareQuery = function (top, skip, search, orderBy, filters, count) {
             var queries = {};
 
             queries.$count = true;
@@ -267,6 +348,10 @@ angular.module('edup.common')
             }
             if (filters) {
                 queries.$filter = filters;
+            }
+
+            if (count) {
+                queries.count = count;
             }
 
             return queries;
@@ -291,7 +376,8 @@ angular.module('edup.common')
                 Students: privateResource.one('students'),
                 Balance: privateResource.one('balance'),
                 Documents: privateResource.one('documents'),
-                LogOut: privateResource.one('logout')
+                LogOut: privateResource.one('logout'),
+                Subjects: privateResource.one('subjects')
             },
             Public: {
                 Login: publicResource.one('login')
@@ -1045,10 +1131,6 @@ angular.module('edup.students')
             $scope.studentPaging.perPage = newRecordsPerPageValue;
         };
 
-        function isEmpty(str) {
-            return (!str || 0 === str.length);
-        }
-
         var previousSearch = '';
 
         $scope.executeSearch = function (searchValue) {
@@ -1058,7 +1140,7 @@ angular.module('edup.students')
                     $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
                     previousSearch = searchValue;
                 }, 300);
-            } else if (isEmpty(searchValue) && previousSearch !== searchValue) {
+            } else if (_.isEmpty(searchValue) && previousSearch !== searchValue) {
                 $timeout(function () {
                     $scope.studentPaging.page = 1;
                     $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);
@@ -1230,10 +1312,68 @@ angular.module('edup.subjects', []);
 
 angular.module('edup.subjects')
 
+    .directive('eventsHeader', ['$timeout', function ($timeout) {
+        return {
+            restrict: 'E',
+            templateUrl: 'events-header',
+            controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
+
+                $scope.subjects = [];
+                $scope.selectedSubject = {};
+
+                var initTypeAhead = function (values) {
+                    var typeAhead = new Bloodhound({
+                        datumTokenizer: Bloodhound.tokenizers.whitespace,
+                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                        local: values
+                    });
+
+                    $('#bloodhound .typeahead').typeahead(
+                        {
+                            hint: true,
+                            highlight: true,
+                            minLength: 1
+                        },
+                        {
+                            name: 'subjectsTypeAhead',
+                            source: typeAhead
+                        }
+                    );
+                };
+
+                function searchSubjects(query) {
+                    RestService.Private.Subjects.get(query).then(function (response) {
+                        $scope.subjects = response.values;
+                        initTypeAhead(_.pluck($scope.subjects, 'subjectName'))
+                    });
+                }
+
+                searchSubjects(QueryService.Query(999, 0, '*', 'Created desc', null, true), '*');
+
+
+                $scope.selectSubject = function (selectedSubjectName) {
+
+                    $scope.selectedSubject = _.find($scope.subjects, function (subject) {
+                        return subject.subjectName === selectedSubjectName;
+                    });
+
+                };
+
+            }],
+            link: function (scope) {
+
+            }
+        };
+    }]
+);
+'use strict';
+
+angular.module('edup.subjects')
+
     .controller('SubjectsController', ['$scope', function ($scope) {
 
-       $scope.subjectsView1 = 'subjectsView1';
-       $scope.subjectsView2 = 'subjectsView2';
+        $scope.subjectsView1 = 'subjectsView1';
+        $scope.subjectsView2 = 'subjectsView2';
 
     }]
 );
@@ -1397,8 +1537,13 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('events-header',
+    "<div class=container-fluid><div class=row><div class=col-md-12><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=\"input-group-addon glyphicon glyphicon-search searchTextInput\" id=basic-addon2></span> <input class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName></div></div></div></div><div class=row><div class=col-md-12></div></div></div>"
+  );
+
+
   $templateCache.put('subjects',
-    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\">{{subjectsView1}}</div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
+    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><events-header></div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
   );
 
 }]);

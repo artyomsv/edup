@@ -7,7 +7,7 @@ public enum SubjectsIndexAttribute implements IndexAttribute {
 
     ID("Id", ""),
     NAME("Name", ""),
-    CREATED("Created", "");
+    CREATED("Created", "Format");
 
     private final String value;
     private final String postFix;

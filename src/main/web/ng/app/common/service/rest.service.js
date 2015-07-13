@@ -12,7 +12,8 @@ angular.module('edup.common')
                 Students: privateResource.one('students'),
                 Balance: privateResource.one('balance'),
                 Documents: privateResource.one('documents'),
-                LogOut: privateResource.one('logout')
+                LogOut: privateResource.one('logout'),
+                Subjects: privateResource.one('subjects')
             },
             Public: {
                 Login: publicResource.one('login')

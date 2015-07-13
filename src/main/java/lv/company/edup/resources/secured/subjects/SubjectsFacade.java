@@ -65,4 +65,9 @@ public class SubjectsFacade extends ApplicationFacade {
         subjectsService.deleteAttendance(eventId, attendanceId);
         return ok();
     }
+
+    public Response rebuildSubjects() {
+        subjectsService.rebuildIndex();
+        return ok();
+    }
 }

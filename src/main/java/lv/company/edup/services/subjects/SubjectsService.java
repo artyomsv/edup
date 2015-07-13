@@ -206,4 +206,8 @@ public class SubjectsService {
 
         attendanceRepository.delete(attendance);
     }
+
+    public void rebuildIndex() {
+        writer.add(mapper.map(subjectRepository.findAll(), SubjectDto.class));
+    }
 }

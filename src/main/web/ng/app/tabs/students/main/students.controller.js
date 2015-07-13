@@ -79,10 +79,6 @@ angular.module('edup.students')
             $scope.studentPaging.perPage = newRecordsPerPageValue;
         };
 
-        function isEmpty(str) {
-            return (!str || 0 === str.length);
-        }
-
         var previousSearch = '';
 
         $scope.executeSearch = function (searchValue) {
@@ -92,7 +88,7 @@ angular.module('edup.students')
                     $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), searchValue);
                     previousSearch = searchValue;
                 }, 300);
-            } else if (isEmpty(searchValue) && previousSearch !== searchValue) {
+            } else if (_.isEmpty(searchValue) && previousSearch !== searchValue) {
                 $timeout(function () {
                     $scope.studentPaging.page = 1;
                     $scope.loadStudents(null, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);

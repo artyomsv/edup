@@ -4,7 +4,7 @@ angular.module('edup.common')
 
     .service('QueryService', function () {
 
-        var prepareQuery = function (top, skip, search, orderBy, filters) {
+        var prepareQuery = function (top, skip, search, orderBy, filters, count) {
             var queries = {};
 
             queries.$count = true;
@@ -23,6 +23,10 @@ angular.module('edup.common')
             }
             if (filters) {
                 queries.$filter = filters;
+            }
+
+            if (count) {
+                queries.count = count;
             }
 
             return queries;
