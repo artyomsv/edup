@@ -1,13 +1,16 @@
 package lv.company.edup.resources.secured.subjects;
 
+import lv.company.edup.services.subjects.dto.AttendanceDto;
 import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.edup.services.subjects.dto.SubjectDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -39,17 +42,41 @@ public class SubjectsResource {
     }
 
     @POST
-    @Path("{subjectId}/events")
+    @Path("events")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response saveSubjectEvent(EventDto dto, @PathParam("subjectId") Long subjectId) {
-        return facade.createSubjectEvent(dto, subjectId);
+    public Response saveSubjectEvent(EventDto dto) {
+        return facade.createSubjectEvent(dto);
     }
 
     @GET
-    @Path("{subjectId}/events/{eventId}/attendance")
-    public Response getEventAttendance(@PathParam("subjectId") Long subjectId,
-                                       @PathParam("eventId") Long eventId) {
-        return facade.getEventAttendance(subjectId, eventId);
+    @Path("events/attendance")
+    public Response getEventAttendance() {
+        return facade.getEventAttendance();
+    }
+
+    @POST
+    @Path("events/{eventId}/attendance")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response saveEventAttendance(AttendanceDto dto,
+                                        @PathParam("eventId") Long eventId) {
+        return facade.saveEventAttendance(dto, eventId);
+    }
+
+    @PUT
+    @Path("events/{eventId}/attendance/{attendanceId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateEventAttendance(AttendanceDto dto,
+                                          @PathParam("eventId") Long eventId,
+                                          @PathParam("attendanceId") Long attendanceId) {
+        return facade.updateEventAttendance(dto, eventId, attendanceId);
+    }
+
+    @DELETE
+    @Path("events/{eventId}/attendance/{attendanceId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateEventAttendance(@PathParam("eventId") Long eventId,
+                                          @PathParam("attendanceId") Long attendanceId) {
+        return facade.deleteEventAttendance(eventId, attendanceId);
     }
 
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 @ApplicationScoped
 public class ValidationService {
 
-    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private Validator validator;
 
     @PostConstruct

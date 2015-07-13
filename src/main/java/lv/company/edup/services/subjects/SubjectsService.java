@@ -1,16 +1,23 @@
 package lv.company.edup.services.subjects;
 
 import lv.company.edup.infrastructure.exceptions.BadRequestException;
+import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.lucene.api.indexer.SubjectWriter;
 import lv.company.edup.infrastructure.lucene.api.searcher.SubjectSearcher;
 import lv.company.edup.infrastructure.lucene.impl.indexer.SubjectsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.SubjectIndexSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
+import lv.company.edup.persistence.students.current.CurrentStudentVersion;
+import lv.company.edup.persistence.students.current.CurrentStudentVersionRepository;
+import lv.company.edup.persistence.subjects.AttendanceRepository;
 import lv.company.edup.persistence.subjects.EventRepository;
 import lv.company.edup.persistence.subjects.EventStatus;
 import lv.company.edup.persistence.subjects.SubjectRepository;
+import lv.company.edup.persistence.subjects.domain.Attendance;
+import lv.company.edup.persistence.subjects.domain.Attendance_;
 import lv.company.edup.persistence.subjects.domain.Event;
 import lv.company.edup.persistence.subjects.domain.Subject;
+import lv.company.edup.persistence.subjects.view.AttendanceView;
 import lv.company.edup.persistence.subjects.view.EventView;
 import lv.company.edup.services.subjects.dto.AttendanceDto;
 import lv.company.edup.services.subjects.dto.EventDto;
@@ -19,12 +26,17 @@ import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.impl.JPA;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
+import javax.persistence.metamodel.SingularAttribute;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 @Stateless
@@ -37,6 +49,8 @@ public class SubjectsService {
     @Inject ObjectMapper mapper;
     @Inject SubjectRepository subjectRepository;
     @Inject EventRepository eventRepository;
+    @Inject CurrentStudentVersionRepository studentRepository;
+    @Inject AttendanceRepository attendanceRepository;
 
     @Inject @JPA ODataSearchService searchService;
 
@@ -88,14 +102,14 @@ public class SubjectsService {
         return result.cloneFromValues(subjects);
     }
 
-    public Long createSubjectEvent(EventDto dto, Long subjectId) {
-        Subject subject = subjectRepository.find(subjectId);
+    public Long createSubjectEvent(EventDto dto) {
+        Subject subject = subjectRepository.find(dto.getSubjectId());
         if (subject == null) {
             throw new BadRequestException("Could not map event to subject");
         }
 
         Event event = new Event();
-        event.setSubjectId(subjectId);
+        event.setSubjectId(dto.getSubjectId());
         event.setCreated(new Date());
         event.setUpdated(new Date());
         event.setEventDate(dto.getEventDate());
@@ -109,9 +123,87 @@ public class SubjectsService {
         return event.getEventId();
     }
 
-    public ODataResult<AttendanceDto> getEventAttendance(Long subjectId, Long eventId) {
-//        ODataCriteria
+    public ODataResult<AttendanceDto> getEventAttendance(ODataCriteria criteria) {
+        ODataResult<AttendanceView> result = searchService.search(criteria, AttendanceView.class);
+        List<AttendanceDto> values = mapper.map(result.getValues(), AttendanceDto.class);
+        return result.cloneFromValues(values);
+    }
 
-        return null;
+    public Long createAttendance(AttendanceDto dto, Long eventId) {
+        Event event = eventRepository.find(eventId);
+        if (event == null) {
+            throw new BadRequestException("Could not map attendance to event");
+        }
+
+        CurrentStudentVersion studentVersion = studentRepository.find(dto.getStudentId());
+        if (studentVersion == null) {
+            throw new BadRequestException("Could not map student to attendance");
+        }
+
+        HashMap<Collection<?>, SingularAttribute<Attendance, ?>> pairs = new HashMap<>();
+        pairs.put(Collections.singleton(eventId), Attendance_.eventId);
+        pairs.put(Collections.singleton(dto.getStudentId()), Attendance_.studentId);
+        List<Attendance> attendances = attendanceRepository.findByMultipleAttributes(pairs);
+        if (CollectionUtils.isNotEmpty(attendances)) {
+            throw new BadRequestException("Attendance for student " + getStudentName(studentVersion) + " is already saved");
+        }
+
+        Attendance attendance = new Attendance();
+        attendance.setEventId(eventId);
+        attendance.setStudentId(dto.getStudentId());
+        attendance.setCreated(new Date());
+        attendance.setUpdated(new Date());
+        attendance.setBalanceAdjusted(false);
+        attendance.setParticipated(true);
+        attendance.setNotified(false);
+
+        attendanceRepository.persist(attendance);
+
+        return attendance.getAttendanceId();
+    }
+
+    private String getStudentName(CurrentStudentVersion studentVersion) {
+        return studentVersion.getName() + " " + studentVersion.getLastName();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void updateAttendance(AttendanceDto dto, Long eventId, Long attendanceId) {
+        Attendance attendance = attendanceRepository.find(attendanceId);
+        if (attendance == null) {
+            throw new NotFoundException("Could not update missing attendance");
+        }
+
+        if (!attendance.getEventId().equals(eventId)) {
+            throw new NotFoundException("Current attendance is not mapped to event");
+        }
+
+        if (dto.getNotified() != null) {
+            attendance.setNotified(dto.getNotified());
+        }
+
+        if (dto.getParticipated() != null) {
+            attendance.setParticipated(dto.getParticipated());
+        }
+
+        if (dto.getBalanceAdjusted() != null) {
+            attendance.setBalanceAdjusted(dto.getBalanceAdjusted());
+        }
+
+        attendance.setUpdated(new Date());
+
+    }
+
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    public void deleteAttendance(Long eventId, Long attendanceId) {
+        Attendance attendance = attendanceRepository.find(attendanceId);
+        if (attendance == null) {
+            throw new NotFoundException("Could not update missing attendance");
+        }
+
+        if (!attendance.getEventId().equals(eventId)) {
+            throw new NotFoundException("Current attendance is not mapped to event");
+        }
+
+        attendanceRepository.delete(attendance);
     }
 }

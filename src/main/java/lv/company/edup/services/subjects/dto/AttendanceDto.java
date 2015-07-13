@@ -3,6 +3,7 @@ package lv.company.edup.services.subjects.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -13,6 +14,7 @@ public class AttendanceDto {
 
     private Long attendanceId;
     private Long eventId;
+    @NotNull
     private Long studentId;
     private String name;
     private String lastName;

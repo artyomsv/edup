@@ -14,6 +14,7 @@ import java.util.Date;
 public class EventDto {
 
     private Long eventId;
+    @NotNull(message = "Event is missing subject ID")
     private Long subjectId;
     private String name;
     private Date created;

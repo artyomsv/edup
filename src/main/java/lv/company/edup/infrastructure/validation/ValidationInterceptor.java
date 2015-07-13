@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import javax.validation.Valid;
 import javax.validation.groups.Default;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -27,7 +28,7 @@ public class ValidationInterceptor {
         for (int i = 0; i < parameterAnnotations.length; i++) {
             boolean found = false;
             for (Annotation annotation : parameterAnnotations[i]) {
-                if (annotation.annotationType().isAssignableFrom(Validate.class)) {
+                if (annotation.annotationType().isAssignableFrom(Valid.class)) {
                     found = true;
                     break;
                 }
