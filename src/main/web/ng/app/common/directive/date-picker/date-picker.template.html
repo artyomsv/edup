@@ -1,8 +1,8 @@
 <div>
-    <label for="{{datePickerId}}">{{label}}</label>
+    <label for="{{datePickerId}}" ng-show="label">{{label}}</label>
 
     <div class='input-group date' id='{{datePickerId}}' ng-click="openDatePicker()">
-        <input ng-model="inputField" type='text' class="form-control" name="date"/>
+        <input placeholder="{{pickerPlaceholder}}" ng-model="inputField" type='text' class="form-control" name="date"/>
         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
     </div>
 </div>

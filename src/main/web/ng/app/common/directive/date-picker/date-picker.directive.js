@@ -9,6 +9,7 @@ angular.module('edup.common')
             scope: {
                 inputField: '=',
                 label: '@',
+                pickerPlaceholder: '@',
                 datePickerId: '@'
             },
             controller: function ($scope) {

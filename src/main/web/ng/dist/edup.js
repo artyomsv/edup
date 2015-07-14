@@ -36,6 +36,7 @@ angular.module('edup.common')
             scope: {
                 inputField: '=',
                 label: '@',
+                pickerPlaceholder: '@',
                 datePickerId: '@'
             },
             controller: ['$scope', function ($scope) {
@@ -59,6 +60,44 @@ angular.module('edup.common')
             }
         };
     }]
+);
+
+'use strict';
+
+angular.module('edup.common')
+
+	.directive('timePicker', ['$timeout', '$filter', function ($timeout, $filter) {
+		return {
+			restrict: 'E',
+			templateUrl: 'time-picker',
+			scope: {
+				inputField: '=',
+				label: '@',
+				pickerPlaceholder: '@',
+				timePickerId: '@'
+			},
+			controller: ['$scope', function ($scope) {
+
+			}],
+
+			link: function (scope) {
+				$timeout(function () {
+					var timePicker = $('#' + scope.timePickerId);
+
+					timePicker.datetimepicker({
+						//viewMode: 'years',
+						format: 'HH:mm'
+					});
+
+					timePicker.on('dp.change', function (event) {
+						scope.inputField = $filter('date')(new Date(event.date), 'HH:mm');
+					});
+
+
+				});
+			}
+		};
+	}]
 );
 
 'use strict';
@@ -246,82 +285,81 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .service('QueryBuilderService', function () {
+	.service('QueryBuilderService', function () {
 
-        function QueryBuilder() {
+		function QueryBuilder() {
 
-            var $top = 10;
-            var $skip = 0;
-            var $search = '';
-            var $orderby = '';
-            var $filters = '';
-            var $count = false;
-            var $all = false;
-            var $head = false;
+			var $top = 10;
+			var $skip = 0;
+			var $search = '';
+			var $orderby = '';
+			var $filter = '';
+			var $count = false;
+			var $all = false;
+			var $head = false;
 
-            var top = function (top) {
-                $top = top;
-                return this;
-            };
+			var top = function (top) {
+				$top = top;
+				return this;
+			};
 
-            var skip = function (skip) {
-                $skip = skip;
-                return this;
-            };
+			var skip = function (skip) {
+				$skip = skip;
+				return this;
+			};
 
-            var search = function (search) {
-                $search = search;
-                return this;
-            };
+			var search = function (search) {
+				$search = search;
+				return this;
+			};
 
-            var count = function () {
-                $count = true;
-                return this;
-            };
+			var count = function () {
+				$count = true;
+				return this;
+			};
 
-            var all = function () {
-                $all = true;
-                return this;
-            };
+			var all = function () {
+				$all = true;
+				return this;
+			};
 
-            var orderby = function (parameter, order) {
-                if (_.isBlankString($orderby)) {
-                    $orderby += parameter + ' ' + order;
-                } else {
-                    $orderby += ',' + parameter + ' ' + order;
-                }
-                return this;
-            };
+			var orderby = function (parameter, order) {
+				if (_.isBlankString($orderby)) {
+					$orderby += parameter + ' ' + order;
+				} else {
+					$orderby += ',' + parameter + ' ' + order;
+				}
+				return this;
+			};
 
-            var filter = function (filter) {
-                $filter = filter;
-                return this;
-            };
+			var filter = function (filterValue) {
+				$filter = filterValue;
+				return this;
+			};
 
-            var build = function () {
-                var query = {};
-                query.$top = $top;
-                query.$skip = $skip;
-                query.$count = $count;
-                query.$all = $all;
-                query.$head = $head;
-                if (!_.isBlankString($search)) {
-                    query.$search = $search;
-                }
-                if (!_.isBlankString($orderby)) {
-                    query.$orderby = $orderby;
-                }
-                if (!_.isBlankString($filters)) {
-                    query.$filter = $filters;
-                }
+			var build = function () {
+				var query = {};
+				query.$top = $top;
+				query.$skip = $skip;
+				query.$count = $count;
+				query.$all = $all;
+				query.$head = $head;
+				if (!_.isBlankString($search)) {
+					query.$search = $search;
+				}
+				if (!_.isBlankString($orderby)) {
+					query.$orderby = $orderby;
+				}
+				if (!_.isBlankString($filter)) {
+					query.$filter = $filter;
+				}
 
-            }
+			};
 
-        }
+		}
 
-
-        return new QueryBuilder()
-    }
+		return new QueryBuilder();
+	}
 );
 'use strict';
 
@@ -1312,59 +1350,72 @@ angular.module('edup.subjects', []);
 
 angular.module('edup.subjects')
 
-    .directive('eventsHeader', ['$timeout', function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'events-header',
-            controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
+	.directive('eventsHeader', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'events-header',
+			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
 
-                $scope.subjects = [];
-                $scope.selectedSubject = {};
-
-                var initTypeAhead = function (values) {
-                    var typeAhead = new Bloodhound({
-                        datumTokenizer: Bloodhound.tokenizers.whitespace,
-                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                        local: values
-                    });
-
-                    $('#bloodhound .typeahead').typeahead(
-                        {
-                            hint: true,
-                            highlight: true,
-                            minLength: 1
-                        },
-                        {
-                            name: 'subjectsTypeAhead',
-                            source: typeAhead
-                        }
-                    );
-                };
-
-                function searchSubjects(query) {
-                    RestService.Private.Subjects.get(query).then(function (response) {
-                        $scope.subjects = response.values;
-                        initTypeAhead(_.pluck($scope.subjects, 'subjectName'))
-                    });
-                }
-
-                searchSubjects(QueryService.Query(999, 0, '*', 'Created desc', null, true), '*');
+				$scope.subjects = [];
+				$scope.selectedSubject = {};
+				$scope.subjectSelected = false;
 
 
-                $scope.selectSubject = function (selectedSubjectName) {
+				var selectSubject = function (selectedSubjectName) {
+					$scope.selectedSubject = _.find($scope.subjects, function (subject) {
+						return subject.subjectName === selectedSubjectName;
+					});
 
-                    $scope.selectedSubject = _.find($scope.subjects, function (subject) {
-                        return subject.subjectName === selectedSubjectName;
-                    });
+					$scope.subjectSelected = !!$scope.selectedSubject;
+				};
 
-                };
+				var initTypeAhead = function (values) {
+					var typeAhead = new Bloodhound({
+						datumTokenizer: Bloodhound.tokenizers.whitespace,
+						queryTokenizer: Bloodhound.tokenizers.whitespace,
+						local: values
+					});
 
-            }],
-            link: function (scope) {
+					var $bloodhound = $('#bloodhound .typeahead');
 
-            }
-        };
-    }]
+					$bloodhound.typeahead({
+							hint: true,
+							highlight: true,
+							minLength: 1
+						},
+						{
+							name: 'subjectsTypeAhead',
+							source: typeAhead
+						}
+					);
+					$bloodhound.bind('typeahead:selected', function (obj, datum) {
+						selectSubject(datum);
+					});
+				};
+
+				function searchSubjects(query) {
+					RestService.Private.Subjects.get(query).then(function (response) {
+						$scope.subjects = response.values;
+						initTypeAhead(_.pluck($scope.subjects, 'subjectName'));
+					});
+				}
+
+				searchSubjects(QueryService.Query(999, 0, '*', 'Created desc', null, true));
+
+				$scope.updateSelectedSubject = function () {
+					$scope.subjectSelected = !!$scope.selectedSubject;
+				};
+
+				$scope.saveNewEvent = function (newSubjectEvent) {
+					console.log(angular.toJson(newSubjectEvent, true));
+				};
+
+			}],
+			link: function (scope) {
+
+			}
+		};
+	}
 );
 'use strict';
 
@@ -1443,7 +1494,12 @@ angular.module('edup')
   'use strict';
 
   $templateCache.put('date-picker',
-    "<div><label for={{datePickerId}}>{{label}}</label><div class=\"input-group date\" id={{datePickerId}} ng-click=openDatePicker()><input ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div>"
+    "<div><label for={{datePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{datePickerId}} ng-click=openDatePicker()><input placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div>"
+  );
+
+
+  $templateCache.put('time-picker',
+    "<div><label for={{timePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{timePickerId}} ng-click=openDatePicker()><input required placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-time\"></span></span></div></div>"
   );
 
 
@@ -1538,7 +1594,7 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid><div class=row><div class=col-md-12><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=\"input-group-addon glyphicon glyphicon-search searchTextInput\" id=basic-addon2></span> <input class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName></div></div></div></div><div class=row><div class=col-md-12></div></div></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span> <input required class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" ng-click=saveNewEvent(subjectEvent)></span></h4></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><date-picker date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
   );
 
 
