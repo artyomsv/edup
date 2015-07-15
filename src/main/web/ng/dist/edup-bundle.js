@@ -53260,6 +53260,25 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
+	.factory('TypeAheadFactory', function () {
+
+		/* jshint ignore:start */
+		var typeAhead = function (values) {
+			return new Bloodhound({
+				datumTokenizer: Bloodhound.tokenizers.whitespace,
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				local: values
+			});
+		};
+
+		return typeAhead;
+		/* jshint ignore:end */
+	}
+);
+'use strict';
+
+angular.module('edup.common')
+
     .service('UrlService', function () {
 
         var location = window.location.hostname;
@@ -54185,7 +54204,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: ['$scope', '$timeout', 'QueryService', 'RestService', 'Bloodhound', function ($scope, $timeout, QueryService, RestService, Bloodhound) {
+			controller: ['$scope', '$timeout', 'QueryService', 'RestService', 'TypeAheadFactory', function ($scope, $timeout, QueryService, RestService, TypeAheadFactory) {
 
 				$scope.subjects = [];
 				$scope.selectedSubject = {};
@@ -54201,11 +54220,7 @@ angular.module('edup.subjects')
 				};
 
 				var initTypeAhead = function (values) {
-					var typeAhead = new Bloodhound({
-						datumTokenizer: Bloodhound.tokenizers.whitespace,
-						queryTokenizer: Bloodhound.tokenizers.whitespace,
-						local: values
-					});
+					var typeAhead = TypeAheadFactory.typeAhead(values);
 
 					var $bloodhound = $('#bloodhound .typeahead');
 
@@ -54330,7 +54345,7 @@ angular.module('edup')
 
 
   $templateCache.put('time-picker',
-    "<div><label for={{timePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{timePickerId}} ng-click=openDatePicker()><input placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-time\"></span></span></div></div>"
+    "<div><label for={{timePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{timePickerId}} ng-click=openDatePicker()><input required placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-time\"></span></span></div></div>"
   );
 
 
@@ -54425,7 +54440,7 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span> <input class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div><div class=col-md-4><div class=form-group><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" ng-click=saveNewEvent(subjectEvent)></span></h4></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><date-picker date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div><div class=\"col-md-1 column\"></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span> <input required class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" ng-click=saveNewEvent(subjectEvent)></span></h4></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><date-picker date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
   );
 
 

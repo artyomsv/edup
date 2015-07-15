@@ -1,59 +1,68 @@
 <div class="container-fluid">
-    <form role="form" name="newSubjectEventForm">
-        <div class="row">
-            <div class="col-md-7">
-                <div id="bloodhound">
-                    <div class="input-group" id="subjectTypeAheadInput">
-                    <span class="input-group-addon"
-                          id="basic-addon2"
-                          ng-class="{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}"></span>
-                        <input required type="text" class="form-control typeahead" placeholder="Subject" ng-model="subjectEvent.subjectName" ng-keyup="updateSelectedSubject()">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="form-group" ng-class="{'has-error': newSubjectEventForm.number.$invalid}">
+	<form role="form" name="newSubjectEventForm" novalidate>
+		<div class="row">
+			<div class="col-md-7">
+				<div id="bloodhound">
+					<div class="input-group" id="subjectTypeAheadInput">
+						<span class="input-group-addon"
+						      id="basic-addon2"
+						      ng-class="{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}">
 
-                    <div class="input-group">
-                        <span class="input-group-addon">&euro;</span>
-                        <input required
-                               id="amount"
-                               class="form-control ng-valid ng-valid-min ng-dirty ng-valid-number"
-                               money=""
-                               ng-model="subjectEvent.amount"
-                               autofocus=""
-                               placeholder="Amount"
-                               precision="2">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <div class="form-group">
-                    <h4>
-                        <span class="glyphicon glyphicon-plus pull-right" style="cursor: pointer" ng-click="saveNewEvent(subjectEvent)"></span>
-                    </h4>
-                    <!--<button type="submit" class="btn btn-primary btn-sm" ng-click="saveNewEvent(subjectEvent)">Save</button>-->
-                </div>
-            </div>
-        </div>
-        <div class="row" style="padding-top: 10px">
-            <div class="col-md-5 column">
-                <div class="form-group" ng-class="{'has-error': newSubjectEventForm.date.$invalid}">
-                    <date-picker date-picker-id="subjectEventDateId" input-field="subjectEvent.eventDate" picker-placeholder="Date"></date-picker>
-                </div>
-            </div>
+            </span>
 
-            <div class="col-md-3 column">
-                <div class="form-group" ng-class="{'has-error': newSubjectEventForm.date.$invalid}">
-                    <time-picker time-picker-id="subjectEventTimeFromId" input-field="subjectEvent.eventTimeFrom" picker-placeholder="From"></time-picker>
-                </div>
-            </div>
+						<div id="scrollable-dropdown-menu">
+							<input type="text"
+							       class="form-control typeahead tt-query"
+							       placeholder="Subject"
+							       ng-model="subjectEvent.subjectName"
+							       ng-keyup="updateSelectedSubject()">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class=" col-md-4">
+				<div class="form-group" ng-class="{'has-error': newSubjectEventForm.number.$invalid}">
 
-            <div class="col-md-3 column">
-                <div class="form-group" ng-class="{'has-error': newSubjectEventForm.date.$invalid}">
-                    <time-picker time-picker-id="subjectEventTimeToId" input-field="subjectEvent.eventTimeTo" picker-placeholder="To"></time-picker>
-                </div>
-            </div>
-        </div>
-    </form>
+					<div class="input-group">
+						<span class="input-group-addon">&euro;</span>
+						<input required
+						       id="amount"
+						       class="form-control ng-valid ng-valid-min ng-dirty ng-valid-number"
+						       money=""
+						       ng-model="subjectEvent.amount"
+						       autofocus=""
+						       placeholder="Amount"
+						       precision="2">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-1">
+				<div class="form-group">
+					<!--<h4>-->
+					<!--<span type="submit" class="glyphicon glyphicon-plus pull-right" style="cursor: pointer" ng-click="saveNewEvent(subjectEvent)"></span>-->
+					<!--</h4>-->
+					<button type="submit" class="btn btn-primary btn-sm" ng-click="saveNewEvent(subjectEvent)">Save</button>
+				</div>
+			</div>
+		</div>
+		<div class="row" style="padding-top: 10px">
+			<div class="col-md-5 column">
+				<div class="form-group">
+					<date-picker required date-picker-id="subjectEventDateId" input-field="subjectEvent.eventDate" picker-placeholder="Date"></date-picker>
+				</div>
+			</div>
+
+			<div class="col-md-3 column">
+				<div class="form-group">
+					<time-picker required time-picker-id="subjectEventTimeFromId" input-field="subjectEvent.eventTimeFrom" picker-placeholder="From"></time-picker>
+				</div>
+			</div>
+
+			<div class="col-md-3 column">
+				<div class="form-group">
+					<time-picker required time-picker-id="subjectEventTimeToId" input-field="subjectEvent.eventTimeTo" picker-placeholder="To"></time-picker>
+				</div>
+			</div>
+		</div>
+	</form>
 </div>

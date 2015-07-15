@@ -73,7 +73,7 @@ public class SubjectsService {
                 .getAllValues()
                 .setHead(true)
                 .setCount(true)
-                .setFilter("Name eq " + dto.getSubjectName());
+                .setFilter("Name eq '" + dto.getSubjectName() + "'");
 
         ODataResult<SubjectDto> search = search(criteria);
         if (search.getCount() != 0) {
@@ -103,13 +103,20 @@ public class SubjectsService {
     }
 
     public Long createSubjectEvent(EventDto dto) {
-        Subject subject = subjectRepository.find(dto.getSubjectId());
-        if (subject == null) {
-            throw new BadRequestException("Could not map event to subject");
+        SubjectDto subjectDto = dto.getSubject();
+        Long subjectId;
+        if (subjectDto.getSubjectId() != null) {
+            Subject subject = subjectRepository.find(subjectDto.getSubjectId());
+            if (subject == null) {
+                throw new BadRequestException("Could not map event to subject");
+            }
+            subjectId = subject.getSubjectId();
+        } else {
+            subjectId = createSubject(subjectDto);
         }
 
         Event event = new Event();
-        event.setSubjectId(dto.getSubjectId());
+        event.setSubjectId(subjectId);
         event.setCreated(new Date());
         event.setUpdated(new Date());
         event.setEventDate(dto.getEventDate());

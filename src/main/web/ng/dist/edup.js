@@ -429,28 +429,71 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .service('UrlService', function () {
+	.service('TypeAheadService', ['UrlService', function (UrlService) {
 
-        var location = window.location.hostname;
+		var url = UrlService.Subjects;
+		var dataSet = {};
 
-        var baseUrl;
+		var filterResponse = function (response) {
+			dataSet = response.values;
+			var pluck = _.pluck(response.values, 'subjectName');
+			return pluck;
+		};
 
-        if (location.indexOf('127.0.0.1') > -1) {
-            baseUrl = 'https://localhost:8443/edup';
-        } else {
-            baseUrl = 'https://' + location + ':8443/edup';
-        }
+		/* jshint ignore:start */
+		var typeAhead = function () {
+			var bloodhound = new Bloodhound({
+				datumTokenizer: function (datum) {
+					return Bloodhound.tokenizers.whitespace(datum.value);
+				},
+				queryTokenizer: Bloodhound.tokenizers.whitespace,
+				limit: 10,
+				remote: {
+					url: url + '?$count=true&$orderby=Created+desc&$search=%QUERY&$skip=0&$top=999&count=true',
+					filter: filterResponse,
+					wildcard: '%QUERY'
+				}
+			});
+			bloodhound.initialize();
+			return bloodhound;
+		};
 
-        return {
-            BaseUrl: baseUrl,
-            Files: {
-                Info: baseUrl + '/api/private/files',
-                Upload: baseUrl + '/api/private/files/upload',
-                Download: baseUrl + '/api/private/files/download'
-            }
-        };
+		return {
+			Build: typeAhead,
+			DataSet: function () {
+				return dataSet;
+			}
+		};
+		/* jshint ignore:end */
+	}]
+);
+'use strict';
 
-    }
+angular.module('edup.common')
+
+	.service('UrlService', function () {
+
+		var location = window.location.hostname;
+
+		var baseUrl;
+
+		if (location.indexOf('127.0.0.1') > -1) {
+			baseUrl = 'https://localhost:8443/edup';
+		} else {
+			baseUrl = 'https://' + location + ':8443/edup';
+		}
+
+		return {
+			BaseUrl: baseUrl,
+			Files: {
+				Info: baseUrl + '/api/private/files',
+				Upload: baseUrl + '/api/private/files/upload',
+				Download: baseUrl + '/api/private/files/download'
+			},
+			Subjects: baseUrl + '/api/private/subjects'
+		};
+
+	}
 );
 'use strict';
 
@@ -1354,7 +1397,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
+			controller: ['$scope', '$timeout', 'moment', 'QueryService', 'RestService', 'TypeAheadService', function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService) {
 
 				$scope.subjects = [];
 				$scope.selectedSubject = {};
@@ -1362,52 +1405,85 @@ angular.module('edup.subjects')
 
 
 				var selectSubject = function (selectedSubjectName) {
-					$scope.selectedSubject = _.find($scope.subjects, function (subject) {
+					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
 					});
 
 					$scope.subjectSelected = !!$scope.selectedSubject;
 				};
 
-				var initTypeAhead = function (values) {
-					var typeAhead = new Bloodhound({
-						datumTokenizer: Bloodhound.tokenizers.whitespace,
-						queryTokenizer: Bloodhound.tokenizers.whitespace,
-						local: values
-					});
+				var typeAhead = TypeAheadService.Build();
 
-					var $bloodhound = $('#bloodhound .typeahead');
+				var $bloodhound = $('#bloodhound .typeahead');
 
-					$bloodhound.typeahead({
-							hint: true,
-							highlight: true,
-							minLength: 1
-						},
-						{
-							name: 'subjectsTypeAhead',
-							source: typeAhead
-						}
-					);
-					$bloodhound.bind('typeahead:selected', function (obj, datum) {
-						selectSubject(datum);
-					});
+				$bloodhound.typeahead({
+						hint: true,
+						highlight: true,
+						minLength: 1
+					},
+					{
+						name: 'subjectsTypeAhead',
+						source: typeAhead
+					}
+				);
+
+				$bloodhound.bind('typeahead:selected', function (obj, datum) {
+					selectSubject(datum);
+				});
+
+				var isSubjectDataFilled = function (newSubjectEvent) {
+					if (!newSubjectEvent) {
+						return false;
+					}
+					if (!newSubjectEvent.amount) {
+						return false;
+					}
+					if (!newSubjectEvent.eventDate) {
+						return false;
+					}
+					if (!newSubjectEvent.eventTimeFrom) {
+						return false;
+					}
+					if (!newSubjectEvent.eventTimeTo) {
+						return false;
+					}
+					return true;
 				};
 
-				function searchSubjects(query) {
-					RestService.Private.Subjects.get(query).then(function (response) {
-						$scope.subjects = response.values;
-						initTypeAhead(_.pluck($scope.subjects, 'subjectName'));
-					});
-				}
-
-				searchSubjects(QueryService.Query(999, 0, '*', 'Created desc', null, true));
-
-				$scope.updateSelectedSubject = function () {
-					$scope.subjectSelected = !!$scope.selectedSubject;
+				var reset = function () {
+					$bloodhound.typeahead('val', '');
+					$scope.subjectEvent = {};
+					$scope.subjectSelected = null;
+					$scope.selectedSubject = false;
 				};
 
 				$scope.saveNewEvent = function (newSubjectEvent) {
-					console.log(angular.toJson(newSubjectEvent, true));
+					if (isSubjectDataFilled(newSubjectEvent)) {
+
+						var shouldSave = false;
+
+						var payload = {};
+						payload.eventDate = new Date(newSubjectEvent.eventDate);
+						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom)
+						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo)
+						payload.price = newSubjectEvent.amount * 100;
+						payload.subject = {};
+						if ($scope.subjectSelected) {
+							payload.subject.subjectName = $scope.selectedSubject.subjectName;
+							payload.subject.subjectId = $scope.selectedSubject.subjectId;
+							shouldSave = true
+						} else if (!_.isEmpty(newSubjectEvent.subjectName)) {
+							payload.subject.subjectName = newSubjectEvent.subjectName;
+							shouldSave = true;
+						}
+
+						if (shouldSave) {
+							RestService.Private.Subjects.one('events').customPOST(payload).then(function (response) {
+								reset();
+								console.log(angular.toJson('Event ID: ' + response.payload));
+							});
+						}
+					}
 				};
 
 			}],
@@ -1594,7 +1670,7 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span> <input required class=\"form-control typeahead\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" ng-click=saveNewEvent(subjectEvent)></span></h4></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><date-picker date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.date.$invalid}\"><time-picker time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm novalidate><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><button type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group><date-picker required date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
   );
 
 
