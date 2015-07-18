@@ -1,18 +1,20 @@
 package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.Email;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StudentDto extends BaseStudentDto {
+public class StudentDto extends LeanStudentDto {
 
     private Long photoId;
     private String photoUrl;
     private Long balance;
     private String parentsInfo;
     private String characteristics;
+    @Email
     private String mail;
 
     public Long getPhotoId() {

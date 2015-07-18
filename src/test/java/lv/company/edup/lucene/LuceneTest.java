@@ -1,4 +1,4 @@
-package lv.company.edup.mappers;
+package lv.company.edup.lucene;
 
 import lv.company.edup.infrastructure.lucene.api.config.IndexConfigProvider;
 import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;

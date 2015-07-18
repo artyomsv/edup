@@ -2,16 +2,20 @@ package lv.company.edup.resources.secured.students;
 
 import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
+import lv.company.edup.infrastructure.validation.Validated;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.resources.ApplicationFacade;
 import lv.company.edup.services.students.StudentsService;
 import lv.company.edup.services.students.TransactionService;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentDto;
+import lv.company.edup.services.students.validation.StudentUpdateCheck;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.groups.Default;
 import javax.ws.rs.core.Response;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,13 +46,15 @@ public class StudentsFacade extends ApplicationFacade {
         return ok(studentsService.findVersion(id, versionId));
     }
 
-    public Response createStudent(StudentDto dto) {
+    @Validated
+    public Response createStudent(@Valid StudentDto dto) {
         EntityPayload payload = studentsService.createStudentVersion(dto);
         studentsService.updateIndex(payload.getId());
         return created(payload.getId(), payload.getVersionId());
     }
 
-    public Response updateStudent(StudentDto dto, Long id, String etag) {
+    @Validated(groups = {Default.class, StudentUpdateCheck.class})
+    public Response updateStudent(@Valid StudentDto dto, Long id, String etag) {
         if (StringUtils.isBlank(etag)) {
             throw new BadRequestException("Missing etag");
         }

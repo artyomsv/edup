@@ -1,0 +1,10 @@
+<div class="container-fluid">
+	<div infinite-scroll="loadMoreEvens()" infinite-scroll-distance="3">
+		<div ng-repeat="event in events"
+		     ng-class-odd="'success'"
+		     ng-class-even="'active'"
+		     ng-click="setSelected(event)">
+			{{event.eventId}}
+		</div>
+	</div>
+</div>

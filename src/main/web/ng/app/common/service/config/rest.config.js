@@ -8,7 +8,7 @@ angular.module('edup.common').run(function (Restangular, UrlService, Notificatio
         var msg = '';
         if (resp.status === 400) {
             _.forEach(resp.data.errors, function (error) {
-                msg += error.message + '\n';
+                msg += error.message + ',\n\n';
             });
         } else {
             msg = 'Failed on: ' + resp.config.method + ' to: ' + resp.config.url;

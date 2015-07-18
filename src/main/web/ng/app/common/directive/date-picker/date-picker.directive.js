@@ -21,7 +21,7 @@ angular.module('edup.common')
                     var datePicker = $('#' + scope.datePickerId);
 
                     datePicker.datetimepicker({
-                        viewMode: 'years',
+                        viewMode: 'days',
                         format: 'YYYY-MM-DD'
                     });
 

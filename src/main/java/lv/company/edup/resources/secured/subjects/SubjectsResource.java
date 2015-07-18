@@ -42,6 +42,13 @@ public class SubjectsResource {
     }
 
     @GET
+    @Path("events/fill/{id}")
+    @Deprecated
+    public Response fillSubjectEvents(@PathParam("id") Long id) {
+        return facade.fillSubjectEvents(17);
+    }
+
+    @GET
     @Path("events")
     public Response getSubjectEvents() {
         return facade.searchSubjectEvents();

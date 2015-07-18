@@ -6,7 +6,7 @@
         version="2.0">
     <persistence-unit name="EDUP_PERSISTENCE" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:jboss/datasources/EDUP_DataSource_Ref</jta-data-source>
+        <jta-data-source>java:jboss/datasources/EDUP_DataSource_Ref_local</jta-data-source>
 
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
 

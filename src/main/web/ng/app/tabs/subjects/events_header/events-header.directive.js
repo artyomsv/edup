@@ -73,14 +73,14 @@ angular.module('edup.subjects')
 
 						var payload = {};
 						payload.eventDate = new Date(newSubjectEvent.eventDate);
-						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom)
-						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo)
+						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom);
+						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
 						if ($scope.subjectSelected) {
 							payload.subject.subjectName = $scope.selectedSubject.subjectName;
 							payload.subject.subjectId = $scope.selectedSubject.subjectId;
-							shouldSave = true
+							shouldSave = true;
 						} else if (!_.isEmpty(newSubjectEvent.subjectName)) {
 							payload.subject.subjectName = newSubjectEvent.subjectName;
 							shouldSave = true;

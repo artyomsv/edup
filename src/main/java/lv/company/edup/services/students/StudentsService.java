@@ -1,7 +1,5 @@
 package lv.company.edup.services.students;
 
-import com.github.javafaker.Faker;
-import com.github.javafaker.Name;
 import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.lucene.api.indexer.StudentWriter;
@@ -11,6 +9,7 @@ import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
 import lv.company.edup.infrastructure.utils.AppCollectionUtils;
+import lv.company.edup.infrastructure.utils.FakeUtils;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.persistence.students.Student;
 import lv.company.edup.persistence.students.current.CurrentStudentVersion;
@@ -21,7 +20,7 @@ import lv.company.edup.persistence.students.properties.StudentPropertyRepository
 import lv.company.edup.persistence.students.properties.StudentProperty_;
 import lv.company.edup.persistence.students.version.StudentVersion;
 import lv.company.edup.persistence.students.version.StudentVersionRepository;
-import lv.company.edup.services.students.dto.BaseStudentDto;
+import lv.company.edup.services.students.dto.LeanStudentDto;
 import lv.company.edup.services.students.dto.StudentDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
@@ -29,17 +28,13 @@ import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrBuilder;
-import org.apache.commons.lang3.time.DateUtils;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -64,15 +59,22 @@ public class StudentsService {
     @Inject @JPA ODataSearchService searchService;
     @Inject UriUtils utils;
 
-    public ODataResult<BaseStudentDto> search() {
+    public ODataResult<LeanStudentDto> search() {
         ODataCriteria criteria = new ODataCriteria(utils.getQueryParameters());
 
         if (!criteria.isNotEmpty()) {
             criteria.setSearch("*");
         }
-        ODataResult<StudentDto> result = searcher.search(criteria);
 
-        List<BaseStudentDto> dtos = mapper.map(result.getValues(), BaseStudentDto.class);
+        ODataResult<StudentDto> result;
+        try {
+            result = searcher.search(criteria);
+        } catch (Exception e) {
+            result = new ODataResult<>();
+            result.setCount(0L);
+        }
+
+        List<LeanStudentDto> dtos = mapper.map(result.getValues(), LeanStudentDto.class);
         return result.cloneFromValues(dtos);
     }
 
@@ -90,13 +92,13 @@ public class StudentsService {
         return mapper.map(student, StudentDto.class);
     }
 
-    public ODataResult<BaseStudentDto> findVersions(Long id) {
+    public ODataResult<LeanStudentDto> findVersions(Long id) {
         Collection<? extends Student> versions = versionRepository.findVersions(id);
 
         fetchBaseStudentProperties(versions);
 
-        List<BaseStudentDto> list = mapper.map(versions, BaseStudentDto.class);
-        ODataResult<BaseStudentDto> result = new ODataResult<BaseStudentDto>();
+        List<LeanStudentDto> list = mapper.map(versions, LeanStudentDto.class);
+        ODataResult<LeanStudentDto> result = new ODataResult<LeanStudentDto>();
         result.setValues(list);
         return result;
     }
@@ -199,47 +201,14 @@ public class StudentsService {
         }
     }
 
+    @Deprecated
     public Boolean fillFakeData(int count) {
-        Faker faker = new Faker();
-
         for (int i = 0; i < count; i++) {
-            StudentDto dto = new StudentDto();
-            Name name = faker.name();
-            dto.setName(name.firstName());
-            dto.setLastName(name.lastName());
-            dto.setParentsInfo(faker.lorem().paragraph());
-            dto.setCharacteristics(faker.lorem().paragraph());
-            dto.setMail(faker.internet().emailAddress());
-
-            int year = random(1995, 2010);
-            int month = random(1, 12);
-            int date = random(1, 28);
-
-            String birthDate = String.format("%04d%02d%02d", year, month, date);
-
-            dto.setPersonId(String.format("%02d%02d%04d-%5d", date, month, year, random(10000, 50000)));
-            dto.setMobile(String.format("%s", random(28000000, 29000000)));
-            try {
-                dto.setBirthDate(DateUtils.parseDate(birthDate, "yyyyMMdd"));
-            } catch (ParseException e) {
-
-            }
+            StudentDto dto = FakeUtils.buildStudent();
             createStudentVersion(dto);
             indexer.add(dto);
         }
         return true;
-    }
-
-    private Integer random(int from, int to) {
-        return RandomUtils.nextInt(from, to);
-    }
-
-    private String getRandomDate() {
-        StrBuilder strBuilder = new StrBuilder();
-        strBuilder.append(RandomUtils.nextInt(1995, 2010))
-                .append(String.format("%2d", RandomUtils.nextInt(0, 11)))
-                .append(String.format("%2d", RandomUtils.nextInt(0, 28)));
-        return strBuilder.toString();
     }
 
     public void rebuild() {

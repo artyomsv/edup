@@ -11,7 +11,7 @@ public class AgeService {
         if (birthDate != null) {
             Date today = new Date();
             long time = TimeUnit.MILLISECONDS.toDays(today.getTime() - birthDate.getTime());
-            return Math.round((double) time * DAY_IN_YEAR);
+            return (long) (time * DAY_IN_YEAR);
         }
         return null;
     }

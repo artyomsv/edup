@@ -48,7 +48,7 @@ angular.module('edup.common')
                     var datePicker = $('#' + scope.datePickerId);
 
                     datePicker.datetimepicker({
-                        viewMode: 'years',
+                        viewMode: 'days',
                         format: 'YYYY-MM-DD'
                     });
 
@@ -202,7 +202,7 @@ angular.module('edup.common').run(['Restangular', 'UrlService', 'NotificationSer
         var msg = '';
         if (resp.status === 400) {
             _.forEach(resp.data.errors, function (error) {
-                msg += error.message + '\n';
+                msg += error.message + ',\n\n';
             });
         } else {
             msg = 'Failed on: ' + resp.config.method + ' to: ' + resp.config.url;
@@ -1388,7 +1388,9 @@ angular.module('edup.students')
 );
 'use strict';
 
-angular.module('edup.subjects', []);
+angular.module('edup.subjects', [
+
+]);
 'use strict';
 
 angular.module('edup.subjects')
@@ -1464,14 +1466,14 @@ angular.module('edup.subjects')
 
 						var payload = {};
 						payload.eventDate = new Date(newSubjectEvent.eventDate);
-						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom)
-						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo)
+						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom);
+						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
 						if ($scope.subjectSelected) {
 							payload.subject.subjectName = $scope.selectedSubject.subjectName;
 							payload.subject.subjectId = $scope.selectedSubject.subjectId;
-							shouldSave = true
+							shouldSave = true;
 						} else if (!_.isEmpty(newSubjectEvent.subjectName)) {
 							payload.subject.subjectName = newSubjectEvent.subjectName;
 							shouldSave = true;
@@ -1485,6 +1487,42 @@ angular.module('edup.subjects')
 						}
 					}
 				};
+
+			}],
+			link: function (scope) {
+
+			}
+		};
+	}
+);
+'use strict';
+
+angular.module('edup.subjects')
+
+	.directive('eventsList', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'events-list',
+			controller: ['$scope', 'QueryService', 'RestService', function ($scope, QueryService, RestService) {
+
+				$scope.events = [];
+
+				$scope.setSelected = function (event) {
+					console.log('Selected event ID: ' + event.eventId);
+				};
+
+				$scope.loadMoreEvens = function () {
+					var query = QueryService.Query(10, 0, '*', 'Created desc', null, true);
+					RestService.Private.Subjects.one('events').get(query).then(function (response) {
+						var events = response.values;
+						_.forEach(events, function (event) {
+							$scope.events.push(event);
+						});
+					});
+				};
+
+				$scope.loadMoreEvens();
+
 
 			}],
 			link: function (scope) {
@@ -1670,12 +1708,17 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid><form role=form name=newSubjectEventForm novalidate><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><button type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group><date-picker required date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><button type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group><date-picker required date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
+  );
+
+
+  $templateCache.put('events-list',
+    "<div class=container-fluid><div infinite-scroll=loadMoreEvens() infinite-scroll-distance=3><div ng-repeat=\"event in events\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(event)>{{event.eventId}}</div></div></div>"
   );
 
 
   $templateCache.put('subjects',
-    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><events-header></div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
+    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div><events-header ng-form=\"\"></div><div><events-list></events-list></div></div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
   );
 
 }]);

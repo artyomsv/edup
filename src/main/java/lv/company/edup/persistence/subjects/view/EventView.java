@@ -43,6 +43,9 @@ public class EventView {
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
+    @Column(name = "EVENT_PRICE")
+    private Long price;
+
     public Long getEventId() {
         return eventId;
     }
@@ -105,5 +108,17 @@ public class EventView {
 
     public Date getUpdated() {
         return updated;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 }

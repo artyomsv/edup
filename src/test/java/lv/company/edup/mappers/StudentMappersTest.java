@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class StudentMappersTest extends BaseMappersTest {
+public class StudentMappersTest extends AbstractMappersTest {
 
     public static final String PERSON_ID = "201281-15151";
     public static final String NAME = "Artyom";

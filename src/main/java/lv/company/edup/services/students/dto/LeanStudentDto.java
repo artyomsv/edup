@@ -1,23 +1,31 @@
 package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lv.company.edup.services.students.validation.StudentUpdateCheck;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BaseStudentDto {
+public class LeanStudentDto {
 
     private Long id;
+    @NotNull(groups = StudentUpdateCheck.class)
     private Long versionId;
+    @NotBlank(message = "Name is missing")
     private String name;
+    @NotBlank(message = "Last name missing")
     private String lastName;
     private String personId;
     private String mobile;
     private Long age;
+    @Past(message = "Birth date cannot be in future")
     private Date birthDate;
     private Date created;
     private Date updated;

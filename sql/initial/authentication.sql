@@ -1,3 +1,6 @@
+DROP VIEW public.V_ROLES;
+DROP VIEW public.V_ACCOUNT;
+
 CREATE TABLE ACCOUNT_VERSION (
   ID         SERIAL PRIMARY KEY       NOT NULL,
   ACCOUNT_FK BIGINT                   NOT NULL,
@@ -51,7 +54,7 @@ CREATE TABLE ACCOUNT_ACTION (
 );
 
 ------------------------------------ VIEWS -----------------------------------------
-DROP VIEW public.V_ACCOUNT RESTRICT;
+
 CREATE OR REPLACE VIEW V_ACCOUNT AS
   SELECT
     a.username,
@@ -64,7 +67,7 @@ CREATE OR REPLACE VIEW V_ACCOUNT AS
     a.status = 'APPROVED';
 
 
-DROP VIEW public.V_ROLES RESTRICT;
+
 CREATE VIEW V_ROLES AS
   SELECT
     a.username,

@@ -70,4 +70,9 @@ public class SubjectsFacade extends ApplicationFacade {
         subjectsService.rebuildIndex();
         return ok();
     }
+
+    public Response fillSubjectEvents(long subjectId) {
+        subjectsService.generateSubjectEvents(subjectId);
+        return ok();
+    }
 }

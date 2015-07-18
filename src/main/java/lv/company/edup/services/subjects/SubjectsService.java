@@ -7,6 +7,7 @@ import lv.company.edup.infrastructure.lucene.api.searcher.SubjectSearcher;
 import lv.company.edup.infrastructure.lucene.impl.indexer.SubjectsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.SubjectIndexSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
+import lv.company.edup.infrastructure.utils.FakeUtils;
 import lv.company.edup.persistence.students.current.CurrentStudentVersion;
 import lv.company.edup.persistence.students.current.CurrentStudentVersionRepository;
 import lv.company.edup.persistence.subjects.AttendanceRepository;
@@ -216,5 +217,13 @@ public class SubjectsService {
 
     public void rebuildIndex() {
         writer.add(mapper.map(subjectRepository.findAll(), SubjectDto.class));
+    }
+
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    @Deprecated
+    public void generateSubjectEvents(long subjectId) {
+        for (int i = 0; i < 100; i++) {
+            createSubjectEvent(FakeUtils.buildEvent(subjectId));
+        }
     }
 }

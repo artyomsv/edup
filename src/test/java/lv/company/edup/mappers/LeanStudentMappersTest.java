@@ -3,7 +3,7 @@ package lv.company.edup.mappers;
 import lv.company.edup.persistence.students.current.CurrentStudentVersion;
 import lv.company.edup.persistence.students.properties.PropertyName;
 import lv.company.edup.persistence.students.version.StudentVersion;
-import lv.company.edup.services.students.dto.BaseStudentDto;
+import lv.company.edup.services.students.dto.LeanStudentDto;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class BaseStudentMappersTest extends BaseMappersTest {
+public class LeanStudentMappersTest extends AbstractMappersTest {
 
     public static final String PERSON_ID = "201281-15151";
     public static final String NAME = "Artyom";
@@ -37,7 +37,7 @@ public class BaseStudentMappersTest extends BaseMappersTest {
         entity.addProperty(PropertyName.MOBILE_PHONE, MOBILE);
         entity.addProperty(PropertyName.PERSONAL_NUMBER, PERSON_ID);
 
-        BaseStudentDto dto = mapper.map(entity, BaseStudentDto.class);
+        LeanStudentDto dto = mapper.map(entity, LeanStudentDto.class);
 
         assertNotNull(dto);
         assertThat(dto.getId(), is(ID));
@@ -53,7 +53,7 @@ public class BaseStudentMappersTest extends BaseMappersTest {
 
     @Test
     public void baseDtoToEntityVersion() throws Exception {
-        BaseStudentDto dto = new BaseStudentDto();
+        LeanStudentDto dto = new LeanStudentDto();
         dto.setId(ID);
         dto.setVersionId(VERSION_ID);
         dto.setLastName(LAST_NAME);

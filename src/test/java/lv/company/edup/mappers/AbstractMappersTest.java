@@ -5,6 +5,7 @@ import lv.company.edup.infrastructure.mapping.MappersProvider;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.services.students.mappers.BaseStudentMapper;
 import lv.company.edup.services.students.mappers.StudentMapper;
+import lv.company.edup.services.subjects.mappers.EventMapper;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import org.junit.Before;
@@ -17,7 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 
 @RunWith(MockitoJUnitRunner.class)
-public abstract class BaseMappersTest {
+public abstract class AbstractMappersTest {
 
     @Mock MappersProvider provider;
     @InjectMocks ObjectMapper mapper;
@@ -44,6 +45,7 @@ public abstract class BaseMappersTest {
         ArrayList<CustomMapper> customMappers = new ArrayList<>();
         customMappers.add(new BaseStudentMapper());
         customMappers.add(new StudentMapper());
+        customMappers.add(new EventMapper());
         return customMappers;
     }
 }

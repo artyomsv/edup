@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @MappedSuperclass
@@ -95,7 +96,8 @@ public abstract class Student implements Serializable {
         StudentProperty property = getSinglePropertyByName(propertyName);
         if (property != null) {
             try {
-                return DateUtils.parseDate(property.getValue(), PATTERN);
+                Date date = DateUtils.parseDate(property.getValue(), Locale.getDefault(), PATTERN);
+                return DateUtils.addHours(date, 12);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

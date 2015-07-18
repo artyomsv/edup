@@ -1,3 +1,5 @@
 'use strict';
 
-angular.module('edup.subjects', []);
+angular.module('edup.subjects', [
+
+]);

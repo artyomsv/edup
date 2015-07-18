@@ -1,318 +1,389 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>lv.company.edup</groupId>
-    <artifactId>server</artifactId>
-    <packaging>war</packaging>
-    <version>${version.major}.${version.minor}.${version.tag}</version>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>lv.company.edup</groupId>
+  <artifactId>server</artifactId>
+  <packaging>war</packaging>
+  <version>${version.major}.${version.minor}.${version.tag}</version>
 
-    <name>Educational planning application</name>
+  <name>Educational planning application</name>
 
-    <developers>
-        <developer>
-            <name>Artjoms Stukans</name>
-            <email>artjoms.stukans@gmal.com</email>
-            <organization>Private organization</organization>
-        </developer>
-    </developers>
+  <developers>
+    <developer>
+      <name>Artjoms Stukans</name>
+      <email>artjoms.stukans@gmal.com</email>
+      <organization>Private organization</organization>
+    </developer>
+  </developers>
 
-    <properties>
-        <version.major>0</version.major>
-        <version.minor>3</version.minor>
-        <version.tag>0</version.tag>
-    </properties>
+  <properties>
+    <version.major>0</version.major>
+    <version.minor>3</version.minor>
+    <version.tag>0</version.tag>
+  </properties>
 
-    <profiles>
-        <profile>
-            <id>Local</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.wildfly.plugins</groupId>
-                        <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.2.Final</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>deploy-only</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
-    <build>
-        <finalName>edup</finalName>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <compilerArgument>-proc:none</compilerArgument>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-annotation-processors-only</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                        <configuration>
-                            <compilerArgument>-proc:only</compilerArgument>
-                            <includes>
-                                <include>**/persistence/**/*.java</include>
-                            </includes>
-                            <annotationProcessors>
-                                <annotationProcessor>
-                                    org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor
-                                </annotationProcessor>
-                            </annotationProcessors>
-                            <debug>true</debug>
-                            <optimize>true</optimize>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.6</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <copy file="${project.basedir}/src/main/web/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
-                                      tofile="${project.basedir}/target/edup/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"/>
-
-                                <copy todir="${project.basedir}/target/edup/ng//vendor/bower_components/bootstrap/dist/fonts">
-                                    <fileset dir="${project.basedir}/src/main/web/ng/vendor/bower_components/bootstrap/dist/fonts">
-                                        <include name="*.*"/>
-                                    </fileset>
-                                </copy>
-
-                                <copy todir="${project.basedir}/target/edup/ng/dist/">
-                                    <fileset dir="${project.basedir}/src/main/web/ng/dist/">
-                                        <include name="*.*"/>
-                                    </fileset>
-                                </copy>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-    </build>
-
+  <dependencyManagement>
     <dependencies>
-        <!--Java EE7 API-->
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!--Data base-->
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.3.10.Final</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jpamodelgen</artifactId>
-            <version>4.3.10.Final</version>
-            <optional>true</optional>
-            <!--<scope>provided</scope>-->
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.4-1200-jdbc41</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>5.1.3.Final</version>
-        </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.resteasy</groupId>-->
-        <!--<artifactId>resteasy-hibernatevalidator-provider</artifactId>-->
-        <!--<version>3.0.11.Final</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.jboss.resteasy</groupId>-->
-        <!--<artifactId>resteasy-jaxrs</artifactId>-->
-        <!--<version>3.0.11.Final</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-        <!--Unit testing-->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Apache libraries -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>4.0</version>
-        </dependency>
-
-        <!--Logger-->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>2.2</version>
-        </dependency>
-
-        <!--Template engine-->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
-        </dependency>
-
-        <!--File upload-->
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-
-        <!--Faker-->
-        <dependency>
-            <groupId>com.github.javafaker</groupId>
-            <artifactId>javafaker</artifactId>
-            <version>0.5</version>
-        </dependency>
-
-        <!--Flying saucer-->
-        <dependency>
-            <groupId>org.xhtmlrenderer</groupId>
-            <artifactId>flying-saucer-pdf</artifactId>
-            <version>9.0.7</version>
-        </dependency>
-
-        <!--Orika-->
-        <dependency>
-            <groupId>ma.glasnost.orika</groupId>
-            <artifactId>orika-core</artifactId>
-            <version>1.4.5</version>
-        </dependency>
-
-        <!--OData-->
-        <dependency>
-            <groupId>lv.company.odata</groupId>
-            <artifactId>odata</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-
-        <!--Object mapper-->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.5.3</version>
-        </dependency>
-
-        <!--Lucene-->
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-core</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-analyzers-common</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-queryparser</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.lucene</groupId>
-            <artifactId>lucene-suggest</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.thetransactioncompany</groupId>
-            <artifactId>cors-filter</artifactId>
-            <version>2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.jasperreports</groupId>
-            <artifactId>jasperreports</artifactId>
-            <version>6.1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.samaxes.filter</groupId>
-            <artifactId>cachefilter</artifactId>
-            <version>2.3.1</version>
-        </dependency>
+      <dependency>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>Deployment</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.wildfly.plugins</groupId>
+            <artifactId>wildfly-maven-plugin</artifactId>
+            <version>1.0.2.Final</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>deploy-only</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>Local</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>src/localhost/webapp</directory>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>Amazon</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <finalName>edup</finalName>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <compilerArgument>-proc:none</compilerArgument>
+        </configuration>
+        <executions>
+          <execution>
+            <id>run-annotation-processors-only</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <compilerArgument>-proc:only</compilerArgument>
+              <includes>
+                <include>**/persistence/**/*.java</include>
+              </includes>
+              <annotationProcessors>
+                <annotationProcessor>
+                  org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor
+                </annotationProcessor>
+              </annotationProcessors>
+              <debug>true</debug>
+              <optimize>true</optimize>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <id>NPM_Install</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>npm</executable>
+              <arguments>
+                <argument>install</argument>
+              </arguments>
+              <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>GRUNT_Dist_package</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>grunt</executable>
+              <arguments>
+                <argument>dist</argument>
+              </arguments>
+              <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <configuration>
+              <tasks>
+                <copy file="${project.basedir}/src/main/web/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                      tofile="${project.basedir}/target/edup/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"/>
+
+                <copy todir="${project.basedir}/target/edup/ng//vendor/bower_components/bootstrap/dist/fonts">
+                  <fileset dir="${project.basedir}/src/main/web/ng/vendor/bower_components/bootstrap/dist/fonts">
+                    <include name="*.*"/>
+                  </fileset>
+                </copy>
+
+                <copy todir="${project.basedir}/target/edup/ng/dist/">
+                  <fileset dir="${project.basedir}/src/main/web/ng/dist/">
+                    <include name="*.*"/>
+                  </fileset>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <dependencies>
+    <!--Java EE7 API-->
+    <dependency>
+      <groupId>javax</groupId>
+      <artifactId>javaee-api</artifactId>
+      <version>7.0</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--Data base-->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>4.3.10.Final</version>
+      <!--<scope>provided</scope>-->
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <version>4.3.10.Final</version>
+      <optional>true</optional>
+      <!--<scope>provided</scope>-->
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>9.4-1200-jdbc41</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>5.1.3.Final</version>
+    </dependency>
+
+    <!--<dependency>-->
+    <!--<groupId>org.jboss.resteasy</groupId>-->
+    <!--<artifactId>resteasy-hibernatevalidator-provider</artifactId>-->
+    <!--<version>3.0.11.Final</version>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
+
+    <!--<dependency>-->
+    <!--<groupId>org.jboss.resteasy</groupId>-->
+    <!--<artifactId>resteasy-jaxrs</artifactId>-->
+    <!--<version>3.0.11.Final</version>-->
+    <!--<scope>provided</scope>-->
+    <!--</dependency>-->
+
+    <!--Unit testing-->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Apache libraries -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-collections4</artifactId>
+      <version>4.0</version>
+    </dependency>
+
+    <!--Logger-->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>2.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.2</version>
+    </dependency>
+
+    <!--Template engine-->
+    <dependency>
+      <groupId>org.apache.velocity</groupId>
+      <artifactId>velocity</artifactId>
+      <version>1.7</version>
+    </dependency>
+
+    <!--File upload-->
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.3.1</version>
+    </dependency>
+
+    <!--Faker-->
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
+      <version>0.5</version>
+    </dependency>
+
+    <!--Flying saucer-->
+    <dependency>
+      <groupId>org.xhtmlrenderer</groupId>
+      <artifactId>flying-saucer-pdf</artifactId>
+      <version>9.0.7</version>
+    </dependency>
+
+    <!--Orika-->
+    <dependency>
+      <groupId>ma.glasnost.orika</groupId>
+      <artifactId>orika-core</artifactId>
+      <version>1.4.5</version>
+    </dependency>
+
+    <!--OData-->
+    <dependency>
+      <groupId>lv.company.odata</groupId>
+      <artifactId>odata</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <!--Object mapper-->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.5.3</version>
+    </dependency>
+
+    <!--Lucene-->
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-core</artifactId>
+      <version>5.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-analyzers-common</artifactId>
+      <version>5.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-queryparser</artifactId>
+      <version>5.2.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-suggest</artifactId>
+      <version>5.2.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.thetransactioncompany</groupId>
+      <artifactId>cors-filter</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>net.sf.jasperreports</groupId>
+      <artifactId>jasperreports</artifactId>
+      <version>6.1.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.samaxes.filter</groupId>
+      <artifactId>cachefilter</artifactId>
+      <version>2.3.1</version>
+    </dependency>
+  </dependencies>
 
 
 </project>
