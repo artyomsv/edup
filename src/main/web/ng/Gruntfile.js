@@ -117,6 +117,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/typeahead.js/dist/bloodhound.min.js',
                     'vendor/bower_components/typeahead.js/dist/typeahead.bundle.min.js',
                     'vendor/bower_components/typeahead.js/dist/typeahead.jquery.min.js',
+                    'vendor/bower_components/angular-typeahead/angular-typeahead.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

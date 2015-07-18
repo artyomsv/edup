@@ -6,19 +6,16 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService) {
+			controller: function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService, NotificationService) {
 
 				$scope.subjects = [];
-				$scope.selectedSubject = {};
-				$scope.subjectSelected = false;
+				$scope.selectedSubject = null;
 
 
 				var selectSubject = function (selectedSubjectName) {
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
 					});
-
-					$scope.subjectSelected = !!$scope.selectedSubject;
 				};
 
 				var typeAhead = TypeAheadService.Build();
@@ -61,9 +58,8 @@ angular.module('edup.subjects')
 
 				var reset = function () {
 					$bloodhound.typeahead('val', '');
-					$scope.subjectEvent = {};
-					$scope.subjectSelected = null;
-					$scope.selectedSubject = false;
+					$scope.subjectEvent = null;
+					$scope.selectedSubject = null;
 				};
 
 				$scope.saveNewEvent = function (newSubjectEvent) {
@@ -77,7 +73,7 @@ angular.module('edup.subjects')
 						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
-						if ($scope.subjectSelected) {
+						if (!!$scope.selectedSubject) {
 							payload.subject.subjectName = $scope.selectedSubject.subjectName;
 							payload.subject.subjectId = $scope.selectedSubject.subjectId;
 							shouldSave = true;
@@ -87,13 +83,36 @@ angular.module('edup.subjects')
 						}
 
 						if (shouldSave) {
-							RestService.Private.Subjects.one('events').customPOST(payload).then(function (response) {
+							RestService.Private.Subjects.one('events').customPOST(payload).then(function () {
 								reset();
-								console.log(angular.toJson('Event ID: ' + response.payload));
+								if (payload.subject.subjectId) {
+									NotificationService.Success('Event have been registered to subject \"' + payload.subject.subjectName + '\"');
+								} else {
+									NotificationService.Success('New subject have been created.\n Event have been registered to subject \"' + payload.subject.subjectName + '\"');
+								}
 							});
+						} else {
+							NotificationService.Error(angular.toJson(newSubjectEvent, true));
 						}
 					}
 				};
+
+				$scope.updateSelectedSubject = function () {
+					var inputValue = $bloodhound.typeahead('val');
+					if ($scope.selectedSubject) {
+						if ($scope.selectedSubject.subjectName === inputValue) {
+							console.log('value same in input and typeahead');
+							$scope.subjectEvent.subjectName = inputValue;
+						} else {
+							console.log('value not same in input and typeahead');
+							$scope.selectedSubject = null;
+							$scope.subjectEvent.subjectName = inputValue;
+						}
+					} else {
+						console.log('typeahead not selected');
+						$scope.subjectEvent.subjectName = inputValue;
+					}
+				}
 
 			},
 			link: function (scope) {

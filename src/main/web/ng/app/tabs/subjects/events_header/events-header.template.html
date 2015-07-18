@@ -1,12 +1,13 @@
 <div class="container-fluid">
-	<form role="form" name="newSubjectEventForm">
+	{{subjectEvent}}
+	<form role="form" name="newSubjectEventForm" novalidate>
 		<div class="row">
 			<div class="col-md-7">
 				<div id="bloodhound">
 					<div class="input-group" id="subjectTypeAheadInput">
 						<span class="input-group-addon"
 						      id="basic-addon2"
-						      ng-class="{'glyphicon glyphicon-ok searchTextInput': subjectSelected , 'glyphicon glyphicon-pencil searchTextInput': !subjectSelected}">
+						      ng-class="{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}">
 
             </span>
 
