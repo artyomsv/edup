@@ -1,71 +1,57 @@
 <div class="mainForm" style="margin-left: 30px; margin-right: 30px">
 
-    <div class="row clearfix">
-        <div class="col-md-12 column">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Size
-                    </th>
-                    <th>
-                        Created
-                    </th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr dir-paginate="document in documents | itemsPerPage: documentsPaging.perPage"
-                    current-page="documentsPaging.page"
-                    total-items="documentsPaging.totalRecords"
-                    ng-class-odd="'success'"
-                    ng-class-even="'active'"
-                    pagination-id="documentsPaginationId">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th>Name</th>
+					<th>Size</th>
+					<th>Created</th>
+					<th></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr dir-paginate="document in documents | itemsPerPage: documentsPaging.perPage"
+				    current-page="documentsPaging.page"
+				    total-items="documentsPaging.totalRecords"
+				    ng-class-odd="'success'"
+				    ng-class-even="'active'"
+				    pagination-id="documentsPaginationId">
 
-                    <td>
-                        {{ document.fileName }}
-                    </td>
-                    <td>
-                        {{ document.size }}
-                    </td>
-                    <td>
-                        {{ document.created | date:'MMM d, y hh:mm' }}
-                    </td>
-                    <td>
-                        <a href="{{ document.link }}">Download</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+					<td>{{ document.fileName }}</td>
+					<td>{{ document.size }}</td>
+					<td>{{ document.created | date:'MMM d, y hh:mm' }}</td>
+					<td><a href="{{ document.link }}">Download</a></td>
+				</tr>
+				</tbody>
+			</table>
 
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <dir-pagination-controls on-page-change="documentsPageChanged(newPageNumber, searchValue)" pagination-id="documentsPaginationId"></dir-pagination-controls>
-                </div>
-            </div>
+			<div class="row">
+				<div class="col-xs-12 text-center">
+					<dir-pagination-controls on-page-change="documentsPageChanged(newPageNumber, searchValue)" pagination-id="documentsPaginationId"></dir-pagination-controls>
+				</div>
+			</div>
 
-        </div>
+		</div>
 
-        <!--        <div style="padding-bottom: 20px">
-                    <edup-toggle toggle-id="documentUploadShowHideToggle"
-                                 on-label="Show"
-                                 off-label="Hide"
-                                 on-event="onShowDownloadToggle"
-                                 off-event="offShowDownloadToggle"
-                            ></edup-toggle>
-                </div>-->
+		<!--        <div style="padding-bottom: 20px">
+								<edup-toggle toggle-id="documentUploadShowHideToggle"
+														 on-label="Show"
+														 off-label="Hide"
+														 on-event="onShowDownloadToggle"
+														 off-event="offShowDownloadToggle"
+												></edup-toggle>
+						</div>-->
 
-        <div style="padding-bottom: 20px">
-            <button type="button" class="btn btn-primary btn-sm pull-right" ng-click="toggleDownloadSection()">{{documentsButtonLabel}}</button>
-        </div>
+		<div style="padding-bottom: 20px">
+			<button type="button" class="btn btn-primary btn-sm pull-right" ng-click="toggleDownloadSection()">{{documentsButtonLabel}}</button>
+		</div>
 
-        <div ng-show="showDownloadSection">
-            <file-upload></file-upload>
-        </div>
+		<div ng-show="showDownloadSection">
+			<file-upload></file-upload>
+		</div>
 
 
-    </div>
+	</div>
 </div>

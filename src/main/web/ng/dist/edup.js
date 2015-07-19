@@ -29,80 +29,6 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.directive('datePicker', ['$timeout', '$filter', function ($timeout, $filter) {
-		return {
-			restrict: 'E',
-			templateUrl: 'date-picker',
-			scope: {
-				inputField: '=',
-				label: '@',
-				pickerPlaceholder: '@',
-				datePickerId: '@'
-			},
-			controller: ['$scope', function ($scope) {
-
-			}],
-
-			link: function (scope) {
-				$timeout(function () {
-					var datePicker = $('#' + scope.datePickerId);
-
-					datePicker.datetimepicker({
-						viewMode: 'days',
-						format: 'YYYY-MM-DD'
-					});
-
-					datePicker.on('dp.change', function (event) {
-						scope.inputField = $filter('date')(new Date(event.date), 'yyyy-MM-dd');
-					});
-				});
-			}
-		};
-	}]
-);
-
-'use strict';
-
-angular.module('edup.common')
-
-	.directive('timePicker', ['$timeout', '$filter', function ($timeout, $filter) {
-		return {
-			restrict: 'E',
-			templateUrl: 'time-picker',
-			scope: {
-				inputField: '=',
-				label: '@',
-				pickerPlaceholder: '@',
-				timePickerId: '@'
-			},
-			controller: ['$scope', function ($scope) {
-
-			}],
-
-			link: function (scope) {
-				$timeout(function () {
-					var timePicker = $('#' + scope.timePickerId);
-
-					timePicker.datetimepicker({
-						//viewMode: 'years',
-						format: 'HH:mm'
-					});
-
-					timePicker.on('dp.change', function (event) {
-						scope.inputField = $filter('date')(new Date(event.date), 'HH:mm');
-					});
-
-
-				});
-			}
-		};
-	}]
-);
-
-'use strict';
-
-angular.module('edup.common')
-
     .directive('edupToggle', ['$timeout', function ($timeout) {
         return {
             restrict: 'E',
@@ -1398,7 +1324,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: ['$scope', '$timeout', 'moment', 'QueryService', 'RestService', 'TypeAheadService', 'NotificationService', function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService, NotificationService) {
+			controller: ['$scope', '$timeout', '$filter', 'moment', 'QueryService', 'RestService', 'TypeAheadService', 'NotificationService', function ($scope, $timeout, $filter, moment, QueryService, RestService, TypeAheadService, NotificationService) {
 
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
@@ -1408,6 +1334,9 @@ angular.module('edup.subjects')
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
 					});
+					if (!!$scope.selectedSubject) {
+						$scope.subjectEvent.subjectName = $scope.selectedSubject.subjectName;
+					}
 				};
 
 				var typeAhead = TypeAheadService.Build();
@@ -1454,15 +1383,33 @@ angular.module('edup.subjects')
 					$scope.selectedSubject = null;
 				};
 
+				var calculateTime = function (date, time) {
+					return $filter('date')(date, 'yyyy-MM-dd') + ' ' + $filter('date')(time, 'HH:mm')
+				};
+
+				$scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					_.forEach($dates, function (date) {
+						if (moment(date.utcDateValue).isBefore(moment())) {
+							date.selectable = false;
+						}
+					})
+				};
+
+				$scope.renderTimePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					$leftDate.selectable = false;
+					$upDate.selectable = false;
+					$rightDate.selectable = false;
+				};
+
 				$scope.saveNewEvent = function (newSubjectEvent) {
 					if (isSubjectDataFilled(newSubjectEvent)) {
 
 						var shouldSave = false;
 
 						var payload = {};
-						payload.eventDate = new Date(newSubjectEvent.eventDate);
-						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom);
-						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
+						payload.eventDate = newSubjectEvent.eventDate;
+						payload.from = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeFrom));
+						payload.to = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeTo));
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
 						if (!!$scope.selectedSubject) {
@@ -1482,6 +1429,9 @@ angular.module('edup.subjects')
 								} else {
 									NotificationService.Success('New subject have been created.\n Event have been registered to subject \"' + payload.subject.subjectName + '\"');
 								}
+
+								$scope.loadMoreEvens(true);
+
 							});
 						} else {
 							NotificationService.Error(angular.toJson(newSubjectEvent, true));
@@ -1504,7 +1454,7 @@ angular.module('edup.subjects')
 						console.log('typeahead not selected');
 						$scope.subjectEvent.subjectName = inputValue;
 					}
-				}
+				};
 
 			}],
 			link: function (scope) {
@@ -1521,26 +1471,52 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-list',
-			controller: ['$scope', 'QueryService', 'RestService', function ($scope, QueryService, RestService) {
+			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
 
-				$scope.events = [];
+				$scope.events = {
+					values: [],
+					total: 0,
+					loading: false
+				};
 
 				$scope.setSelected = function (event) {
 					console.log('Selected event ID: ' + event.eventId);
 				};
 
-				$scope.loadMoreEvens = function () {
-					var query = QueryService.Query(10, 0, '*', 'Created desc', null, true);
-					RestService.Private.Subjects.one('events').get(query).then(function (response) {
-						var events = response.values;
-						_.forEach(events, function (event) {
-							$scope.events.push(event);
-						});
-					});
+				$scope.loadMoreEvens = function (force) {
+					if (!force && $scope.events.values.length !== 0 && ($scope.events.values.length === $scope.events.total)) {
+						return;
+					}
+
+					if (force) {
+						$scope.events = {
+							values: [],
+							total: 0,
+							loading: false
+						};
+					}
+
+					if (!$scope.events.loading) {
+						$scope.events.loading = true;
+
+						//var query = QueryService.Query(10, $scope.events.values.length, '*', 'Created desc', null, true);
+						var query = QueryService.Query(10, $scope.events.values.length, '*', 'EventDate desc,From desc', null, true);
+
+						$timeout(function () {
+							RestService.Private.Subjects.one('events').get(query).then(function (response) {
+								var events = response.values;
+								console.log('Loaded: ' + events.length);
+								_.forEach(events, function (event) {
+									event.priceAdjusted = event.price / 100;
+									$scope.events.values.push(event);
+								});
+
+								$scope.events.total = response.count;
+								$scope.events.loading = false;
+							});
+						}, 300);
+					}
 				};
-
-				$scope.loadMoreEvens();
-
 
 			}],
 			link: function (scope) {
@@ -1579,6 +1555,8 @@ angular.module('edup.subjects')
 'use strict';
 
 angular.module('edup.tabs', [
+    'ui.bootstrap.datetimepicker',
+    'infinite-scroll',
     'angularFileUpload',
     'fiestah.money',
     'edup.calendar',
@@ -1624,16 +1602,6 @@ angular.module('edup')
     }]
 );angular.module('edup').run(['$templateCache', function($templateCache) {
   'use strict';
-
-  $templateCache.put('date-picker',
-    "<div><label for={{datePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{datePickerId}} ng-click=openDatePicker()><input placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-calendar\"></span></span></div></div>"
-  );
-
-
-  $templateCache.put('time-picker',
-    "<div><label for={{timePickerId}} ng-show=label>{{label}}</label><div class=\"input-group date\" id={{timePickerId}} ng-click=openDatePicker()><input required placeholder={{pickerPlaceholder}} ng-model=inputField class=form-control name=\"date\"> <span class=input-group-addon><span class=\"glyphicon glyphicon-time\"></span></span></div></div>"
-  );
-
 
   $templateCache.put('edup-toggle',
     "<input id={{toggleId}} type=checkbox data-toggle=toggle data-on={{onLabel}} data-off={{offLabel}} data-width=100 data-size=small>"
@@ -1686,7 +1654,7 @@ angular.module('edup')
 
 
   $templateCache.put('edit-student',
-    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=editStudentDatePicker input-field=studentEdit.birthDateString label=Birthday></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"margin-top: 10px; margin-left: 17px\"><button type=submit class=\"btn btn-primary btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
+    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=dropdown><label for=editStudentDatePicker>Birthdate</label><a class=dropdown-toggle id=editStudentDatePicker role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=studentEdit.birthDateString placeholder=Birthdate> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=studentEdit.birthDateString data-datetimepicker-config=\"{ dropdownSelector: '#editStudentDatePicker' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"margin-top: 10px; margin-left: 17px\"><button type=submit class=\"btn btn-primary btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
   );
 
 
@@ -1696,7 +1664,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-identification-card',
-    "<div><form class=form-horizontal style=\"border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px\"><fieldset><legend>Identification card</legend><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-primary btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-primary btn-sm\" style=\"width: 100%\">Attendance history</button></div></fieldset></form><balance-modal></balance-modal></div>"
+    "<div><div class=form-horizontal style=\"border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px\"><fieldset><legend>Identification card</legend><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-primary btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-primary btn-sm\" style=\"width: 100%\">Attendance history</button></div></fieldset></div><balance-modal></balance-modal></div>"
   );
 
 
@@ -1716,7 +1684,7 @@ angular.module('edup')
 
 
   $templateCache.put('new-student-modal',
-    "<div app-modal id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true><span class=\"glyphicon glyphicon-remove\"></span></button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form name=studentCreatedForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=newStudentDatePicker input-field=newStudent.birthDateString label=Birthdate></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-url=newStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\" ng-click=executeReset()>Reset</button> <button type=reset class=\"btn btn-warning btn-sm\" ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
+    "<div app-modal id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true><span class=\"glyphicon glyphicon-remove\"></span></button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form name=studentCreatedForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=dropdown><label for=newStudentDatePicker>Birthdate</label><a class=dropdown-toggle id=newStudentDatePicker role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=newStudent.birthDateString placeholder=Birthdate> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=newStudent.birthDateString data-datetimepicker-config=\"{ dropdownSelector: '#newStudentDatePicker' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-url=newStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\" ng-click=executeReset()>Reset</button> <button type=reset class=\"btn btn-warning btn-sm\" ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
   );
 
 
@@ -1726,12 +1694,12 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid>{{subjectEvent}}<form role=form name=newSubjectEventForm novalidate><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><button type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group><date-picker required date-picker-id=subjectEventDateId input-field=subjectEvent.eventDate picker-placeholder=Date></date-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeFromId input-field=subjectEvent.eventTimeFrom picker-placeholder=From></time-picker></div></div><div class=\"col-md-3 column\"><div class=form-group><time-picker required time-picker-id=subjectEventTimeToId input-field=subjectEvent.eventTimeTo picker-placeholder=To></time-picker></div></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm novalidate><div class=row><div class=\"col-md-8 column\"><div class=form-group id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=\"col-md-4 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div></div><div class=row><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=subjectEvent.eventDate placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventDate data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeFromId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeFrom placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeFrom data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'minute'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeToId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeTo placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeTo data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'minute', minuteStep: 10}\"></datetimepicker></ul></div></div></div><div class=\"col-md-2 column\"><div class=form-group><button style=\"width: 100%\" type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div></form></div>"
   );
 
 
   $templateCache.put('events-list',
-    "<div class=container-fluid><div infinite-scroll=loadMoreEvens() infinite-scroll-distance=3><div ng-repeat=\"event in events\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(event)>{{event.eventId}}</div></div></div>"
+    "<div class=container-fluid><div id=events_list_contaner style=\"height:400px;overflow: auto\"><table class=\"table table-hover\"><thead><tr><th>ID</th><th>Name</th><th>Date</th><th>From</th><th>To</th><th>Price</th></tr></thead><tbody><div infinite-scroll=loadMoreEvens(false) infinite-scroll-distance=3 infinite-scroll-container=\"'#events_list_contaner'\"><tr ng-repeat=\"event in events.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(event)><td>{{ event.eventId }}</td><td>{{ event.subject.subjectName }}</td><td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td><td>{{ event.from | date:'HH:mm'}}</td><td>{{ event.to | date:'HH:mm'}}</td><td>{{ event.priceAdjusted | number : 2}} EUR</td></tr></div></tbody></table></div></div>"
   );
 
 

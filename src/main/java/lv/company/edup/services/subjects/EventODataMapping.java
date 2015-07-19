@@ -15,6 +15,8 @@ public class EventODataMapping extends AbstractODataJPAMapping<EventView> {
         mapAttribute("EventDate").to(EventView_.eventDate);
         mapAttribute("Created").to(EventView_.created);
         mapAttribute("Updated").to(EventView_.updated);
+        mapAttribute("From").to(EventView_.from);
+        mapAttribute("To").to(EventView_.to);
     }
 
     @Override

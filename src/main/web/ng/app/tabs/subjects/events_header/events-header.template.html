@@ -1,69 +1,97 @@
 <div class="container-fluid">
-	{{subjectEvent}}
-	<form role="form" name="newSubjectEventForm" novalidate>
-		<div class="row">
-			<div class="col-md-7">
-				<div id="bloodhound">
-					<div class="input-group" id="subjectTypeAheadInput">
-						<span class="input-group-addon"
-						      id="basic-addon2"
-						      ng-class="{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}">
 
-            </span>
+	<form role="form" name="newSubjectEventForm" novalidate>
+
+		<div class="row">
+
+			<div class="col-md-8 column">
+				<div  class="form-group" id="bloodhound">
+					<div class="input-group" id="subjectTypeAheadInput">
+						<span class="input-group-addon" id="basic-addon2" ng-class="{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}"></span>
 
 						<div id="scrollable-dropdown-menu">
-							<input type="text"
-							       class="form-control typeahead tt-query"
-							       placeholder="Subject"
-							       ng-model="subjectEvent.subjectName"
-							       ng-keyup="updateSelectedSubject()">
+							<input type="text" class="form-control typeahead tt-query" placeholder="Subject" ng-model="subjectEvent.subjectName" ng-keyup="updateSelectedSubject()">
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class=" col-md-4">
-				<div class="form-group" ng-class="{'has-error': newSubjectEventForm.number.$invalid}">
 
+			<div class="col-md-4 column">
+				<div class="form-group" ng-class="{'has-error': newSubjectEventForm.number.$invalid}">
 					<div class="input-group">
 						<span class="input-group-addon">&euro;</span>
-						<input required
-						       id="amount"
-						       class="form-control ng-valid ng-valid-min ng-dirty ng-valid-number"
-						       money=""
-						       ng-model="subjectEvent.amount"
-						       autofocus=""
-						       placeholder="Amount"
-						       precision="2">
+						<input required id="amount" class="form-control ng-valid ng-valid-min ng-dirty ng-valid-number" money="" ng-model="subjectEvent.amount" autofocus="" placeholder="Amount" precision="2">
 					</div>
 				</div>
 			</div>
-			<div class="col-md-1">
-				<div class="form-group">
-					<!--<h4>-->
-					<!--<span type="submit" class="glyphicon glyphicon-plus pull-right" style="cursor: pointer" ng-click="saveNewEvent(subjectEvent)"></span>-->
-					<!--</h4>-->
-					<button type="submit" class="btn btn-primary btn-sm" ng-click="saveNewEvent(subjectEvent)">Save</button>
-				</div>
-			</div>
+
 		</div>
-		<div class="row" style="padding-top: 10px">
-			<div class="col-md-5 column">
+
+
+		<div class="row">
+
+			<div class="col-md-4 column">
+
 				<div class="form-group">
-					<date-picker required date-picker-id="subjectEventDateId" input-field="subjectEvent.eventDate" picker-placeholder="Date"></date-picker>
+					<div class="dropdown">
+						<a class="dropdown-toggle" id="subjectEventDateId" role="button" data-toggle="dropdown" data-target="#" href="#">
+							<div class="input-group">
+								<input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" data-ng-model="subjectEvent.eventDate" placeholder="Date">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<datetimepicker data-ng-model="subjectEvent.eventDate"
+							                data-before-render="renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)"
+							                data-datetimepicker-config="{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}"></datetimepicker>
+						</ul>
+					</div>
 				</div>
 			</div>
 
 			<div class="col-md-3 column">
 				<div class="form-group">
-					<time-picker required time-picker-id="subjectEventTimeFromId" input-field="subjectEvent.eventTimeFrom" picker-placeholder="From"></time-picker>
+					<div class="dropdown">
+						<a class="dropdown-toggle" id="subjectEventTimeFromId" role="button" data-toggle="dropdown" data-target="#" href="#">
+							<div class="input-group">
+								<input datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeFrom" placeholder="Date">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<datetimepicker data-ng-model="subjectEvent.eventTimeFrom"
+							                data-before-render="renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)"
+							                data-datetimepicker-config="{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'minute'}"></datetimepicker>
+						</ul>
+					</div>
 				</div>
 			</div>
 
 			<div class="col-md-3 column">
 				<div class="form-group">
-					<time-picker required time-picker-id="subjectEventTimeToId" input-field="subjectEvent.eventTimeTo" picker-placeholder="To"></time-picker>
+					<div class="dropdown">
+						<a class="dropdown-toggle" id="subjectEventTimeToId" role="button" data-toggle="dropdown" data-target="#" href="#">
+							<div class="input-group">
+								<input datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeTo" placeholder="Date">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<datetimepicker data-ng-model="subjectEvent.eventTimeTo"
+							                data-before-render="renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)"
+							                data-datetimepicker-config="{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'minute', minuteStep: 10}"></datetimepicker>
+						</ul>
+					</div>
 				</div>
 			</div>
+
+			<div class="col-md-2 column">
+				<div class="form-group">
+					<button style="width: 100%" type="submit" class="btn btn-primary btn-sm" ng-click="saveNewEvent(subjectEvent)">Save</button>
+				</div>
+			</div>
+
 		</div>
+
 	</form>
 </div>

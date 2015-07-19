@@ -16,6 +16,7 @@
     "angular-bootstrap-calendar": "0.10.1",
     "angular-bootstrap": "0.13.0",
     "angular-animate": "1.4.0-build.3993+sha.1268b17",
+    "angular-bootstrap-datetimepicker": "latest",
     "jquery": "2.1.4",
     "angular-file-upload": "latest",
     "angular-utils-pagination": "0.7.0",

@@ -1,72 +1,81 @@
 <div class="mainForm">
-    <div class="row clearfix">
-        <form role="form" name="studentUpdateForm">
-            <div class="col-md-6 column">
+	<div class="row clearfix">
+		<form role="form" name="studentUpdateForm">
+			<div class="col-md-6 column">
 
-                <div class="col-md-6 column">
-                    <div class="form-group">
-                        <label for="studentName">Name</label>
-                        <input type="text" class="form-control" id="studentName" ng-model="studentEdit.name" required/>
-                    </div>
+				<div class="col-md-6 column">
+					<div class="form-group">
+						<label for="studentName">Name</label>
+						<input type="text" class="form-control" id="studentName" ng-model="studentEdit.name" required/>
+					</div>
 
-                    <div class="form-group">
-                        <label for="studentLastName">Last name</label>
-                        <input type="tel" class="form-control" id="studentLastName" ng-model="studentEdit.lastName" required/>
-                    </div>
-                </div>
+					<div class="form-group">
+						<label for="studentLastName">Last name</label>
+						<input type="tel" class="form-control" id="studentLastName" ng-model="studentEdit.lastName" required/>
+					</div>
+				</div>
 
-                <div class="col-md-6 column">
-                    <div class="form-group">
-                        <label for="studentMobile">Mobile</label>
-                        <input type="text" class="form-control" id="studentMobile" ng-model="studentEdit.mobile"/>
-                    </div>
+				<div class="col-md-6 column">
+					<div class="form-group">
+						<label for="studentMobile">Mobile</label>
+						<input type="text" class="form-control" id="studentMobile" ng-model="studentEdit.mobile"/>
+					</div>
 
-                    <div class="form-group">
-                        <label for="studentPersonalNumber">Personal number</label>
-                        <input type="text" class="form-control" id="studentPersonalNumber" ng-model="studentEdit.personId"/>
-                    </div>
-                </div>
+					<div class="form-group">
+						<label for="studentPersonalNumber">Personal number</label>
+						<input type="text" class="form-control" id="studentPersonalNumber" ng-model="studentEdit.personId"/>
+					</div>
+				</div>
 
-                <div class="col-md-12 column">
-                    <div class="form-group">
-                        <label for="parentInformationInput">Parent information</label>
-                        <textarea ng-model="studentEdit.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
-                    </div>
+				<div class="col-md-12 column">
+					<div class="form-group">
+						<label for="parentInformationInput">Parent information</label>
+						<textarea ng-model="studentEdit.parentsInfo" class="form-control fixedTextArea" id="parentInformationInput" name="parentInformationInput"></textarea>
+					</div>
 
-                    <div class="form-group">
-                        <label for="characteristicsInput">Characteristics</label>
-                        <textarea ng-model="studentEdit.characteristics" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
-                    </div>
-                </div>
+					<div class="form-group">
+						<label for="characteristicsInput">Characteristics</label>
+						<textarea ng-model="studentEdit.characteristics" class="form-control fixedTextArea" id="characteristicsInput" name="characteristicsInput"></textarea>
+					</div>
+				</div>
 
-            </div>
+			</div>
 
-            <div class="col-md-6 column">
+			<div class="col-md-6 column">
 
-                <div class="col-md-12 column">
+				<div class="col-md-12 column">
 
-                    <div class="form-group">
-                        <label for="studentMail">e-mail</label>
-                        <input type="text" class="form-control" id="studentMail" ng-model="studentEdit.mail"/>
-                    </div>
+					<div class="form-group">
+						<label for="studentMail">e-mail</label>
+						<input type="text" class="form-control" id="studentMail" ng-model="studentEdit.mail"/>
+					</div>
 
-                    <div class="form-group" ng-class="{'has-error': studentCreatedForm.date.$invalid}">
-                        <date-picker date-picker-id="editStudentDatePicker" input-field="studentEdit.birthDateString" label="Birthday"></date-picker>
-                    </div>
-                </div>
+					<div class="dropdown">
+						<label for="editStudentDatePicker">Birthdate</label>
+						<a class="dropdown-toggle" id="editStudentDatePicker" role="button" data-toggle="dropdown" data-target="#" href="#">
+							<div class="input-group">
+								<input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" data-ng-model="studentEdit.birthDateString" placeholder="Birthdate">
+								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<datetimepicker data-ng-model="studentEdit.birthDateString" data-datetimepicker-config="{ dropdownSelector: '#editStudentDatePicker' , startView:'day', minView:'day'}"></datetimepicker>
+						</ul>
+					</div>
+				</div>
 
-                <div class="col-md-12 row">
-                    <photo-upload photo-id='studentEdit.photoId' photo-url="studentEdit.photoUrl"></photo-upload>
-                </div>
+				<div class="col-md-12 row">
+					<photo-upload photo-id='studentEdit.photoId' photo-url="studentEdit.photoUrl"></photo-upload>
+				</div>
 
-            </div>
+			</div>
 
-            <div class="col-md-12 column" style="margin-top: 10px; margin-left: 17px">
-                <button type="submit" class="btn btn-primary btn-sm" ng-click="executeStudentUpdate(studentEdit)">Update</button>
-            </div>
+			<div class="col-md-12 column" style="margin-top: 10px; margin-left: 17px">
+				<button type="submit" class="btn btn-primary btn-sm" ng-click="executeStudentUpdate(studentEdit)">Update</button>
+			</div>
 
-        </form>
-    </div>
+		</form>
+	</div>
 
 
 </div>

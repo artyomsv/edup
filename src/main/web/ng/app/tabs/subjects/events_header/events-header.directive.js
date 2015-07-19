@@ -6,7 +6,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService, NotificationService) {
+			controller: function ($scope, $timeout, $filter, moment, QueryService, RestService, TypeAheadService, NotificationService) {
 
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
@@ -16,6 +16,9 @@ angular.module('edup.subjects')
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
 					});
+					if (!!$scope.selectedSubject) {
+						$scope.subjectEvent.subjectName = $scope.selectedSubject.subjectName;
+					}
 				};
 
 				var typeAhead = TypeAheadService.Build();
@@ -62,15 +65,33 @@ angular.module('edup.subjects')
 					$scope.selectedSubject = null;
 				};
 
+				var calculateTime = function (date, time) {
+					return $filter('date')(date, 'yyyy-MM-dd') + ' ' + $filter('date')(time, 'HH:mm')
+				};
+
+				$scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					_.forEach($dates, function (date) {
+						if (moment(date.utcDateValue).isBefore(moment())) {
+							date.selectable = false;
+						}
+					})
+				};
+
+				$scope.renderTimePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					$leftDate.selectable = false;
+					$upDate.selectable = false;
+					$rightDate.selectable = false;
+				};
+
 				$scope.saveNewEvent = function (newSubjectEvent) {
 					if (isSubjectDataFilled(newSubjectEvent)) {
 
 						var shouldSave = false;
 
 						var payload = {};
-						payload.eventDate = new Date(newSubjectEvent.eventDate);
-						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom);
-						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
+						payload.eventDate = newSubjectEvent.eventDate;
+						payload.from = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeFrom));
+						payload.to = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeTo));
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
 						if (!!$scope.selectedSubject) {
@@ -90,6 +111,9 @@ angular.module('edup.subjects')
 								} else {
 									NotificationService.Success('New subject have been created.\n Event have been registered to subject \"' + payload.subject.subjectName + '\"');
 								}
+
+								$scope.loadMoreEvens(true);
+
 							});
 						} else {
 							NotificationService.Error(angular.toJson(newSubjectEvent, true));
@@ -112,7 +136,7 @@ angular.module('edup.subjects')
 						console.log('typeahead not selected');
 						$scope.subjectEvent.subjectName = inputValue;
 					}
-				}
+				};
 
 			},
 			link: function (scope) {

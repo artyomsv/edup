@@ -1,10 +1,36 @@
 <div class="container-fluid">
-	<div infinite-scroll="loadMoreEvens()" infinite-scroll-distance="3">
-		<div ng-repeat="event in events"
-		     ng-class-odd="'success'"
-		     ng-class-even="'active'"
-		     ng-click="setSelected(event)">
-			{{event.eventId}}
-		</div>
+
+	<div id="events_list_contaner" style="height:400px;overflow: auto">
+		<table class="table table-hover">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Date</th>
+				<th>From</th>
+				<th>To</th>
+				<th>Price</th>
+			</tr>
+			</thead>
+			<tbody>
+
+			<div infinite-scroll="loadMoreEvens(false)" infinite-scroll-distance="3" infinite-scroll-container="'#events_list_contaner'">
+				<tr ng-repeat="event in events.values"
+				    ng-class-odd="'success'"
+				    ng-class-even="'active'"
+				    ng-click="setSelected(event)">
+
+					<td>{{ event.eventId }}</td>
+					<td>{{ event.subject.subjectName }}</td>
+					<td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td>
+					<td>{{ event.from | date:'HH:mm'}}</td>
+					<td>{{ event.to | date:'HH:mm'}}</td>
+					<td>{{ event.priceAdjusted | number : 2}} EUR</td>
+				</tr>
+				<!--<div ng-show='events.loading'>Loading data...</div>-->
+
+			</div>
+			</tbody>
+		</table>
 	</div>
 </div>

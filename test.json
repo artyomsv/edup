@@ -1,7 +1,145 @@
 {
-  "subjectId": 1,
-  "event": 1437339600000,
-  "from": 1437382800000,
-  "to": 1437388200000,
-  "price": 1000
+  "count": 13,
+  "values": [
+    {
+      "eventId": 13,
+      "subject": {
+        "subjectId": 1,
+        "subjectName": "Fake subject"
+      },
+      "created": 1437260901455,
+      "updated": 1437260901455,
+      "eventDate": 1437264000000,
+      "from": 1437260880000,
+      "to": 1437260880000,
+      "price": 2200,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 13,
+      "subject": {
+        "subjectId": 1,
+        "subjectName": "Fake subject"
+      },
+      "created": 1437260901455,
+      "updated": 1437260901455,
+      "eventDate": 1437264000000,
+      "from": 1437260880000,
+      "to": 1437260880000,
+      "price": 2200,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 12,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437260612014,
+      "updated": 1437260612014,
+      "eventDate": 1437264000000,
+      "from": 1437260580000,
+      "to": 1437260580000,
+      "price": 2000,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 12,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437260612014,
+      "updated": 1437260612014,
+      "eventDate": 1437264000000,
+      "from": 1437260580000,
+      "to": 1437260580000,
+      "price": 2000,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 11,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437260377080,
+      "updated": 1437260377080,
+      "eventDate": 1437350400000,
+      "from": 1437379080000,
+      "to": 1437379200000,
+      "price": 1100,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 11,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437260377080,
+      "updated": 1437260377080,
+      "eventDate": 1437350400000,
+      "from": 1437379080000,
+      "to": 1437379200000,
+      "price": 1100,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 10,
+      "subject": {
+        "subjectId": 1,
+        "subjectName": "Fake subject"
+      },
+      "created": 1437260316498,
+      "updated": 1437260316498,
+      "eventDate": 1437264000000,
+      "from": 1437260280000,
+      "to": 1437260280000,
+      "price": 1000,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 10,
+      "subject": {
+        "subjectId": 1,
+        "subjectName": "Fake subject"
+      },
+      "created": 1437260316498,
+      "updated": 1437260316498,
+      "eventDate": 1437264000000,
+      "from": 1437260280000,
+      "to": 1437260280000,
+      "price": 1000,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 9,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437259031184,
+      "updated": 1437259031184,
+      "eventDate": 1437350400000,
+      "from": 1437348600000,
+      "to": 1437374100000,
+      "price": 1500,
+      "status": "PLANNED"
+    },
+    {
+      "eventId": 9,
+      "subject": {
+        "subjectId": 2,
+        "subjectName": "New Subject"
+      },
+      "created": 1437259031184,
+      "updated": 1437259031184,
+      "eventDate": 1437350400000,
+      "from": 1437348600000,
+      "to": 1437374100000,
+      "price": 1500,
+      "status": "PLANNED"
+    }
+  ]
 }
