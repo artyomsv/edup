@@ -11,11 +11,13 @@ angular.module('edup.subjects')
 				$scope.events = {
 					values: [],
 					total: 0,
-					loading: false
+					loading: false,
+					firstLoad : true
 				};
 
 				$scope.setSelected = function (event) {
-					console.log('Selected event ID: ' + event.eventId);
+					$scope.events.firstLoad = false;
+					$scope.loadEventDetails(event.eventId);
 				};
 
 				$scope.loadMoreEvens = function (force) {
@@ -35,12 +37,14 @@ angular.module('edup.subjects')
 						$scope.events.loading = true;
 
 						//var query = QueryService.Query(10, $scope.events.values.length, '*', 'Created desc', null, true);
-						var query = QueryService.Query(10, $scope.events.values.length, '*', 'EventDate desc,From desc', null, true);
+						var query = QueryService.Query(13, $scope.events.values.length, '*', 'EventDate desc,From desc', null, true);
 
 						$timeout(function () {
 							RestService.Private.Subjects.one('events').get(query).then(function (response) {
 								var events = response.values;
-								console.log('Loaded: ' + events.length);
+								if ($scope.events.firstLoad && events.length !== 0) {
+									$scope.setSelected(events[0]);
+								}
 								_.forEach(events, function (event) {
 									event.priceAdjusted = event.price / 100;
 									$scope.events.values.push(event);

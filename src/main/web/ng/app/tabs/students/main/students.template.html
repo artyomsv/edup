@@ -1,14 +1,40 @@
 <div class="mainForm" ng-controller="StudentsController">
 
-    <div class="row clearfix">
-        <div class="col-md-7 column">
-            <students-list-header></students-list-header>
+	<div class="row clearfix">
 
-            <students-list></students-list>
-        </div>
-        <div class="col-md-5 column" ng-show="studentSelected">
-            <student-identification-card></student-identification-card>
-        </div>
-    </div>
+		<div class="col-md-7 column">
+			<div class="panel panel-success">
+
+				<div class="panel-heading panel-success-override">
+					Students
+				</div>
+
+				<div class="panel-body panel-body-override">
+
+					<div class="row">
+						<students-list-header></students-list-header>
+					</div>
+
+					<div class="row">
+						<students-list></students-list>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="col-md-5 column">
+			<div class="panel panel-success">
+
+				<div class="panel-heading panel-success-override">
+					Identification card
+				</div>
+				<div class="panel-body panel-body-override" ng-show="studentSelected">
+					<student-identification-card></student-identification-card>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>

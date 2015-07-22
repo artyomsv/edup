@@ -1,58 +1,52 @@
 <div>
-    <div class="form-horizontal" style="border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px">
-        <fieldset>
+	<div class="form-horizontal">
+		<div class="col-md-12 column">
+			<table class="identification-card" width="100%">
+				<tr>
+					<td>
+						<h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4>
+					</td>
+					<td rowspan="2" width="180px">
+						<img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4>{{ selectedStudent.personId }}</h4>
+					</td>
+				</tr>
+			</table>
+		</div>
 
-            <!-- Form Name -->
-            <legend>Identification card</legend>
-
-            <div class="col-md-12 column">
-                <table class="identification-card" width="100%">
-                    <tr>
-                        <td>
-                            <h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4>
-                        </td>
-                        <td rowspan="2" width="180px">
-                            <img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h4>{{ selectedStudent.personId }}</h4>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="col-md-12 column" style="padding-top: 20px">
-                <table class="identification-card" width="100%">
-                    <tr>
-                        <td>Phone number:</td>
-                        <td>{{ selectedStudent.mobile }}</td>
-                    </tr>
-                    <tr>
-                        <td>Current balance:</td>
-                        <td>{{ selectedStudent.balance | number : 2}} EUR</td>
-                        <td>
-                            <button type="button"
-                                    class="btn btn-primary btn-sm pull-right"
-                                    data-toggle="modal"
-                                    data-target="#addToBalanceModalView">Add to balance
-                            </button>
-                        </td>
-                    </tr>
-                </table>
+		<div class="col-md-12 column" style="padding-top: 20px">
+			<table class="identification-card" width="100%">
+				<tr>
+					<td>Phone number:</td>
+					<td>{{ selectedStudent.mobile }}</td>
+				</tr>
+				<tr>
+					<td>Current balance:</td>
+					<td>{{ selectedStudent.balance | number : 2}} EUR</td>
+					<td>
+						<button type="button"
+						        class="btn btn-success btn-sm pull-right"
+						        data-toggle="modal"
+						        data-target="#addToBalanceModalView">Add to balance
+						</button>
+					</td>
+				</tr>
+			</table>
 
 
-            </div>
+		</div>
 
-            <div class="col-md-12 column" style="padding-top: 10px;">
-                <button type="button" class="btn btn-primary btn-sm" style="width: 100%">Attendance history</button>
-            </div>
+		<div class="col-md-12 column" style="padding-top: 10px;">
+			<button type="button" class="btn btn-success btn-sm" style="width: 100%">Attendance history</button>
+		</div>
 
-        </fieldset>
-    </div>
+	</div>
 
 
-    <balance-modal></balance-modal>
+	<balance-modal></balance-modal>
 </div>
 

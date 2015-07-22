@@ -1,16 +1,31 @@
 <div class="mainForm" ng-controller="SubjectsController">
 
 	<div class="row clearfix">
+
 		<div class="col-md-7 column">
-			<div>
-				<events-header></events-header>
+			<div class="panel panel-success">
+
+				<div class="panel-heading panel-success-override">
+					Events list
+				</div>
+
+				<div class="panel-body panel-body-override">
+
+					<div class="row">
+						<events-header></events-header>
+					</div>
+
+					<div class="row">
+						<events-list></events-list>
+					</div>
+
+				</div>
 			</div>
-			<div>
-				<events-list></events-list>
-			</div>
+
 		</div>
+
 		<div class="col-md-5 column">
-			{{subjectsView2}}
+			<event-info></event-info>
 		</div>
 	</div>
 

@@ -54087,23 +54087,6 @@ angular.module('edup.students')
                 };
 
 
-                //$scope.documents = [
-                //    {
-                //        'name': 'report.docx',
-                //        'date': '2015/03/03',
-                //        'link': 'https:/localhost:8443/edup/api/file/report.docx'
-                //    },
-                //    {
-                //        'name': 'balance.xls',
-                //        'date': '2015/03/04',
-                //        'link': 'https:/localhost:8443/edup/api/file/balance.xls'
-                //    },
-                //    {
-                //        'name': 'photo.jpg',
-                //        'date': '2015/03/04',
-                //        'link': 'https:/localhost:8443/edup/api/file/photo.jpg'
-                //    }
-                //];
             }],
 
             link: function (scope) {
@@ -54555,11 +54538,75 @@ angular.module('edup.subjects', [
 
 angular.module('edup.subjects')
 
+	.directive('eventInfo', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'event-info',
+			controller: ['$scope', 'RestService', 'QueryService', function ($scope, RestService, QueryService) {
+
+				$scope.studentsManagemnt = {
+					expanded: false
+				};
+
+				$scope.selectedEvent = {
+					loaded: false
+				};
+
+				$scope.loadEventDetails = function (eventId) {
+					if (eventId) {
+						$scope.resetEventStudentsSearch();
+
+						RestService.Private.Subjects.one('events').one(eventId.toString()).get().then(function (response) {
+							if (response.payload) {
+								$scope.selectedEvent = response.payload;
+								$scope.selectedEvent.loaded = true;
+								$scope.selectedEvent.adjustedPrice = $scope.selectedEvent.price / 100;
+
+								$scope.loadAttendance(eventId);
+							}
+						});
+					}
+				};
+
+				$scope.loadAttendance = function (eventId) {
+					if (eventId) {
+						var query = QueryService.Query(999, 0, '*', null, 'EventId eq ' + eventId, false);
+						RestService.Private.Subjects
+							.one('events')
+							.one('attendance')
+							.get(query)
+							.then(function (response) {
+								$scope.eventStudentsSearch.attendance = response.values;
+								if ($scope.studentsManagemnt.expanded) {
+									$scope.executeSearch();
+								}
+							});
+					}
+				};
+
+				$scope.processExpand = function () {
+					$scope.studentsManagemnt.expanded = !$scope.studentsManagemnt.expanded;
+					if ($scope.studentsManagemnt.expanded) {
+						$scope.executeSearch();
+					}
+				};
+
+			}],
+			link: function (scope) {
+
+			}
+		};
+	}
+);
+'use strict';
+
+angular.module('edup.subjects')
+
 	.directive('eventsHeader', function () {
 		return {
 			restrict: 'E',
 			templateUrl: 'events-header',
-			controller: ['$scope', '$timeout', 'moment', 'QueryService', 'RestService', 'TypeAheadService', 'NotificationService', function ($scope, $timeout, moment, QueryService, RestService, TypeAheadService, NotificationService) {
+			controller: ['$scope', '$timeout', '$filter', 'moment', 'QueryService', 'RestService', 'TypeAheadService', 'NotificationService', function ($scope, $timeout, $filter, moment, QueryService, RestService, TypeAheadService, NotificationService) {
 
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
@@ -54618,15 +54665,33 @@ angular.module('edup.subjects')
 					$scope.selectedSubject = null;
 				};
 
+				var calculateTime = function (date, time) {
+					return $filter('date')(date, 'yyyy-MM-dd') + ' ' + $filter('date')(time, 'HH:mm');
+				};
+
+				$scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					_.forEach($dates, function (date) {
+						if (moment(date.utcDateValue).isBefore(moment())) {
+							date.selectable = false;
+						}
+					});
+				};
+
+				$scope.renderTimePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					$leftDate.selectable = false;
+					$upDate.selectable = false;
+					$rightDate.selectable = false;
+				};
+
 				$scope.saveNewEvent = function (newSubjectEvent) {
 					if (isSubjectDataFilled(newSubjectEvent)) {
 
 						var shouldSave = false;
 
 						var payload = {};
-						payload.eventDate = new Date(newSubjectEvent.eventDate);
-						payload.from = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeFrom);
-						payload.to = new Date(newSubjectEvent.eventDate + ' ' + newSubjectEvent.eventTimeTo);
+						payload.eventDate = newSubjectEvent.eventDate;
+						payload.from = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeFrom));
+						payload.to = new Date(calculateTime(newSubjectEvent.eventDate, newSubjectEvent.eventTimeTo));
 						payload.price = newSubjectEvent.amount * 100;
 						payload.subject = {};
 						if (!!$scope.selectedSubject) {
@@ -54693,11 +54758,13 @@ angular.module('edup.subjects')
 				$scope.events = {
 					values: [],
 					total: 0,
-					loading: false
+					loading: false,
+					firstLoad : true
 				};
 
 				$scope.setSelected = function (event) {
-					console.log('Selected event ID: ' + event.eventId);
+					$scope.events.firstLoad = false;
+					$scope.loadEventDetails(event.eventId);
 				};
 
 				$scope.loadMoreEvens = function (force) {
@@ -54717,12 +54784,14 @@ angular.module('edup.subjects')
 						$scope.events.loading = true;
 
 						//var query = QueryService.Query(10, $scope.events.values.length, '*', 'Created desc', null, true);
-						var query = QueryService.Query(10, $scope.events.values.length, '*', 'EventDate desc,From desc', null, true);
+						var query = QueryService.Query(13, $scope.events.values.length, '*', 'EventDate desc,From desc', null, true);
 
 						$timeout(function () {
 							RestService.Private.Subjects.one('events').get(query).then(function (response) {
 								var events = response.values;
-								console.log('Loaded: ' + events.length);
+								if ($scope.events.firstLoad && events.length !== 0) {
+									$scope.setSelected(events[0]);
+								}
 								_.forEach(events, function (event) {
 									event.priceAdjusted = event.price / 100;
 									$scope.events.values.push(event);
@@ -54769,6 +54838,140 @@ angular.module('edup.subjects')
         };
     }
 );
+'use strict';
+
+angular.module('edup.subjects')
+
+	.directive('studentsAttendanceList', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'students-attendance-list',
+
+			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
+
+				$scope.resetEventStudentsSearch = function () {
+					$scope.eventStudentsSearch = {
+						spin: false,
+						formats: ['Registered', 'All', 'Not registered'],
+						searchValue: '',
+						values: [],
+						total: 0,
+						attendance: []
+					};
+
+					$scope.eventStudentsSearch.format = $scope.eventStudentsSearch.formats[0];
+				};
+
+				$scope.resetEventStudentsSearch();
+
+				$scope.mapAttendance = function (students) {
+					_.forEach(students, function (student) {
+						student.active = false;
+						_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
+							if (student.id === attendance.studentId) {
+								student.active = true;
+								student.attendanceId = attendance.attendanceId;
+							}
+						});
+					});
+				};
+
+				var studentsQuery = function (skip) {
+					var search = _.isEmpty($scope.eventStudentsSearch.searchValue) ? '*' : $scope.eventStudentsSearch.searchValue;
+					var filter = null;
+					var attendanceStudents = _.pluck($scope.eventStudentsSearch.attendance, 'studentdId');
+					switch($scope.eventStudentsSearch.format) {
+						case 'Registered' : filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')'; break;
+						case 'Not registered' : filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')'; break;
+					}
+					return QueryService.Query(10, skip, search, 'Name asc, LastName asc', filter);
+				};
+
+				$scope.executeSearch = function () {
+					if ($scope.studentsManagemnt.expanded && !$scope.eventStudentsSearch.spin) {
+
+						$scope.eventStudentsSearch.spin = true;
+
+						var query = studentsQuery(0);
+
+						RestService.Private.Students.get(query).then(function (response) {
+							$scope.eventStudentsSearch.values = response.values;
+							$scope.eventStudentsSearch.total = response.count;
+							$scope.mapAttendance($scope.eventStudentsSearch.values);
+							$scope.eventStudentsSearch.spin = false;
+						});
+
+					}
+				};
+
+				$scope.$watch('eventStudentsSearch.format', function () {
+					$scope.executeSearch();
+				});
+
+				$scope.loadMoreStudents = function () {
+					if ($scope.eventStudentsSearch.values.length !== 0 && ($scope.eventStudentsSearch.values.length === $scope.eventStudentsSearch.total)) {
+						return;
+					}
+
+					if (!$scope.eventStudentsSearch.spin && $scope.studentsManagemnt.expanded) {
+						$scope.eventStudentsSearch.spin = true;
+						$scope.eventStudentsSearch.spin = true;
+
+						var query = studentsQuery($scope.eventStudentsSearch.values.length);
+
+						RestService.Private.Students.get(query).then(function (response) {
+							var students = response.values;
+							_.forEach(students, function (student) {
+								$scope.eventStudentsSearch.values.push(student);
+							});
+
+							$scope.eventStudentsSearch.total = response.count;
+							$scope.mapAttendance(students);
+							$scope.eventStudentsSearch.spin = false;
+						});
+					}
+				};
+
+				$scope.updateStudentAttendance = function (student) {
+					if (!student.attendanceId) {
+						RestService.Private.Subjects
+							.one('events')
+							.one($scope.selectedEvent.eventId.toString())
+							.one('attendance')
+							.customPOST({
+								eventId: $scope.selectedEvent.eventId,
+								studentId: student.id
+							})
+							.then(function (response) {
+								student.attendanceId = response.payload;
+								$scope.selectedEvent.students += 1;
+							});
+					} else {
+						RestService.Private.Subjects
+							.one('events')
+							.one($scope.selectedEvent.eventId.toString())
+							.one('attendance')
+							.one(student.attendanceId.toString())
+							.remove()
+							.then(function () {
+								_.remove($scope.eventStudentsSearch.attendance, function (attendance) {
+									return student.id === attendance.studentId;
+								});
+								student.attendanceId = null;
+								$scope.selectedEvent.students -= 1;
+							});
+					}
+				};
+
+			}],
+
+			link: function (scope) {
+
+			}
+		};
+	}
+)
+;
 'use strict';
 
 angular.module('edup.tabs', [
@@ -54871,7 +55074,7 @@ angular.module('edup')
 
 
   $templateCache.put('edit-student',
-    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=editStudentDatePicker input-field=studentEdit.birthDateString label=Birthday></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"margin-top: 10px; margin-left: 17px\"><button type=submit class=\"btn btn-primary btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
+    "<div class=mainForm><div class=\"row clearfix\"><form role=form name=studentUpdateForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=studentEdit.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=studentEdit.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"studentEdit.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"studentEdit.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=studentEdit.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=studentEdit.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"studentEdit.mail\"></div><div class=dropdown><label for=editStudentDatePicker>Birthdate</label><a class=dropdown-toggle id=editStudentDatePicker role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=studentEdit.birthDateString placeholder=Birthdate> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=studentEdit.birthDateString data-datetimepicker-config=\"{ dropdownSelector: '#editStudentDatePicker' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=studentEdit.photoId photo-url=studentEdit.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"margin-top: 10px; margin-left: 17px\"><button type=submit class=\"btn btn-primary btn-sm\" ng-click=executeStudentUpdate(studentEdit)>Update</button></div></form></div></div>"
   );
 
 
@@ -54881,27 +55084,27 @@ angular.module('edup')
 
 
   $templateCache.put('student-identification-card',
-    "<div><form class=form-horizontal style=\"border: 1px solid #d3d3d3;background-color: #ededed; border-radius: 5px; padding: 10px\"><fieldset><legend>Identification card</legend><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-primary btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-primary btn-sm\" style=\"width: 100%\">Attendance history</button></div></fieldset></form><balance-modal></balance-modal></div>"
+    "<div><div class=form-horizontal><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
   );
 
 
   $templateCache.put('students-list-header',
-    "<div><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#addNewStudentModalView ng-click=resetNewStudent()></span></h4></div></div><new-student></new-student></div>"
+    "<div class=container-fluid><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#addNewStudentModalView ng-click=resetNewStudent()></span></h4></div></div><new-student></new-student></div>"
   );
 
 
   $templateCache.put('students-list',
-    "<div style=\"padding-top: 20px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: studentPaging.perPage\" current-page=studentPaging.page total-items=studentPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'missing-data-row': !student.mobile, 'selected-row': student.id === selectedStudent.id}\" pagination-id=studentsPaginationId><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button href=#information type=button class=\"btn btn-primary btn-xs\" ng-click=openStudentDetailModal(student)>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"studentsPageChanged(newPageNumber, searchValue)\" pagination-id=studentsPaginationId></dir-pagination-controls></div></div><student-details></student-details></div>"
+    "<div class=container-fluid style=\"padding-top: 20px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Last name</th><th>Age</th><th>ID</th><th>Phone</th><th></th></tr></thead><tbody><tr dir-paginate=\"student in students | itemsPerPage: studentPaging.perPage\" current-page=studentPaging.page total-items=studentPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(student.id) ng-class=\"{'missing-data-row': !student.mobile, 'selected-row': student.id === selectedStudent.id}\" pagination-id=studentsPaginationId><td>{{ student.name }}</td><td>{{ student.lastName }}</td><td>{{ student.age }}</td><td>{{ student.personId }}</td><td>{{ student.mobile }}</td><td><button href=#information type=button class=\"btn btn-success btn-xs\" ng-click=openStudentDetailModal(student)>Details</button></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"studentsPageChanged(newPageNumber, searchValue)\" pagination-id=studentsPaginationId></dir-pagination-controls></div></div><student-details></student-details></div>"
   );
 
 
   $templateCache.put('students',
-    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><students-list-header></students-list-header><students-list></students-list></div><div class=\"col-md-5 column\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div>"
+    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Students</div><div class=\"panel-body panel-body-override\"><div class=row><students-list-header></students-list-header></div><div class=row><students-list></students-list></div></div></div></div><div class=\"col-md-5 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Identification card</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div></div></div>"
   );
 
 
   $templateCache.put('new-student-modal',
-    "<div app-modal id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true><span class=\"glyphicon glyphicon-remove\"></span></button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form name=studentCreatedForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=form-group ng-class=\"{'has-error': studentCreatedForm.date.$invalid}\"><date-picker date-picker-id=newStudentDatePicker input-field=newStudent.birthDateString label=Birthdate></date-picker></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-url=newStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\" ng-click=executeReset()>Reset</button> <button type=reset class=\"btn btn-warning btn-sm\" ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
+    "<div app-modal id=addNewStudentModalView class=\"modal fade bs-example-modal-lg\" tabindex=-1 role=dialog aria-labelledby=myLargeModalLabel aria-hidden=true><div class=\"modal-dialog modal-lg\"><div class=\"modal-content modalViewPadding\"><div class=modal-header><button type=button class=close data-dismiss=modal aria-hidden=true><span class=\"glyphicon glyphicon-remove\"></span></button><h4 class=modal-title id=myModalLabel>Add new student</h4></div><div style=\"padding-top: 20px; padding-bottom: 10px\"><div class=\"row clearfix\"><form role=form name=studentCreatedForm><div class=\"col-md-6 column\"><div class=\"col-md-6 column\"><div class=form-group><label for=studentName>Name</label><input class=form-control id=studentName ng-model=newStudent.name required></div><div class=form-group><label for=studentLastName>Last name</label><input type=tel class=form-control id=studentLastName ng-model=newStudent.lastName required></div></div><div class=\"col-md-6 column\"><div class=form-group><label for=studentMobile>Mobile</label><input class=form-control id=studentMobile ng-model=\"newStudent.mobile\"></div><div class=form-group><label for=studentPersonalNumber>Personal number</label><input class=form-control id=studentPersonalNumber ng-model=\"newStudent.personId\"></div></div><div class=\"col-md-12 column\"><div class=form-group><label for=parentInformationInput>Parent information</label><textarea ng-model=newStudent.parentsInfo class=\"form-control fixedTextArea\" id=parentInformationInput name=parentInformationInput></textarea></div><div class=form-group><label for=characteristicsInput>Characteristics</label><textarea ng-model=newStudent.characteristics class=\"form-control fixedTextArea\" id=characteristicsInput name=characteristicsInput></textarea></div></div></div><div class=\"col-md-6 column\"><div class=\"col-md-12 column\"><div class=form-group><label for=studentMail>e-mail</label><input class=form-control id=studentMail ng-model=\"newStudent.mail\"></div><div class=dropdown><label for=newStudentDatePicker>Birthdate</label><a class=dropdown-toggle id=newStudentDatePicker role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=newStudent.birthDateString placeholder=Birthdate> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=newStudent.birthDateString data-datetimepicker-config=\"{ dropdownSelector: '#newStudentDatePicker' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div><div class=\"col-md-12 row\"><photo-upload photo-id=newStudent.photoId photo-url=newStudent.photoUrl></photo-upload></div></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=submit class=\"btn btn-success btn-sm\" ng-click=executeStudentSave(newStudent)>Save</button> <button type=reset class=\"btn btn-primary btn-sm\" ng-click=executeReset()>Reset</button> <button type=reset class=\"btn btn-warning btn-sm\" ng-click=executeCancel()>Cancel</button></div></form></div></div></div></div></div>"
   );
 
 
@@ -54910,18 +55113,28 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('event-info',
+    "<div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Event information</div><div class=\"panel-body panel-body-override container-fluid\"><div class=row><div class=col-md-12><div class=row><div class=col-md-8><table><tr><td><b>Subject name:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.subject.subjectName}}</td></tr><tr><td><b>Event date:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.eventDate | date:'yyyy/MM/dd'}}</td></tr><tr><td><b>Time:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.from | date:'HH:mm'}} - {{selectedEvent.to | date:'HH:mm'}}</td></tr><tr><td><b>Price:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.adjustedPrice | number : 2}}</td></tr></table></div><div class=col-md-4><div class=pull-right ng-show=selectedEvent.loaded><div>Students <span class=badge>{{selectedEvent.students}}</span></div></div></div></div></div></div><div class=row><div class=col-md-12><div class=pull-right><button class=\"btn btn-success btn-sm\" type=button data-toggle=collapse data-target=#studentManageView aria-expanded=false aria-controls=studentManageView ng-click=processExpand()>Manage</button></div></div></div><div class=collapse id=studentManageView style=\"margin-top: 15px\"><students-attendance-list></students-attendance-list></div></div></div>"
+  );
+
+
   $templateCache.put('events-header',
-    "<div class=container-fluid>{{subjectEvent}}<form role=form name=newSubjectEventForm novalidate><div class=row><div class=col-md-7><div id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=col-md-4><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div><div class=col-md-1><div class=form-group><button type=submit class=\"btn btn-primary btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div><div class=row style=\"padding-top: 10px\"><div class=\"col-md-5 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=subjectEvent.eventDate placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventDate data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeFromId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeFrom placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeFrom data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'day'}\"></datetimepicker></ul></div></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeToId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeTo placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeTo data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'day'}\"></datetimepicker></ul></div></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm novalidate><div class=row><div class=\"col-md-8 column\"><div class=form-group id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=\"col-md-4 column\"><div class=form-group ng-class=\"{'has-error': newSubjectEventForm.number.$invalid}\"><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div></div><div class=row><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=subjectEvent.eventDate placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventDate data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeFromId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeFrom placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeFrom data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'minute'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-3 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeToId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeTo placeholder=Date> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeTo data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'minute', minuteStep: 10}\"></datetimepicker></ul></div></div></div><div class=\"col-md-2 column\"><div class=form-group><button style=\"width: 100%\" type=submit class=\"btn btn-success btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div></form></div>"
   );
 
 
   $templateCache.put('events-list',
-    "<div class=container-fluid><div id=events_list_contaner style=\"height:400px;overflow: auto\"><table class=\"table table-hover\"><thead><tr><th>ID</th><th>Name</th><th>Date</th><th>From</th><th>To</th><th>Price</th></tr></thead><tbody><div infinite-scroll=loadMoreEvens(false) infinite-scroll-distance=3 infinite-scroll-container=\"'#events_list_contaner'\"><tr ng-repeat=\"event in events.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-click=setSelected(event)><td>{{ event.eventId }}</td><td>{{ event.subject.subjectName }}</td><td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td><td>{{ event.from | date:'HH:mm'}}</td><td>{{ event.to | date:'HH:mm'}}</td><td>{{ event.priceAdjusted | number : 2}} EUR</td></tr></div></tbody></table></div></div>"
+    "<div class=container-fluid><div id=events_list_contaner style=\"height:400px;overflow: auto\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Date</th><th>From</th><th>To</th></tr></thead><tbody><div infinite-scroll=loadMoreEvens(false) infinite-scroll-distance=3 infinite-scroll-container=\"'#events_list_contaner'\"><tr ng-repeat=\"event in events.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-class=\"{'selected-row': event.eventId === selectedEvent.eventId}\" ng-click=setSelected(event)><td>{{ event.subject.subjectName }}</td><td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td><td>{{ event.from | date:'HH:mm'}}</td><td>{{ event.to | date:'HH:mm'}}</td></tr></div></tbody></table></div></div>"
   );
 
 
   $templateCache.put('subjects',
-    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div><events-header></events-header></div><div><events-list></events-list></div></div><div class=\"col-md-5 column\">{{subjectsView2}}</div></div></div>"
+    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Events list</div><div class=\"panel-body panel-body-override\"><div class=row><events-header></events-header></div><div class=row><events-list></events-list></div></div></div></div><div class=\"col-md-5 column\"><event-info></event-info></div></div></div>"
+  );
+
+
+  $templateCache.put('students-attendance-list',
+    "<div style=height:373px><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\"></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:320px;overflow: auto;margin-top: 10px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>ID</th><th>Registered Y/N</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ student.name }} {{ student.lastName }}</td><td>{{ student.personId }}</td><td><input type=checkbox name=checkboxes id=checkboxes-1 ng-checked=student.active ng-click=updateStudentAttendance(student)></td></tr></div></tbody></table></div></div></div></div>"
   );
 
 }]);

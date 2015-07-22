@@ -1,0 +1,76 @@
+<div class="panel panel-success">
+
+	<div class="panel-heading panel-success-override">
+		Event information
+	</div>
+
+	<div class="panel-body panel-body-override container-fluid">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-8">
+
+						<table>
+							<tr>
+								<td><b>Subject name:</b></td>
+								<td style="padding-left: 10px">{{selectedEvent.subject.subjectName}}</td>
+							</tr>
+							<tr>
+								<td><b>Event date:</b></td>
+								<td style="padding-left: 10px">{{selectedEvent.eventDate | date:'yyyy/MM/dd'}}</td>
+							</tr>
+							<tr>
+								<td><b>Time:</b></td>
+								<td style="padding-left: 10px">{{selectedEvent.from | date:'HH:mm'}} - {{selectedEvent.to | date:'HH:mm'}}</td>
+							</tr>
+							<tr>
+								<td><b>Price:</b></td>
+								<td style="padding-left: 10px">{{selectedEvent.adjustedPrice | number : 2}}</td>
+							</tr>
+						</table>
+
+					</div>
+
+					<div class="col-md-4">
+						<div class="pull-right" ng-show="selectedEvent.loaded">
+							<div>Students <span class="badge">{{selectedEvent.students}}</span></div>
+						</div>
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="pull-right">
+					<button class="btn btn-success btn-sm"
+					        type="button"
+					        data-toggle="collapse"
+					        data-target="#studentManageView"
+					        aria-expanded="false"
+					        aria-controls="studentManageView"
+					        ng-click="processExpand()"
+							>
+						Manage
+					</button>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="collapse" id="studentManageView" style="margin-top: 15px">
+			<!--<div class="well">-->
+			<!--heya-->
+			<!--</div>-->
+
+			<students-attendance-list></students-attendance-list>
+		</div>
+
+	</div>
+
+	<!--<div class="panel-footer">Panel footer</div>-->
+
+</div>

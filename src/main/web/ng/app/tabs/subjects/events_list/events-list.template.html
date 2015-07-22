@@ -4,12 +4,10 @@
 		<table class="table table-hover">
 			<thead>
 			<tr>
-				<th>ID</th>
 				<th>Name</th>
 				<th>Date</th>
 				<th>From</th>
 				<th>To</th>
-				<th>Price</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -18,14 +16,13 @@
 				<tr ng-repeat="event in events.values"
 				    ng-class-odd="'success'"
 				    ng-class-even="'active'"
+				    ng-class="{'selected-row': event.eventId === selectedEvent.eventId}"
 				    ng-click="setSelected(event)">
 
-					<td>{{ event.eventId }}</td>
 					<td>{{ event.subject.subjectName }}</td>
 					<td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td>
 					<td>{{ event.from | date:'HH:mm'}}</td>
 					<td>{{ event.to | date:'HH:mm'}}</td>
-					<td>{{ event.priceAdjusted | number : 2}} EUR</td>
 				</tr>
 				<!--<div ng-show='events.loading'>Loading data...</div>-->
 

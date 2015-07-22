@@ -459,10 +459,16 @@ body {
   border-radius: 10px;
 }
 .selected-row {
-  color: #3c763d !important;
   font-weight: 500 ;
 }
 .missing-data-row {
   color: #a94442;
-  font-weight: 500;
+}
+.panel-success-override {
+  color: white !important;
+  background-color: #5cb85c !important;
+  border-color: #4cae4c !important;
+}
+.panel-body-override {
+  background-color: rgba(244, 244, 244, 0.45) !important;
 }

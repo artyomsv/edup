@@ -1,0 +1,60 @@
+<div style="height:373px;">
+
+	<div class="row">
+		<div class="col-xs-8">
+			<div class="input-group">
+                <span class="input-group-addon" id="basic-addon1"
+                      ng-class="{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}"></span>
+				<input type="text" class="form-control" placeholder="search" ng-model="eventStudentsSearch.searchValue" ng-keyup="executeSearch()">
+			</div>
+		</div>
+
+		<div class="col-md-4">
+
+			<div class="dropdown pull-right">
+				<select id="formatId"
+				        class="form-control"
+				        ng-model="eventStudentsSearch.format"
+				        ng-options="format for format in eventStudentsSearch.formats"
+						>
+				</select>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div id="events_students_contaner" style="height:320px;overflow: auto;margin-top: 10px">
+				<table class="table table-hover">
+					<thead>
+					<tr>
+						<th>Name</th>
+						<th>ID</th>
+						<th>Registered Y/N</th>
+					</tr>
+					</thead>
+					<tbody>
+
+					<div infinite-scroll="loadMoreStudents()" nfinite-scroll-distance="4" infinite-scroll-container="'#events_students_contaner'">
+
+						<tr ng-repeat="student in eventStudentsSearch.values"
+						    ng-class-odd="'success'"
+						    ng-class-even="'active'"
+								>
+
+							<td>{{ student.name }} {{ student.lastName }}</td>
+							<td>{{ student.personId }}</td>
+							<td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-checked="student.active" ng-click="updateStudentAttendance(student)"></td>
+						</tr>
+					</div>
+					</tbody>
+				</table>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
