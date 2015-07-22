@@ -54,6 +54,12 @@ public class SubjectsResource {
         return facade.searchSubjectEvents();
     }
 
+    @GET
+    @Path("events/{eventId}")
+    public Response getSubjectEvent(@PathParam("eventId") Long eventId) {
+        return facade.getSubjectEventDetails(eventId);
+    }
+
     @POST
     @Path("events")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -63,8 +69,8 @@ public class SubjectsResource {
 
     @GET
     @Path("events/attendance")
-    public Response getEventAttendance() {
-        return facade.getEventAttendance();
+    public Response searchAttendance() {
+        return facade.searchAttendance();
     }
 
     @POST

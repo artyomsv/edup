@@ -13,6 +13,7 @@ import java.util.Date;
 public class AttendanceDto {
 
     private Long attendanceId;
+    @NotNull
     private Long eventId;
     @NotNull
     private Long studentId;

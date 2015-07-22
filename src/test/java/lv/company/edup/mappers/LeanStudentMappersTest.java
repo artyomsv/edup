@@ -23,7 +23,7 @@ public class LeanStudentMappersTest extends AbstractMappersTest {
     public static final long VERSION_ID = 2L;
     public static final long AGE = 5L;
     public static final String MOBILE = "28612816";
-    public static final Date BIRTH_DATE = DateUtils.addYears(new Date(), (int) AGE * -1);
+    public static final Date BIRTH_DATE = DateUtils.addYears(new Date(), (int) (AGE + 1) * -1);
 
     @Test
     public void entityToBaseDto() throws Exception {

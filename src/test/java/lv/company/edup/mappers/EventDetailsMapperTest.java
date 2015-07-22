@@ -1,8 +1,8 @@
 package lv.company.edup.mappers;
 
 import lv.company.edup.persistence.subjects.EventStatus;
-import lv.company.edup.persistence.subjects.view.SubjectEvents;
-import lv.company.edup.services.subjects.dto.EventDto;
+import lv.company.edup.persistence.subjects.view.SubjectEventsDetails;
+import lv.company.edup.services.subjects.dto.EventDetailsDto;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-public class EventMapperTest extends AbstractMappersTest {
+public class EventDetailsMapperTest extends AbstractMappersTest {
 
     public static final Date EVENT_DATE = new Date();
     public static final Date FROM = DateUtils.addHours(EVENT_DATE, 10);
@@ -21,18 +21,20 @@ public class EventMapperTest extends AbstractMappersTest {
     public static final long EVENT_ID = 2L;
     public static final String SUBJECT_NAME = "Subject name";
     public static final EventStatus STATUS = EventStatus.PLANNED;
+    public static final long PRICE = 1200L;
 
     @Test
     public void testName() throws Exception {
-        SubjectEvents entity = new SubjectEvents();
+        SubjectEventsDetails entity = new SubjectEventsDetails();
         entity.setName(SUBJECT_NAME);
         entity.setStatus(STATUS);
         entity.setEventDate(EVENT_DATE);
         entity.setFrom(FROM);
         entity.setTo(TO);
         entity.setEventId(EVENT_ID);
+        entity.setPrice(PRICE);
 
-        EventDto dto = mapper.map(entity, EventDto.class);
+        EventDetailsDto dto = mapper.map(entity, EventDetailsDto.class);
 
         assertNotNull(dto);
         assertNotNull(dto.getSubject());
@@ -42,6 +44,7 @@ public class EventMapperTest extends AbstractMappersTest {
         assertThat(dto.getEventDate(), is(EVENT_DATE));
         assertThat(dto.getFrom(), is(FROM));
         assertThat(dto.getTo(), is(TO));
+        assertThat(dto.getPrice(), is(PRICE));
 
     }
 }

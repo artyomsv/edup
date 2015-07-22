@@ -50,7 +50,34 @@ public abstract class AbstractIndexer<T> implements Indexer<T> {
 
     @Override
     public void delete(Long id) {
+        IndexWriter indexWriter = null;
+        try {
+            indexWriter = getIndexWriter();
+            indexWriter.deleteDocuments(new Term(LuceneDocumentUtils.TECHNICAL_ID, String.valueOf(id)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(indexWriter);
+        }
+    }
 
+    @Override
+    public void delete() {
+        IndexWriter indexWriter = null;
+        try {
+            indexWriter = getIndexWriter();
+            indexWriter.deleteAll();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(indexWriter);
+        }
+    }
+
+    @Override
+    public void fullRebuild() {
+        delete();
+        add(load());
     }
 
     private void indexRecord(T t, IndexWriter indexWriter) throws IOException {

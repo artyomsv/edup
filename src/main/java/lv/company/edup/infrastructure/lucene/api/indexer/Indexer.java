@@ -15,6 +15,10 @@ public interface Indexer<T> {
 
     void delete(Long id);
 
+    void delete();
+
+    void fullRebuild();
+
     Collection<T> load();
 
     Collection<T> load(Collection<Long> ids);

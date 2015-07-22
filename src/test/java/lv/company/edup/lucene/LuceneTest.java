@@ -1,7 +1,7 @@
 package lv.company.edup.lucene;
 
 import lv.company.edup.infrastructure.lucene.api.config.IndexConfigProvider;
-import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;
+import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.CustomMapper;
 import lv.company.edup.infrastructure.mapping.MappersProvider;
@@ -24,6 +24,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -64,7 +65,7 @@ public class LuceneTest {
     @Spy IndexConfigProvider configProvider;
     @Spy QueryParserImpl parser;
 
-    @InjectMocks StudentsIndexer indexer;
+    @InjectMocks StudentsIndexWriter indexer;
     @InjectMocks StudentsSearcher searcher;
 
     private Map<Long, StudentDto> db = new HashedMap();
@@ -128,6 +129,20 @@ public class LuceneTest {
     public void filterSingleId() throws Exception {
         MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
         parameters.add("$filter", "Id eq 1");
+        ODataCriteria criteria = new ODataCriteria(parameters);
+
+        ODataResult<StudentDto> result = searcher.search(criteria);
+        List<StudentDto> values = result.getValues();
+        assertThat(values.size(), is(1));
+        Iterator<StudentDto> iterator = values.iterator();
+        assertThat(iterator.next().getId(), is(1L));
+    }
+
+    @Test
+    @Ignore
+    public void filterNoEqualsSingleId() throws Exception {
+        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
+        parameters.add("$filter", "Id ne 1");
         ODataCriteria criteria = new ODataCriteria(parameters);
 
         ODataResult<StudentDto> result = searcher.search(criteria);

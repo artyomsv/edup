@@ -5,6 +5,7 @@ import lv.company.edup.infrastructure.mapping.MappersProvider;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.services.students.mappers.BaseStudentMapper;
 import lv.company.edup.services.students.mappers.StudentMapper;
+import lv.company.edup.services.subjects.mappers.EventDetailsMapper;
 import lv.company.edup.services.subjects.mappers.EventMapper;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.converter.BidirectionalConverter;
@@ -46,6 +47,7 @@ public abstract class AbstractMappersTest {
         customMappers.add(new BaseStudentMapper());
         customMappers.add(new StudentMapper());
         customMappers.add(new EventMapper());
+        customMappers.add(new EventDetailsMapper());
         return customMappers;
     }
 }

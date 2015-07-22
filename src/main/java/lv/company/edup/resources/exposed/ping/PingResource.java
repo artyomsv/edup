@@ -1,8 +1,9 @@
 package lv.company.edup.resources.exposed.ping;
 
-import lv.company.edup.infrastructure.lucene.api.config.IndexType;
 import lv.company.edup.infrastructure.lucene.api.indexer.StudentWriter;
-import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;
+import lv.company.edup.infrastructure.lucene.api.indexer.SubjectWriter;
+import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexWriter;
+import lv.company.edup.infrastructure.lucene.impl.indexer.SubjectsIndexWriter;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -14,13 +15,14 @@ import javax.ws.rs.core.Response;
 
 @Path("public/ping")
 @ApplicationScoped
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public class PingResource {
 
     @Inject PingFacade facade;
-    @Inject @StudentWriter StudentsIndexer indexer;
+    @Inject @StudentWriter StudentsIndexWriter studentsIndex;
+    @Inject @SubjectWriter SubjectsIndexWriter subjectIndex;
 
     @GET
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response pong() {
         return facade.buildDto();
     }
@@ -28,9 +30,17 @@ public class PingResource {
     @GET
     @Produces({MediaType.TEXT_HTML})
     public Response pongHtml() {
-        IndexType type = indexer.getType();
         return facade.buildHtml();
     }
+
+    @GET
+    @Path("index")
+    public Response rebuildIndex() {
+        studentsIndex.fullRebuild();
+        subjectIndex.fullRebuild();
+        return facade.ok();
+    }
+
 
 
 }

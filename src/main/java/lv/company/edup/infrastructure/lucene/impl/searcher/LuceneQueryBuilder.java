@@ -105,7 +105,7 @@ public class LuceneQueryBuilder {
                 addSearchParameter(parametersQuery, searchParameters, relation, analyzer);
                 query.add(parametersQuery, Occur.MUST);
             } else {
-                addSearchParameter(query, searchParameters, relation, analyzer);
+                addSearchParameter(query, searchParameters, Relation.OR, analyzer);
             }
         }
 

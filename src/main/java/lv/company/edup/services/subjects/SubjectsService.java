@@ -19,13 +19,17 @@ import lv.company.edup.persistence.subjects.domain.Attendance_;
 import lv.company.edup.persistence.subjects.domain.Event;
 import lv.company.edup.persistence.subjects.domain.Subject;
 import lv.company.edup.persistence.subjects.view.AttendanceView;
-import lv.company.edup.persistence.subjects.view.EventView;
+import lv.company.edup.persistence.subjects.view.SubjectEventDetailsRepository;
+import lv.company.edup.persistence.subjects.view.SubjectEvents;
+import lv.company.edup.persistence.subjects.view.SubjectEventsDetails;
 import lv.company.edup.services.subjects.dto.AttendanceDto;
+import lv.company.edup.services.subjects.dto.EventDetailsDto;
 import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.edup.services.subjects.dto.SubjectDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
+import lv.company.odata.api.SearchOperator;
 import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -52,6 +56,7 @@ public class SubjectsService {
     @Inject EventRepository eventRepository;
     @Inject CurrentStudentVersionRepository studentRepository;
     @Inject AttendanceRepository attendanceRepository;
+    @Inject SubjectEventDetailsRepository eventDetailsRepository;
 
     @Inject @JPA ODataSearchService searchService;
 
@@ -98,7 +103,7 @@ public class SubjectsService {
     }
 
     public ODataResult<EventDto> searchSubjectEvents(ODataCriteria criteria) {
-        ODataResult<EventView> result = searchService.search(criteria, EventView.class);
+        ODataResult<SubjectEvents> result = searchService.search(criteria, SubjectEvents.class);
         List<EventDto> subjects = mapper.map(result.getValues(), EventDto.class);
         return result.cloneFromValues(subjects);
     }
@@ -131,7 +136,7 @@ public class SubjectsService {
         return event.getEventId();
     }
 
-    public ODataResult<AttendanceDto> getEventAttendance(ODataCriteria criteria) {
+    public ODataResult<AttendanceDto> searchAttendance(ODataCriteria criteria) {
         ODataResult<AttendanceView> result = searchService.search(criteria, AttendanceView.class);
         List<AttendanceDto> values = mapper.map(result.getValues(), AttendanceDto.class);
         return result.cloneFromValues(values);
@@ -225,5 +230,18 @@ public class SubjectsService {
         for (int i = 0; i < 100; i++) {
             createSubjectEvent(FakeUtils.buildEvent(subjectId));
         }
+    }
+
+    public EventDetailsDto getEventDetails(Long eventId) {
+        SubjectEventsDetails details = eventDetailsRepository.find(eventId);
+        EventDetailsDto detailsDto = null;
+        if (details != null) {
+            detailsDto = mapper.map(details, EventDetailsDto.class);
+            ODataCriteria criteria = new ODataCriteria();
+            criteria.getAllValues().setCount(true).appendCustomFilter("EventId", SearchOperator.equal(), String.valueOf(eventId));
+            ODataResult<AttendanceView> search = searchService.search(criteria, AttendanceView.class);
+            detailsDto.setStudents(search.getCount());
+        }
+        return detailsDto;
     }
 }

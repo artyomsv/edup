@@ -11,24 +11,15 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Entity
-@Table(name = "V_SUBJECTS")
-public class EventView {
+@Table(name = "V_SUBJECT_EVENTS")
+public class SubjectEvents {
 
     @Id
     @Column(name = "SUBJECT_EVENT_ID")
     private Long eventId;
 
-    @Column(name = "SUBJECT_ID")
-    private Long subjectId;
-
     @Column(name = "SUBJECT_NAME")
     private String name;
-
-    @Column(name = "CREATED")
-    private Date created;
-
-    @Column(name = "UPDATED")
-    private Date updated;
 
     @Column(name = "EVENT_DATE")
     private Date eventDate;
@@ -43,23 +34,12 @@ public class EventView {
     @Enumerated(EnumType.STRING)
     private EventStatus status;
 
-    @Column(name = "EVENT_PRICE")
-    private Long price;
-
     public Long getEventId() {
         return eventId;
     }
 
     public void setEventId(Long eventId) {
         this.eventId = eventId;
-    }
-
-    public Long getSubjectId() {
-        return subjectId;
-    }
-
-    public void setSubjectId(Long subjectId) {
-        this.subjectId = subjectId;
     }
 
     public String getName() {
@@ -102,23 +82,4 @@ public class EventView {
         this.status = status;
     }
 
-    public Date getCreated() {
-        return created;
-    }
-
-    public Date getUpdated() {
-        return updated;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
 }

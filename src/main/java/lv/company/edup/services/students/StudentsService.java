@@ -4,7 +4,7 @@ import lv.company.edup.infrastructure.exceptions.BadRequestException;
 import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.lucene.api.indexer.StudentWriter;
 import lv.company.edup.infrastructure.lucene.api.searcher.StudentReader;
-import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexer;
+import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
@@ -50,7 +50,7 @@ public class StudentsService {
     private static final String SECURED_FILES_DOWNLOAD = "/private/files/download";
 
     @Inject @StudentReader StudentsSearcher searcher;
-    @Inject @StudentWriter StudentsIndexer indexer;
+    @Inject @StudentWriter StudentsIndexWriter indexer;
 
     @Inject CurrentStudentVersionRepository currentStudentVersionRepository;
     @Inject StudentPropertyRepository propertyRepository;

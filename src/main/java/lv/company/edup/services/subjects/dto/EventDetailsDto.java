@@ -4,29 +4,22 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lv.company.edup.persistence.subjects.EventStatus;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-public class EventDto {
+public class EventDetailsDto {
 
     private Long eventId;
-    @NotNull(message = "Subject envelope cannot be null")
-    @Valid
     private SubjectDto subject;
-    @NotNull(message = "Event is missing event date")
     private Date eventDate;
-    @NotNull(message = "Event is missing time from")
     private Date from;
-    @NotNull(message = "Event is missing time to")
     private Date to;
-    @NotNull(message = "Event is missing price")
     private Long price;
     private EventStatus status;
+    private Long students;
 
     public Long getEventId() {
         return eventId;
@@ -43,6 +36,7 @@ public class EventDto {
     public void setSubject(SubjectDto subject) {
         this.subject = subject;
     }
+
 
     public Date getEventDate() {
         return eventDate;
@@ -82,5 +76,13 @@ public class EventDto {
 
     public void setStatus(EventStatus status) {
         this.status = status;
+    }
+
+    public Long getStudents() {
+        return students;
+    }
+
+    public void setStudents(Long students) {
+        this.students = students;
     }
 }

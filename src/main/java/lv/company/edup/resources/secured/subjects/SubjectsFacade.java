@@ -45,9 +45,9 @@ public class SubjectsFacade extends ApplicationFacade {
         return created(subjectsService.createSubjectEvent(dto));
     }
 
-    public Response getEventAttendance() {
+    public Response searchAttendance() {
         ODataCriteria criteria = new ODataCriteria(utils.getQueryParameters());
-        return ok(subjectsService.getEventAttendance(criteria));
+        return ok(subjectsService.searchAttendance(criteria));
     }
 
     @Validated
@@ -74,5 +74,9 @@ public class SubjectsFacade extends ApplicationFacade {
     public Response fillSubjectEvents(long subjectId) {
         subjectsService.generateSubjectEvents(subjectId);
         return ok();
+    }
+
+    public Response getSubjectEventDetails(Long eventId) {
+        return ok(subjectsService.getEventDetails(eventId));
     }
 }

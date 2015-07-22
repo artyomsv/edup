@@ -23,9 +23,9 @@ import java.util.logging.Logger;
 
 @ApplicationScoped
 @StudentWriter
-public class StudentsIndexer extends AbstractIndexer<StudentDto> {
+public class StudentsIndexWriter extends AbstractIndexer<StudentDto> {
 
-    private static final Logger LOGGER = Logger.getLogger(StudentsIndexer.class.getSimpleName());
+    private static final Logger LOGGER = Logger.getLogger(StudentsIndexWriter.class.getSimpleName());
 
     @Inject CurrentStudentVersionRepository repository;
     @Inject ObjectMapper mapper;
