@@ -53726,7 +53726,7 @@ angular.module('edup.header')
                 };
 
                 $scope.downloadReport = function () {
-                    window.open('https://172.20.10.4:8443/edup/api/private/reports');
+                    //window.open('https://172.20.10.4:8443/edup/api/private/reports');
                 };
 
                 $scope.logoutUser = function () {
@@ -54879,7 +54879,7 @@ angular.module('edup.subjects')
 				var studentsQuery = function (skip) {
 					var search = _.isEmpty($scope.eventStudentsSearch.searchValue) ? '*' : $scope.eventStudentsSearch.searchValue;
 					var filter = null;
-					var attendanceStudents = _.pluck($scope.eventStudentsSearch.attendance, 'studentdId');
+					var attendanceStudents = _.pluck($scope.eventStudentsSearch.attendance, 'studentId');
 					switch($scope.eventStudentsSearch.format) {
 						case 'Registered' : filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')'; break;
 						case 'Not registered' : filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')'; break;

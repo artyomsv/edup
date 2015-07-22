@@ -14,7 +14,7 @@ angular.module('edup.header')
                 };
 
                 $scope.downloadReport = function () {
-                    window.open('https://172.20.10.4:8443/edup/api/private/reports');
+                    //window.open('https://172.20.10.4:8443/edup/api/private/reports');
                 };
 
                 $scope.logoutUser = function () {
