@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
@@ -51,7 +52,11 @@ public class VelocityTemplateEngine implements TemplateEngine {
         }
 
         StringWriter writer = new StringWriter();
-        Velocity.evaluate(context, writer, template.getName().name(), template.getTemplate());
+        try {
+            Velocity.evaluate(context, writer, template.getName().name(), new String(template.getTemplate(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return writer.toString().getBytes(Charset.forName("UTF-8"));
     }
 

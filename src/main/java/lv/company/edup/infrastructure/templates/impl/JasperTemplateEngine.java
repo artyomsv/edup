@@ -1,5 +1,7 @@
 package lv.company.edup.infrastructure.templates.impl;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
+import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.templates.api.JasperEngine;
 import lv.company.edup.infrastructure.templates.api.Template;
 import lv.company.edup.infrastructure.templates.api.TemplateEngine;
@@ -18,7 +20,6 @@ import net.sf.jasperreports.engine.util.JRProperties;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import org.apache.commons.io.IOUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +37,8 @@ public class JasperTemplateEngine implements TemplateEngine {
             JRProperties.setProperty("net.sf.jasperreports.default.pdf.embedded","true");
 
             JRDataSource dataSource = new JREmptyDataSource();
-            JasperReport compiledJasperReport = JasperCompileManager.compileReport(IOUtils.toInputStream(template.getTemplate()));
+
+            JasperReport compiledJasperReport = JasperCompileManager.compileReport(new ByteInputStream(template.getTemplate(), template.getTemplate().length));
             JasperPrint jasperPrint = JasperFillManager.fillReport(compiledJasperReport, context, dataSource);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -60,13 +62,14 @@ public class JasperTemplateEngine implements TemplateEngine {
                     exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(outputStream));
                     exporter.exportReport();
                     return outputStream.toByteArray();
+                default:
+                    return null;
             }
 
         } catch (JRException e) {
-            e.printStackTrace();
+            throw new InternalException(e);
         }
 
-        return null;
     }
 
 }

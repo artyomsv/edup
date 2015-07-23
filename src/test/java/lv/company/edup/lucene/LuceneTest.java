@@ -15,6 +15,7 @@ import lv.company.edup.services.students.mappers.BaseStudentMapper;
 import lv.company.edup.services.students.mappers.StudentMapper;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
+import lv.company.odata.api.SearchOperator;
 import lv.company.odata.impl.parse.QueryParserImpl;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.converter.BidirectionalConverter;
@@ -141,9 +142,8 @@ public class LuceneTest {
     @Test
     @Ignore
     public void filterNoEqualsSingleId() throws Exception {
-        MultivaluedMap<String, String> parameters = new MultivaluedHashMap<String, String>();
-        parameters.add("$filter", "Id ne 1");
-        ODataCriteria criteria = new ODataCriteria(parameters);
+        ODataCriteria criteria = new ODataCriteria();
+        criteria.appendCustomFilter("Id", SearchOperator.notEqual(), "1");
 
         ODataResult<StudentDto> result = searcher.search(criteria);
         List<StudentDto> values = result.getValues();

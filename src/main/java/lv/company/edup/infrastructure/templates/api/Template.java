@@ -2,30 +2,25 @@ package lv.company.edup.infrastructure.templates.api;
 
 public class Template {
 
-    private TemplateName name;
-    private String template;
+    private final TemplateName name;
+    private final byte[] template;
+    private final byte[] compiledTemplate;
 
-    public Template() {
-    }
-
-    public Template(TemplateName name, String template) {
-        this.name = name;
+    public Template(byte[] compiledTemplate, byte[] template, TemplateName name) {
+        this.compiledTemplate = compiledTemplate;
         this.template = template;
+        this.name = name;
     }
 
     public TemplateName getName() {
         return name;
     }
 
-    public void setName(TemplateName name) {
-        this.name = name;
-    }
-
-    public String getTemplate() {
+    public byte[] getTemplate() {
         return template;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public byte[] getCompiledTemplate() {
+        return compiledTemplate;
     }
 }

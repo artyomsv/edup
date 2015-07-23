@@ -5,8 +5,12 @@ import lv.company.edup.infrastructure.templates.api.TemplateName;
 import org.apache.commons.io.IOUtils;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.*;
-import javax.inject.Inject;
+import javax.ejb.ConcurrencyManagement;
+import javax.ejb.ConcurrencyManagementType;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumMap;
@@ -29,14 +33,21 @@ public class TemplateCache {
         templates = new EnumMap<>(TemplateName.class);
         try {
             for (TemplateName name : TemplateName.values()) {
-                InputStream stream = TemplateCache.class.getResourceAsStream(name.file);
-                String template = IOUtils.toString(stream, "UTF-8");
-                templates.put(name, new Template(name, template));
-                logger.log(Level.INFO, "File {0} was caches as velocity template", name.file);
-
+                templates.put(name, new Template(read(name.compiledFile), read(name.file), name));
+                logger.log(Level.INFO, "File {0} was caches as template", name.file);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private byte[] read(String file) throws IOException {
+        InputStream stream = null;
+        try {
+            stream = TemplateCache.class.getResourceAsStream(file);
+            return IOUtils.toByteArray(stream);
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
     }
 
