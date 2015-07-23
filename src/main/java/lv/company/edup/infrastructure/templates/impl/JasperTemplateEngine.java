@@ -1,6 +1,5 @@
 package lv.company.edup.infrastructure.templates.impl;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.templates.api.JasperEngine;
 import lv.company.edup.infrastructure.templates.api.Template;
@@ -22,6 +21,7 @@ import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
@@ -38,8 +38,9 @@ public class JasperTemplateEngine implements TemplateEngine {
 
             JRDataSource dataSource = new JREmptyDataSource();
 
-            JasperReport compiledJasperReport = JasperCompileManager.compileReport(new ByteInputStream(template.getTemplate(), template.getTemplate().length));
+            JasperReport compiledJasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(template.getTemplate()));
             JasperPrint jasperPrint = JasperFillManager.fillReport(compiledJasperReport, context, dataSource);
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(new ByteArrayInputStream(template.getCompiledTemplate()), context, dataSource);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             SimpleExporterInput exporterInput = new SimpleExporterInput(jasperPrint);
