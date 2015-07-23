@@ -1,5 +1,6 @@
 package lv.company.edup.infrastructure.templates.impl;
 
+import lv.company.edup.infrastructure.exceptions.InternalException;
 import lv.company.edup.infrastructure.templates.api.Template;
 import lv.company.edup.infrastructure.templates.api.TemplateName;
 import org.apache.commons.io.IOUtils;
@@ -45,7 +46,11 @@ public class TemplateCache {
         InputStream stream = null;
         try {
             stream = TemplateCache.class.getResourceAsStream(file);
-            return IOUtils.toByteArray(stream);
+            if (stream != null) {
+                return IOUtils.toByteArray(stream);
+            } else {
+                throw new InternalException("Missing " + file + " file.");
+            }
         } finally {
             IOUtils.closeQuietly(stream);
         }

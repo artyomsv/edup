@@ -109,9 +109,9 @@ angular.module('edup.common')
         var baseUrl;
 
         if (location.indexOf('127.0.0.1') > -1) {
-            baseUrl = 'http://127.0.0.1:8088/';
+            baseUrl = 'http://127.0.0.1:8484/';
         } else {
-            baseUrl = 'https://' + location + ':8443/edup/ng';
+            baseUrl = 'http://' + location + ':8484/edup/ng';
         }
 
         paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -404,9 +404,9 @@ angular.module('edup.common')
 		var baseUrl;
 
 		if (location.indexOf('127.0.0.1') > -1) {
-			baseUrl = 'https://localhost:8443/edup';
+			baseUrl = 'http://localhost:8484/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = 'http://' + location + ':8484/edup';
 		}
 
 		return {
@@ -501,7 +501,6 @@ angular.module('edup.header')
                 };
 
                 $scope.downloadReport = function () {
-                    //window.open('https://172.20.10.4:8443/edup/api/private/reports');
                 };
 
                 $scope.logoutUser = function () {

@@ -83,6 +83,48 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>NPM</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>NPM_Install</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>npm</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                  <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>GRUNT_Dist_package</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>grunt</executable>
+                  <arguments>
+                    <argument>dist</argument>
+                  </arguments>
+                  <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
   <build>
@@ -92,6 +134,10 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.TTF</exclude>
+          <exclude>**/*.jasper</exclude>
+        </excludes>
       </resource>
     </resources>
 
@@ -125,42 +171,6 @@
               </annotationProcessors>
               <debug>true</debug>
               <optimize>true</optimize>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.4.0</version>
-        <executions>
-          <execution>
-            <id>NPM_Install</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>npm</executable>
-              <arguments>
-                <argument>install</argument>
-              </arguments>
-              <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>GRUNT_Dist_package</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>grunt</executable>
-              <arguments>
-                <argument>dist</argument>
-              </arguments>
-              <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
             </configuration>
           </execution>
         </executions>
