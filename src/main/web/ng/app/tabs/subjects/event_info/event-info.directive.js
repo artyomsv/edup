@@ -6,7 +6,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'event-info',
-			controller: function ($scope, RestService, QueryService) {
+			controller: function ($scope, moment, RestService, QueryService) {
 
 				$scope.studentsManagemnt = {
 					expanded: false
@@ -18,13 +18,15 @@ angular.module('edup.subjects')
 
 				$scope.loadEventDetails = function (eventId) {
 					if (eventId) {
-						$scope.resetEventStudentsSearch();
 
 						RestService.Private.Subjects.one('events').one(eventId.toString()).get().then(function (response) {
 							if (response.payload) {
 								$scope.selectedEvent = response.payload;
 								$scope.selectedEvent.loaded = true;
 								$scope.selectedEvent.adjustedPrice = $scope.selectedEvent.price / 100;
+								$scope.selectedEvent.havePassed = moment().isAfter($scope.selectedEvent.eventDate);
+
+								$scope.resetEventStudentsSearch($scope.selectedEvent.havePassed);
 
 								$scope.loadAttendance(eventId);
 							}
@@ -41,18 +43,14 @@ angular.module('edup.subjects')
 							.get(query)
 							.then(function (response) {
 								$scope.eventStudentsSearch.attendance = response.values;
-								if ($scope.studentsManagemnt.expanded) {
-									$scope.executeSearch();
-								}
+								$scope.executeSearch();
 							});
 					}
 				};
 
 				$scope.processExpand = function () {
 					$scope.studentsManagemnt.expanded = !$scope.studentsManagemnt.expanded;
-					if ($scope.studentsManagemnt.expanded) {
-						$scope.executeSearch();
-					}
+					$scope.executeSearch();
 				};
 
 			},

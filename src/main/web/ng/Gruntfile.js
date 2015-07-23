@@ -118,6 +118,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/typeahead.js/dist/typeahead.jquery.min.js',
                     'vendor/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
                     'vendor/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
+                    'vendor/bower_components/angular-bootstrap-toggle-switch/angular-toggle-switch.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

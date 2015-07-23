@@ -30,8 +30,9 @@
 					<thead>
 					<tr>
 						<th>Name</th>
-						<th>ID</th>
-						<th>Registered Y/N</th>
+						<th class="text-center">ID</th>
+						<th class="text-center">Registered</th>
+						<th class="text-center" ng-show="selectedEvent.havePassed">Participated</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -44,8 +45,26 @@
 								>
 
 							<td>{{ student.name }} {{ student.lastName }}</td>
-							<td>{{ student.personId }}</td>
-							<td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-checked="student.active" ng-click="updateStudentAttendance(student)"></td>
+							<td class="text-center">{{ student.personId }}</td>
+							<td class="text-center">
+								<input type="checkbox"
+								       name="checkboxes"
+								       id="registeredStudentId"
+								       ng-checked="student.active"
+								       ng-click="updateStudentAttendance(student)"/>
+							</td>
+							<td ng-show="selectedEvent.havePassed">
+
+								<div ng-show="student.showAbsenceToggle" ng-init="htmlSwitchStatus = true" toggle-switch
+								     class="switch-success switch-mini"
+								     on-label="Yes"
+								     off-label="No"
+								     ng-model="student.participated"
+								     ng-switch="performDataSwitch(student)"
+										>
+								</div>
+
+							</td>
 						</tr>
 					</div>
 					</tbody>
@@ -54,6 +73,10 @@
 			</div>
 		</div>
 	</div>
+
+	<!--on-label='<i class="glyphicon glyphicon-ok-circle"></i>'-->
+	<!--off-label='<i class="glyphicon glyphicon-ban-circle"></i>'-->
+	<!--html="true"-->
 
 </div>
 

@@ -434,9 +434,13 @@ legend.scheduler-border {
   border-bottom: none;
 }
 body {
-  background: #eeeeee url('/edup/images/sativa.png');
+  background: #eeeeee url('../../../../edup/images/sativa.png');
   position: relative;
   height: 100%;
+}
+.ats-switch span.switch-right {
+  background: #d9534f !important;
+  color: white;
 }
 .standaloneBody {
   background: #e9e9e9;

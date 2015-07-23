@@ -53233,6 +53233,7 @@ var mod;mod=angular.module("infinite-scroll",[]),mod.value("THROTTLE_MILLISECOND
     }]);
 }));
 
+angular.module("toggle-switch",["ng"]).directive("toggleSwitch",["$compile",function($compile){return{restrict:"EA",replace:!0,require:"ngModel",scope:{isDisabled:"=",onLabel:"@",offLabel:"@",knobLabel:"@",html:"=",onChange:"&"},template:'<div class="ats-switch" ng-click="toggle()" ng-keypress="onKeyPress($event)" ng-class="{ \'disabled\': isDisabled }" role="switch" aria-checked="{{!!model}}"><div class="switch-animate" ng-class="{\'switch-off\': !model, \'switch-on\': model}"><span class="switch-left"></span><span class="knob"></span><span class="switch-right"></span></div></div>',compile:function(element,attrs){return angular.isUndefined(attrs.onLabel)&&(attrs.onLabel="On"),angular.isUndefined(attrs.offLabel)&&(attrs.offLabel="Off"),angular.isUndefined(attrs.knobLabel)&&(attrs.knobLabel=" "),angular.isUndefined(attrs.isDisabled)&&(attrs.isDisabled=!1),angular.isUndefined(attrs.html)&&(attrs.html=!1),angular.isUndefined(attrs.tabindex)&&(attrs.tabindex=0),function(scope,iElement,iAttrs,ngModel){iElement.attr("tabindex",attrs.tabindex),scope.toggle=function(){scope.isDisabled||(scope.model=!scope.model,ngModel.$setViewValue(scope.model)),scope.onChange()};var spaceCharCode=32;scope.onKeyPress=function($event){$event.charCode!=spaceCharCode||$event.altKey||$event.ctrlKey||$event.metaKey||scope.toggle()},ngModel.$formatters.push(function(modelValue){return modelValue}),ngModel.$parsers.push(function(viewValue){return viewValue}),ngModel.$viewChangeListeners.push(function(){scope.$eval(attrs.ngChange)}),ngModel.$render=function(){scope.model=ngModel.$viewValue};var bindSpan=function(span,html){span=angular.element(span);var bindAttributeName=html===!0?"ng-bind-html":"ng-bind";span.removeAttr("ng-bind-html"),span.removeAttr("ng-bind"),angular.element(span).hasClass("switch-left")&&span.attr(bindAttributeName,"onLabel"),span.hasClass("knob")&&span.attr(bindAttributeName,"knobLabel"),span.hasClass("switch-right")&&span.attr(bindAttributeName,"offLabel"),$compile(span)(scope,function(cloned,scope){span.replaceWith(cloned)})},bindSwitch=function(iElement,html){angular.forEach(iElement[0].children[0].children,function(span,index){bindSpan(span,html)})};scope.$watch("html",function(newValue){bindSwitch(iElement,newValue)})}}}}]);
 'use strict';
 
 angular.module('edup.common', [
@@ -53578,6 +53579,7 @@ angular.module('edup.common')
                 Subjects: privateResource.one('subjects')
             },
             Public: {
+                Ping : publicResource.one('ping'),
                 Login: publicResource.one('login')
             }
 
@@ -53695,20 +53697,29 @@ angular.module('edup.header', ['ui.router']);
 
 angular.module('edup.header')
 
-    .controller('NavbarController', ['$scope', '$state', function ($scope, $state) {
-        $scope.appModel = {
-            items: ['Students', 'Subjects', 'Calendar'],
-            states: ['students', 'subjects', 'calendar'],
-            current: 0
-        };
+	.controller('NavbarController', ['$scope', '$state', 'RestService', function ($scope, $state, RestService) {
 
-        $scope.$watch(function () {
-            return $scope.appModel.current;
-        }, function (index) {
-            $state.go($scope.appModel.states[index]);
-        });
+		$scope.application = {
+			version: '     '
+		};
 
-    }]
+		RestService.Public.Ping.get().then(function (response) {
+			$scope.application.version = response.payload.version;
+		});
+
+		$scope.appModel = {
+			items: ['Students', 'Subjects', 'Calendar'],
+			states: ['students', 'subjects', 'calendar'],
+			current: 0
+		};
+
+		$scope.$watch(function () {
+			return $scope.appModel.current;
+		}, function (index) {
+			$state.go($scope.appModel.states[index]);
+		});
+
+	}]
 );
 'use strict';
 
@@ -54542,7 +54553,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'event-info',
-			controller: ['$scope', 'RestService', 'QueryService', function ($scope, RestService, QueryService) {
+			controller: ['$scope', 'moment', 'RestService', 'QueryService', function ($scope, moment, RestService, QueryService) {
 
 				$scope.studentsManagemnt = {
 					expanded: false
@@ -54554,13 +54565,15 @@ angular.module('edup.subjects')
 
 				$scope.loadEventDetails = function (eventId) {
 					if (eventId) {
-						$scope.resetEventStudentsSearch();
 
 						RestService.Private.Subjects.one('events').one(eventId.toString()).get().then(function (response) {
 							if (response.payload) {
 								$scope.selectedEvent = response.payload;
 								$scope.selectedEvent.loaded = true;
 								$scope.selectedEvent.adjustedPrice = $scope.selectedEvent.price / 100;
+								$scope.selectedEvent.havePassed = moment().isAfter($scope.selectedEvent.eventDate);
+
+								$scope.resetEventStudentsSearch($scope.selectedEvent.havePassed);
 
 								$scope.loadAttendance(eventId);
 							}
@@ -54577,18 +54590,14 @@ angular.module('edup.subjects')
 							.get(query)
 							.then(function (response) {
 								$scope.eventStudentsSearch.attendance = response.values;
-								if ($scope.studentsManagemnt.expanded) {
-									$scope.executeSearch();
-								}
+								$scope.executeSearch();
 							});
 					}
 				};
 
 				$scope.processExpand = function () {
 					$scope.studentsManagemnt.expanded = !$scope.studentsManagemnt.expanded;
-					if ($scope.studentsManagemnt.expanded) {
-						$scope.executeSearch();
-					}
+					$scope.executeSearch();
 				};
 
 			}],
@@ -54849,28 +54858,33 @@ angular.module('edup.subjects')
 
 			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
 
-				$scope.resetEventStudentsSearch = function () {
+				$scope.resetEventStudentsSearch = function (havePassed) {
 					$scope.eventStudentsSearch = {
 						spin: false,
-						formats: ['Registered', 'All', 'Not registered'],
+						formats: [
+							'Registered',
+							'All'
+							//'Not registered'
+						],
 						searchValue: '',
 						values: [],
 						total: 0,
 						attendance: []
 					};
 
-					$scope.eventStudentsSearch.format = $scope.eventStudentsSearch.formats[0];
+					$scope.eventStudentsSearch.format = havePassed ? $scope.eventStudentsSearch.formats[0] : $scope.eventStudentsSearch.formats[1];
 				};
-
-				$scope.resetEventStudentsSearch();
 
 				$scope.mapAttendance = function (students) {
 					_.forEach(students, function (student) {
 						student.active = false;
+						student.showAbsenceToggle = false;
 						_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
 							if (student.id === attendance.studentId) {
 								student.active = true;
 								student.attendanceId = attendance.attendanceId;
+								student.showAbsenceToggle = true;
+								student.participated = attendance.participated;
 							}
 						});
 					});
@@ -54880,9 +54894,13 @@ angular.module('edup.subjects')
 					var search = _.isEmpty($scope.eventStudentsSearch.searchValue) ? '*' : $scope.eventStudentsSearch.searchValue;
 					var filter = null;
 					var attendanceStudents = _.pluck($scope.eventStudentsSearch.attendance, 'studentId');
-					switch($scope.eventStudentsSearch.format) {
-						case 'Registered' : filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')'; break;
-						case 'Not registered' : filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')'; break;
+					switch ($scope.eventStudentsSearch.format) {
+						case 'Registered' :
+							filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')';
+							break;
+						case 'Not registered' :
+							filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')';
+							break;
 					}
 					return QueryService.Query(10, skip, search, 'Name asc, LastName asc', filter);
 				};
@@ -54894,13 +54912,14 @@ angular.module('edup.subjects')
 
 						var query = studentsQuery(0);
 
-						RestService.Private.Students.get(query).then(function (response) {
-							$scope.eventStudentsSearch.values = response.values;
-							$scope.eventStudentsSearch.total = response.count;
-							$scope.mapAttendance($scope.eventStudentsSearch.values);
-							$scope.eventStudentsSearch.spin = false;
-						});
-
+						$timeout(function () {
+							RestService.Private.Students.get(query).then(function (response) {
+								$scope.eventStudentsSearch.values = response.values;
+								$scope.eventStudentsSearch.total = response.count;
+								$scope.mapAttendance($scope.eventStudentsSearch.values);
+								$scope.eventStudentsSearch.spin = false;
+							});
+						}, 100);
 					}
 				};
 
@@ -54909,12 +54928,15 @@ angular.module('edup.subjects')
 				});
 
 				$scope.loadMoreStudents = function () {
+					if (!$scope.eventStudentsSearch || $scope.eventStudentsSearch.spin) {
+						return;
+					}
+
 					if ($scope.eventStudentsSearch.values.length !== 0 && ($scope.eventStudentsSearch.values.length === $scope.eventStudentsSearch.total)) {
 						return;
 					}
 
 					if (!$scope.eventStudentsSearch.spin && $scope.studentsManagemnt.expanded) {
-						$scope.eventStudentsSearch.spin = true;
 						$scope.eventStudentsSearch.spin = true;
 
 						var query = studentsQuery($scope.eventStudentsSearch.values.length);
@@ -54945,6 +54967,19 @@ angular.module('edup.subjects')
 							.then(function (response) {
 								student.attendanceId = response.payload;
 								$scope.selectedEvent.students += 1;
+								if ($scope.selectedEvent.havePassed) {
+									student.showAbsenceToggle = true;
+
+									var attendance = {
+										attendanceId: response.payload,
+										studentId: student.id,
+										participated: true,
+										eventId: $scope.selectedEvent.eventId
+									};
+
+									$scope.eventStudentsSearch.attendance.push(attendance);
+									student.participated = attendance.participated;
+								}
 							});
 					} else {
 						RestService.Private.Subjects
@@ -54957,10 +54992,39 @@ angular.module('edup.subjects')
 								_.remove($scope.eventStudentsSearch.attendance, function (attendance) {
 									return student.id === attendance.studentId;
 								});
+
+								if ($scope.eventStudentsSearch.format === $scope.eventStudentsSearch.formats[0]) {
+									_.remove($scope.eventStudentsSearch.values, function (listStudent) {
+										return student.id === listStudent.id;
+									});
+								}
+
 								student.attendanceId = null;
 								$scope.selectedEvent.students -= 1;
 							});
 					}
+				};
+
+				$scope.performDataSwitch = function (student) {
+					//if (student.attendanceId) {
+					//	RestService.Private.Subjects
+					//		.one('events')
+					//		.one($scope.selectedEvent.eventId.toString())
+					//		.one('attendance')
+					//		.one(student.attendanceId.toString())
+					//		.customPUT({
+					//			eventId: $scope.selectedEvent.eventId,
+					//			studentId: student.id,
+					//			participated: student.participated
+					//		})
+					//		.then(function () {
+					//			_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
+					//				if (student.id === attendance.studentId) {
+					//					attendance.participated = student.participated;
+					//				}
+					//			});
+					//		});
+					//}
 				};
 
 			}],
@@ -54975,13 +55039,15 @@ angular.module('edup.subjects')
 'use strict';
 
 angular.module('edup.tabs', [
-    'ui.bootstrap.datetimepicker',
-    'infinite-scroll',
-    'angularFileUpload',
-    'fiestah.money',
-    'edup.calendar',
-    'edup.subjects',
-    'edup.students'
+	'ngSanitize',
+	'toggle-switch',
+	'ui.bootstrap.datetimepicker',
+	'infinite-scroll',
+	'angularFileUpload',
+	'fiestah.money',
+	'edup.calendar',
+	'edup.subjects',
+	'edup.students'
 ]);
 'use strict';
 
@@ -55034,7 +55100,7 @@ angular.module('edup')
 
 
   $templateCache.put('edup-header',
-    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button> <a class=navbar-brand href=\"\">Educational planning application</a></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/subjects')}\"><a href=#subjects>Subjects</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div>"
+    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header style=\"margin-right: 30px\"><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button><div class=navbar-brand>Educational planning application: {{application.version}}</div></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/subjects')}\"><a href=#subjects>Subjects</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div>"
   );
 
 
@@ -55069,7 +55135,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-documents',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Size</th><th>Created</th><th></th></tr></thead><tbody><tr dir-paginate=\"document in documents | itemsPerPage: documentsPaging.perPage\" current-page=documentsPaging.page total-items=documentsPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" pagination-id=documentsPaginationId><td>{{ document.fileName }}</td><td>{{ document.size }}</td><td>{{ document.created | date:'MMM d, y hh:mm' }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"documentsPageChanged(newPageNumber, searchValue)\" pagination-id=documentsPaginationId></dir-pagination-controls></div></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>Size</th><th>Created</th><th></th></tr></thead><tbody><tr dir-paginate=\"document in documents | itemsPerPage: documentsPaging.perPage\" current-page=documentsPaging.page total-items=documentsPaging.totalRecords ng-class-odd=\"'success'\" ng-class-even=\"'active'\" pagination-id=documentsPaginationId><td>{{ document.fileName }}</td><td>{{ document.size }}</td><td>{{ document.created | date:'MMM d, y HH:mm' }}</td><td><a href=\"{{ document.link }}\">Download</a></td></tr></tbody></table><div class=row><div class=\"col-xs-12 text-center\"><dir-pagination-controls on-page-change=\"documentsPageChanged(newPageNumber, searchValue)\" pagination-id=documentsPaginationId></dir-pagination-controls></div></div></div><div style=\"padding-bottom: 20px\"><button type=button class=\"btn btn-primary btn-sm pull-right\" ng-click=toggleDownloadSection()>{{documentsButtonLabel}}</button></div><div ng-show=showDownloadSection><file-upload></file-upload></div></div></div>"
   );
 
 
@@ -55129,12 +55195,12 @@ angular.module('edup')
 
 
   $templateCache.put('subjects',
-    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Events list</div><div class=\"panel-body panel-body-override\"><div class=row><events-header></events-header></div><div class=row><events-list></events-list></div></div></div></div><div class=\"col-md-5 column\"><event-info></event-info></div></div></div>"
+    "<div class=mainForm ng-controller=SubjectsController><div class=\"row clearfix\"><div class=\"col-md-6 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Events list</div><div class=\"panel-body panel-body-override\"><div class=row><events-header></events-header></div><div class=row><events-list></events-list></div></div></div></div><div class=\"col-md-6 column\"><event-info></event-info></div></div></div>"
   );
 
 
   $templateCache.put('students-attendance-list',
-    "<div style=height:373px><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\"></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:320px;overflow: auto;margin-top: 10px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th>ID</th><th>Registered Y/N</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ student.name }} {{ student.lastName }}</td><td>{{ student.personId }}</td><td><input type=checkbox name=checkboxes id=checkboxes-1 ng-checked=student.active ng-click=updateStudentAttendance(student)></td></tr></div></tbody></table></div></div></div></div>"
+    "<div style=height:373px><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\"></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:320px;overflow: auto;margin-top: 10px\"><table class=\"table table-hover\"><thead><tr><th>Name</th><th class=text-center>ID</th><th class=text-center>Registered</th><th class=text-center ng-show=selectedEvent.havePassed>Participated</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ student.name }} {{ student.lastName }}</td><td class=text-center>{{ student.personId }}</td><td class=text-center><input type=checkbox name=checkboxes id=registeredStudentId ng-checked=student.active ng-click=\"updateStudentAttendance(student)\"></td><td ng-show=selectedEvent.havePassed><div ng-show=student.showAbsenceToggle ng-init=\"htmlSwitchStatus = true\" toggle-switch class=\"switch-success switch-mini\" on-label=Yes off-label=No ng-model=student.participated ng-switch=performDataSwitch(student)></div></td></tr></div></tbody></table></div></div></div></div>"
   );
 
 }]);

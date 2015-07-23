@@ -16,6 +16,7 @@ angular.module('edup.common')
                 Subjects: privateResource.one('subjects')
             },
             Public: {
+                Ping : publicResource.one('ping'),
                 Login: publicResource.one('login')
             }
 

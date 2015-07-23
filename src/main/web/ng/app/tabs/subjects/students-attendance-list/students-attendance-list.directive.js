@@ -9,28 +9,33 @@ angular.module('edup.subjects')
 
 			controller: function ($scope, $timeout, QueryService, RestService) {
 
-				$scope.resetEventStudentsSearch = function () {
+				$scope.resetEventStudentsSearch = function (havePassed) {
 					$scope.eventStudentsSearch = {
 						spin: false,
-						formats: ['Registered', 'All', 'Not registered'],
+						formats: [
+							'Registered',
+							'All'
+							//'Not registered'
+						],
 						searchValue: '',
 						values: [],
 						total: 0,
 						attendance: []
 					};
 
-					$scope.eventStudentsSearch.format = $scope.eventStudentsSearch.formats[0];
+					$scope.eventStudentsSearch.format = havePassed ? $scope.eventStudentsSearch.formats[0] : $scope.eventStudentsSearch.formats[1];
 				};
-
-				$scope.resetEventStudentsSearch();
 
 				$scope.mapAttendance = function (students) {
 					_.forEach(students, function (student) {
 						student.active = false;
+						student.showAbsenceToggle = false;
 						_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
 							if (student.id === attendance.studentId) {
 								student.active = true;
 								student.attendanceId = attendance.attendanceId;
+								student.showAbsenceToggle = true;
+								student.participated = attendance.participated;
 							}
 						});
 					});
@@ -40,9 +45,13 @@ angular.module('edup.subjects')
 					var search = _.isEmpty($scope.eventStudentsSearch.searchValue) ? '*' : $scope.eventStudentsSearch.searchValue;
 					var filter = null;
 					var attendanceStudents = _.pluck($scope.eventStudentsSearch.attendance, 'studentId');
-					switch($scope.eventStudentsSearch.format) {
-						case 'Registered' : filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')'; break;
-						case 'Not registered' : filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')'; break;
+					switch ($scope.eventStudentsSearch.format) {
+						case 'Registered' :
+							filter = 'Id eq (' + (attendanceStudents || []).join(',') + ')';
+							break;
+						case 'Not registered' :
+							filter = 'Id ne (' + (attendanceStudents || []).join(',') + ')';
+							break;
 					}
 					return QueryService.Query(10, skip, search, 'Name asc, LastName asc', filter);
 				};
@@ -54,13 +63,14 @@ angular.module('edup.subjects')
 
 						var query = studentsQuery(0);
 
-						RestService.Private.Students.get(query).then(function (response) {
-							$scope.eventStudentsSearch.values = response.values;
-							$scope.eventStudentsSearch.total = response.count;
-							$scope.mapAttendance($scope.eventStudentsSearch.values);
-							$scope.eventStudentsSearch.spin = false;
-						});
-
+						$timeout(function () {
+							RestService.Private.Students.get(query).then(function (response) {
+								$scope.eventStudentsSearch.values = response.values;
+								$scope.eventStudentsSearch.total = response.count;
+								$scope.mapAttendance($scope.eventStudentsSearch.values);
+								$scope.eventStudentsSearch.spin = false;
+							});
+						}, 100);
 					}
 				};
 
@@ -69,12 +79,15 @@ angular.module('edup.subjects')
 				});
 
 				$scope.loadMoreStudents = function () {
+					if (!$scope.eventStudentsSearch || $scope.eventStudentsSearch.spin) {
+						return;
+					}
+
 					if ($scope.eventStudentsSearch.values.length !== 0 && ($scope.eventStudentsSearch.values.length === $scope.eventStudentsSearch.total)) {
 						return;
 					}
 
 					if (!$scope.eventStudentsSearch.spin && $scope.studentsManagemnt.expanded) {
-						$scope.eventStudentsSearch.spin = true;
 						$scope.eventStudentsSearch.spin = true;
 
 						var query = studentsQuery($scope.eventStudentsSearch.values.length);
@@ -105,6 +118,19 @@ angular.module('edup.subjects')
 							.then(function (response) {
 								student.attendanceId = response.payload;
 								$scope.selectedEvent.students += 1;
+								if ($scope.selectedEvent.havePassed) {
+									student.showAbsenceToggle = true;
+
+									var attendance = {
+										attendanceId: response.payload,
+										studentId: student.id,
+										participated: true,
+										eventId: $scope.selectedEvent.eventId
+									};
+
+									$scope.eventStudentsSearch.attendance.push(attendance);
+									student.participated = attendance.participated;
+								}
 							});
 					} else {
 						RestService.Private.Subjects
@@ -117,10 +143,39 @@ angular.module('edup.subjects')
 								_.remove($scope.eventStudentsSearch.attendance, function (attendance) {
 									return student.id === attendance.studentId;
 								});
+
+								if ($scope.eventStudentsSearch.format === $scope.eventStudentsSearch.formats[0]) {
+									_.remove($scope.eventStudentsSearch.values, function (listStudent) {
+										return student.id === listStudent.id;
+									});
+								}
+
 								student.attendanceId = null;
 								$scope.selectedEvent.students -= 1;
 							});
 					}
+				};
+
+				$scope.performDataSwitch = function (student) {
+					//if (student.attendanceId) {
+					//	RestService.Private.Subjects
+					//		.one('events')
+					//		.one($scope.selectedEvent.eventId.toString())
+					//		.one('attendance')
+					//		.one(student.attendanceId.toString())
+					//		.customPUT({
+					//			eventId: $scope.selectedEvent.eventId,
+					//			studentId: student.id,
+					//			participated: student.participated
+					//		})
+					//		.then(function () {
+					//			_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
+					//				if (student.id === attendance.studentId) {
+					//					attendance.participated = student.participated;
+					//				}
+					//			});
+					//		});
+					//}
 				};
 
 			},

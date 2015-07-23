@@ -1,14 +1,19 @@
 @import (reference) "../../../../vendor/bower_components/bootstrap/less/bootstrap";
-@import "/app/style/less/edup/login/login";
-@import "/app/style/less/edup/header/header";
-@import "/app/style/less/edup/common/common";
-@import "/app/style/less/edup/typeahead/typeahead";
-@import "/app/style/less/edup/client_attendance/client_attendance";
+@import "../../../../app/style/less/edup/login/login";
+@import "../../../../app/style/less/edup/header/header";
+@import "../../../../app/style/less/edup/common/common";
+@import "../../../../app/style/less/edup/typeahead/typeahead";
+@import "../../../../app/style/less/edup/client_attendance/client_attendance";
 
 body {
-  background: #eeeeee url('/edup/images/sativa.png');
+  background: #eeeeee url('../../../../edup/images/sativa.png');
   position: relative;
   height: 100%;
+}
+
+.ats-switch span.switch-right {
+  background: @btn-danger-bg !important;
+  color: white;
 }
 
 .standaloneBody {
