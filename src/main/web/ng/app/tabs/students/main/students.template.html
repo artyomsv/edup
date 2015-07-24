@@ -25,13 +25,52 @@
 		</div>
 
 		<div class="col-md-5 column">
-			<div class="panel panel-success">
 
-				<div class="panel-heading panel-success-override">
-					Identification card
+			<div class="row">
+				<div class="panel panel-success">
+
+					<div class="panel-heading panel-success-override">
+						Identification card
+					</div>
+					<div class="panel-body panel-body-override" ng-show="studentSelected">
+						<student-identification-card></student-identification-card>
+					</div>
 				</div>
-				<div class="panel-body panel-body-override" ng-show="studentSelected">
-					<student-identification-card></student-identification-card>
+			</div>
+
+			<div class="row">
+				<div class="panel panel-success">
+
+					<div class="panel-heading panel-success-override">
+						Transactions history
+					</div>
+					<div class="panel-body panel-body-override" ng-show="studentSelected">
+						<div class="row">
+							<div class="col-md-12">
+								<h3>
+									Under development
+								</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="panel panel-success">
+
+					<div class="panel-heading panel-success-override">
+						Latest files
+					</div>
+					<div class="panel-body panel-body-override" ng-show="studentSelected">
+						<div class="row">
+							<div class="col-md-12">
+								<h3>
+									Under development
+								</h3>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

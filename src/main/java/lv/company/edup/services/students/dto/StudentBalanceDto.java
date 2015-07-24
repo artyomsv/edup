@@ -2,7 +2,10 @@ package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -11,10 +14,13 @@ import java.util.Date;
 public class StudentBalanceDto {
 
     private Long id;
-    @NotNull
+    @NotNull @DecimalMin(inclusive = true, value = "0", message = "Student ID cannot be negative!")
     private Long studentId;
     @NotNull
+    @DecimalMin(inclusive = false, value = "0", message = "Amount have to be grater then zero!")
+    @DecimalMax(inclusive = true, value = "100000", message = "Maximum amount must not exceed 1000.00 EURO")
     private Long amount;
+    @Size(max = 256, message = "Transaction comment must be between {min} and {max} characters long")
     private String comments;
     private Date created;
     private Boolean cash;

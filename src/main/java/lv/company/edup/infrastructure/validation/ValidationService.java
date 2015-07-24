@@ -24,6 +24,10 @@ public class ValidationService {
         validator = factory.getValidator();
     }
 
+    public void validate(Object... objects) {
+        validate(new Class<?>[]{Default.class}, objects);
+    }
+
     public void validate(Class<?> defaultGroup, Object... objects) {
         validate(new Class<?>[]{defaultGroup}, objects);
     }

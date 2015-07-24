@@ -109,9 +109,9 @@ angular.module('edup.common')
         var baseUrl;
 
         if (location.indexOf('127.0.0.1') > -1) {
-            baseUrl = 'http://127.0.0.1:8484/';
+            baseUrl = 'http://127.0.0.1:8088/';
         } else {
-            baseUrl = 'http://' + location + ':8484/edup/ng';
+            baseUrl = 'https://' + location + ':8443/edup/ng';
         }
 
         paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -404,9 +404,9 @@ angular.module('edup.common')
 		var baseUrl;
 
 		if (location.indexOf('127.0.0.1') > -1) {
-			baseUrl = 'http://localhost:8484/edup';
+			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'http://' + location + ':8484/edup';
+			baseUrl = 'https://' + location + ':8443/edup';
 		}
 
 		return {
@@ -701,56 +701,79 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('studentAttendance', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'student-attendance',
+	.directive('studentAttendance', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'student-attendance',
 
-            controller: ['$scope', function ($scope) {
-                $scope.attendanceHistory = [
-                    {
-                        'subject' : 'Math',
-                        'date' : '2015/03/03',
-                        'amount' : 15
-                    },
-                    {
-                        'subject' : 'Literature',
-                        'date' : '2015/03/03',
-                        'amount' : 15
-                    },
-                    {
-                        'subject' : 'Sport',
-                        'date' : '2015/03/04',
-                        'amount' : 20
-                    },
-                    {
-                        'subject' : 'History',
-                        'date' : '2015/03/04',
-                        'amount' : 10
-                    },
-                    {
-                        'subject' : 'Math',
-                        'date' : '2015/03/05',
-                        'amount' : 15
-                    },
-                    {
-                        'subject' : 'English',
-                        'date' : '2015/03/07',
-                        'amount' : 15
-                    },
-                    {
-                        'subject' : 'Sport',
-                        'date' : '2015/03/07',
-                        'amount' : 20
-                    }
-                ];
-            }],
+			controller: function () {
 
-            link : function ($scope) {
-               
-            }
-        };
-    }
+				//$scope.studentAttendanceSearch = {
+				//	spin: false,
+				//	searchValue: '',
+				//	values: [],
+				//	total: 0
+				//};
+				//
+				//$scope.loadStudentAttendace = function () {
+				//	if ($scope.studentAttendanceSearch.values.length !== 0 && ($scope.studentAttendanceSearch.values.length === $scope.studentAttendanceSearch.total)) {
+				//		return;
+				//	}
+				//
+				//	if (!$scope.studentAttendanceSearch.spin) {
+				//		$scope.studentAttendanceSearch.spin = true;
+				//
+				//		var query = QueryService.Query(10, $scope.studentAttendanceSearch.values.length + 10, search, 'Name asc, LastName asc', filter);
+				//
+				//
+				//	}
+				//
+				//};
+
+				//$scope.attendanceHistory = [
+				//	{
+				//		'subject': 'Math',
+				//		'date': '2015/03/03',
+				//		'amount': 15
+				//	},
+				//	{
+				//		'subject': 'Literature',
+				//		'date': '2015/03/03',
+				//		'amount': 15
+				//	},
+				//	{
+				//		'subject': 'Sport',
+				//		'date': '2015/03/04',
+				//		'amount': 20
+				//	},
+				//	{
+				//		'subject': 'History',
+				//		'date': '2015/03/04',
+				//		'amount': 10
+				//	},
+				//	{
+				//		'subject': 'Math',
+				//		'date': '2015/03/05',
+				//		'amount': 15
+				//	},
+				//	{
+				//		'subject': 'English',
+				//		'date': '2015/03/07',
+				//		'amount': 15
+				//	},
+				//	{
+				//		'subject': 'Sport',
+				//		'date': '2015/03/07',
+				//		'amount': 20
+				//	}
+				//];
+			},
+
+			link: function ($scope) {
+
+			}
+		};
+	}
 );
 'use strict';
 
@@ -927,81 +950,86 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('fileUpload', ['$window', '$timeout', 'UrlService', 'FileUploader', 'NotificationService', function ($window, $timeout, UrlService, FileUploader, NotificationService) {
-        return {
-            restrict: 'E',
-            templateUrl: 'file-upload',
-            scope: false,
-            priority: 10,
-            controller: ['$scope', '$timeout', 'RestService', function ($scope, $timeout, RestService) {
-                $scope.executeDocumentSave = function (studentId, fileId, fileName) {
-                    if (studentId && fileId) {
+	.directive('fileUpload', ['$window', '$timeout', 'UrlService', 'FileUploader', 'NotificationService', function ($window, $timeout, UrlService, FileUploader, NotificationService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'file-upload',
+			scope: false,
+			priority: 10,
+			controller: ['$scope', '$timeout', 'RestService', function ($scope, $timeout, RestService) {
+				$scope.executeDocumentSave = function (studentId, fileId, fileName) {
+					if (studentId && fileId) {
 
-                        var body = {
-                            fileId: fileId,
-                            studentId: studentId
-                        };
+						var body = {
+							fileId: fileId,
+							studentId: studentId
+						};
 
-                        RestService.Private.Documents.customPOST(body).then(function (response) {
-                            NotificationService.Success('Document ' + fileName + ' uploaded!');
-                        });
-                    }
-                };
+						RestService.Private.Documents.customPOST(body).then(function (response) {
+							NotificationService.Success('Document ' + fileName + ' uploaded!');
+						});
+					}
+				};
 
-            }],
-            link: function (scope) {
-                scope.uploader = new FileUploader({
-                    url: UrlService.Files.Upload
-                });
-                scope.uploader.removeAfterUpload = true;
+			}],
+			link: function (scope) {
+				scope.uploader = new FileUploader({
+					url: UrlService.Files.Upload
+				});
+				scope.uploader.removeAfterUpload = true;
 
-                scope.deleteItem = function (id) {
-                    console.log('delete ' + id);
-                };
+				scope.deleteItem = function (id) {
+					console.log('delete ' + id);
+				};
 
-                scope.openDownloadUrl = function (url) {
-                    $window.open(url, '_blank');
-                };
+				scope.openDownloadUrl = function (url) {
+					$window.open(url, '_blank');
+				};
 
-                //scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
-                //    console.info('onWhenAddingFileFailed', item, filter, options);
-                //};
-                //scope.uploader.onAfterAddingFile = function (fileItem) {
-                //    console.info('onAfterAddingFile', fileItem);
-                //};
-                //scope.uploader.onAfterAddingAll = function (addedFileItems) {
-                //    console.info('onAfterAddingAll', addedFileItems);
-                //};
-                //scope.uploader.onBeforeUploadItem = function (item) {
-                //    console.info('onBeforeUploadItem', item);
-                //};
-                //scope.uploader.onProgressItem = function (fileItem, progress) {
-                //    console.info('onProgressItem', fileItem, progress);
-                //};
-                //scope.uploader.onProgressAll = function (progress) {
-                //    console.info('onProgressAll', progress);
-                //};
-                scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                    var fileId = response.payload.id;
-                    scope.executeDocumentSave(scope.selectedStudent.id, fileId, fileItem._file.name);
-                };
-                scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
-                    NotificationService.Error('Failed to upload ' + fileItem._file.name);
-                };
-                //scope.uploader.onCancelItem = function (fileItem, response, status, headers) {
-                //    console.info('onCancelItem', fileItem, response, status, headers);
-                //};
-                //scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
-                //    console.info('onCompleteItem', fileItem, response, status, headers);
-                //};
-                scope.uploader.onCompleteAll = function () {
-                    $timeout(function() {
-                        scope.refreshDocumentsList();
-                    }, 1000);
-                };
-            }
-        };
-    }]
+				//scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+				//    console.info('onWhenAddingFileFailed', item, filter, options);
+				//};
+				//scope.uploader.onAfterAddingFile = function (fileItem) {
+				//    console.info('onAfterAddingFile', fileItem);
+				//};
+				//scope.uploader.onAfterAddingAll = function (addedFileItems) {
+				//    console.info('onAfterAddingAll', addedFileItems);
+				//};
+				//scope.uploader.onBeforeUploadItem = function (item) {
+				//    console.info('onBeforeUploadItem', item);
+				//};
+				//scope.uploader.onProgressItem = function (fileItem, progress) {
+				//    console.info('onProgressItem', fileItem, progress);
+				//};
+				//scope.uploader.onProgressAll = function (progress) {
+				//    console.info('onProgressAll', progress);
+				//};
+				scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+					var fileId = response.payload.id;
+					scope.executeDocumentSave(scope.selectedStudent.id, fileId, fileItem._file.name);
+				};
+				scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+					if (response && response.errors.length > 0) {
+						var errors = _.pluck(response.errors, 'message');
+						NotificationService.Error('Failed to upload ' + fileItem._file.name + '. ' + (errors || []).join(','));
+					} else {
+						NotificationService.Error('Failed to upload ' + fileItem._file.name);
+					}
+				};
+				//scope.uploader.onCancelItem = function (fileItem, response, status, headers) {
+				//    console.info('onCancelItem', fileItem, response, status, headers);
+				//};
+				//scope.uploader.onCompleteItem = function (fileItem, response, status, headers) {
+				//    console.info('onCompleteItem', fileItem, response, status, headers);
+				//};
+				scope.uploader.onCompleteAll = function () {
+					$timeout(function () {
+						scope.refreshDocumentsList();
+					}, 1000);
+				};
+			}
+		};
+	}]
 );
 'use strict';
 
@@ -1878,17 +1906,17 @@ angular.module('edup')
 
 
   $templateCache.put('student-accounting',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></form></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><form role=form name=studentBalanceUpdate><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=form-control money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div><div class=\"form-group text-center\"><button ng-click=\"updateStudentBalance(balance, selectedStudent)\" id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button></div></form></div></div></div>"
   );
 
 
   $templateCache.put('student-attendance',
-    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=\"row clearfix\"><div class=\"col-md-12 column\"><table class=\"table table-hover\"><thead><tr><th>Subject name</th><th>Date</th><th>Amount</th></tr></thead><tbody><tr ng-repeat=\"event in attendanceHistory\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td>{{ event.subject }}</td><td>{{ event.date }}</td><td>{{ event.amount }} EUR</td></tr></tbody></table><div class=text-center><ul class=\"pagination pagination-sm\"><li><a href=#>Prev</a></li><li><a href=#>1</a></li><li><a href=#>2</a></li><li><a href=#>3</a></li><li><a href=#>4</a></li><li><a href=#>5</a></li><li><a href=#>Next</a></li></ul></div></div><div class=\"row clearfix\"><div class=\"col-md-12 column\"><button type=button class=\"btn btn-success pull-right\">Add new attendance</button></div></div></div></div>"
+    "<div class=mainForm style=\"margin-left: 30px; margin-right: 30px\"><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div>"
   );
 
 
   $templateCache.put('balance-modal',
-    "<div app-modal id=addToBalanceModalView class=\"modal fade bs-example-modal-sm\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form><fieldset><legend>Add money to account</legend><form class=\"ng-valid ng-dirty\"><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div></form><div class=\"form-group text-center\"><button ng-click=saving(balance) id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button> <button id=cancelBalanceUpdate class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-click=\"balance = null\">Cancel</button></div></fieldset></form></div></div></div>"
+    "<div app-modal id=addToBalanceModalView class=\"modal fade bs-example-modal-sm\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form><fieldset><legend>Add money to account</legend><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=form-control money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div><div class=\"form-group text-center\"><button ng-click=saving(balance) id=addToBalanceButton class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset class=\"btn btn-primary btn-sm\">Reset</button> <button id=cancelBalanceUpdate class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-click=\"balance = null\">Cancel</button></div></fieldset></form></div></div></div>"
   );
 
 
@@ -1913,12 +1941,12 @@ angular.module('edup')
 
 
   $templateCache.put('student-identification-card',
-    "<div><div class=form-horizontal><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
+    "<div><div class=form-horizontal><div class=\"col-md-12 column\"><table class=identification-card width=100%><tr><td><h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4></td><td rowspan=2 width=180px><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></td></tr><tr><td><h4>{{ selectedStudent.personId }}</h4></td></tr></table></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div ng-show=false class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
   );
 
 
   $templateCache.put('students-list-header',
-    "<div class=container-fluid><div class=row><div class=col-xs-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div><div class=col-xs-3><div class=btn-group role=group aria-label=...><button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button></div></div><div class=col-xs-1><h4><span class=\"glyphicon glyphicon-plus pull-right\" style=\"cursor: pointer\" data-toggle=modal data-target=#addNewStudentModalView ng-click=resetNewStudent()></span></h4></div></div><new-student></new-student></div>"
+    "<div class=container-fluid><div class=row><div class=col-md-8><div class=column><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=searchValue ng-keyup=executeSearch(searchValue)></div></div></div><div class=col-md-4><div class=column><div class=\"btn-group btn-group-sm\" role=group aria-label=... style=\"padding-top: 2px\"><button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 10}\" ng-click=setRecordsPerPage(10)>10</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 25}\" ng-click=setRecordsPerPage(25)>25</button> <button type=button class=\"btn btn-default\" ng-class=\"{ active: studentPaging.perPage === 50}\" ng-click=setRecordsPerPage(50)>50</button><h3><span class=\"glyphicon glyphicon-plus\" style=\"cursor: pointer;position: absolute; padding-top: 5px;padding-left: 10px\" data-toggle=modal data-target=#addNewStudentModalView ng-click=resetNewStudent()></span></h3></div></div></div></div><new-student></new-student></div>"
   );
 
 
@@ -1928,7 +1956,7 @@ angular.module('edup')
 
 
   $templateCache.put('students',
-    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Students</div><div class=\"panel-body panel-body-override\"><div class=row><students-list-header></students-list-header></div><div class=row><students-list></students-list></div></div></div></div><div class=\"col-md-5 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Identification card</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div></div></div>"
+    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div class=\"col-md-7 column\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Students</div><div class=\"panel-body panel-body-override\"><div class=row><students-list-header></students-list-header></div><div class=row><students-list></students-list></div></div></div></div><div class=\"col-md-5 column\"><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Identification card</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Transactions history</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Latest files</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div></div></div></div></div></div>"
   );
 
 
