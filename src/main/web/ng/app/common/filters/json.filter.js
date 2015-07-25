@@ -2,8 +2,9 @@
 
 angular.module('edup.common')
 
-    .filter('toJson', function () {
-        return function (input, pretty) {
-            return angular.toJson(input, pretty);
-        };
-    });
+	.filter('toJson', function () {
+		return function (input, pretty) {
+			return angular.toJson(input, pretty);
+		};
+	}
+);

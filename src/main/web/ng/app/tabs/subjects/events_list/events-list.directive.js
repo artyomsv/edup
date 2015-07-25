@@ -12,7 +12,8 @@ angular.module('edup.subjects')
 					values: [],
 					total: 0,
 					loading: false,
-					firstLoad : true
+					firstLoad : true,
+					eventRecordsFound: true
 				};
 
 				$scope.setSelected = function (event) {
@@ -52,6 +53,8 @@ angular.module('edup.subjects')
 
 								$scope.events.total = response.count;
 								$scope.events.loading = false;
+
+								$scope.events.eventRecordsFound = response.count !== 0;
 							});
 						}, 300);
 					}

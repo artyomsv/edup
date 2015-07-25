@@ -20,7 +20,8 @@ angular.module('edup.subjects')
 						searchValue: '',
 						values: [],
 						total: 0,
-						attendance: []
+						attendance: [],
+						studentRecordsFound: true
 					};
 
 					$scope.eventStudentsSearch.format = havePassed ? $scope.eventStudentsSearch.formats[0] : $scope.eventStudentsSearch.formats[1];
@@ -28,6 +29,7 @@ angular.module('edup.subjects')
 
 				$scope.mapAttendance = function (students) {
 					_.forEach(students, function (student) {
+						student.fullName = student.name + ' ' + student.lastName;
 						student.active = false;
 						student.showAbsenceToggle = false;
 						_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
@@ -69,14 +71,12 @@ angular.module('edup.subjects')
 								$scope.eventStudentsSearch.total = response.count;
 								$scope.mapAttendance($scope.eventStudentsSearch.values);
 								$scope.eventStudentsSearch.spin = false;
+
+								$scope.eventStudentsSearch.studentRecordsFound = response.count !== 0;
 							});
 						}, 100);
 					}
 				};
-
-				$scope.$watch('eventStudentsSearch.format', function () {
-					$scope.executeSearch();
-				});
 
 				$scope.loadMoreStudents = function () {
 					if (!$scope.eventStudentsSearch || $scope.eventStudentsSearch.spin) {
@@ -156,26 +156,35 @@ angular.module('edup.subjects')
 					}
 				};
 
-				$scope.performDataSwitch = function (student) {
-					//if (student.attendanceId) {
-					//	RestService.Private.Subjects
-					//		.one('events')
-					//		.one($scope.selectedEvent.eventId.toString())
-					//		.one('attendance')
-					//		.one(student.attendanceId.toString())
-					//		.customPUT({
-					//			eventId: $scope.selectedEvent.eventId,
-					//			studentId: student.id,
-					//			participated: student.participated
-					//		})
-					//		.then(function () {
-					//			_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
-					//				if (student.id === attendance.studentId) {
-					//					attendance.participated = student.participated;
-					//				}
-					//			});
-					//		});
-					//}
+				$scope.formatChanged = function () {
+					$scope.executeSearch();
+				};
+
+				$scope.onStudentAbsenceEvent = function (student) {
+					console.log(student.participated);
+					if (student.attendanceId) {
+						student.updateInProgress = true;
+						RestService.Private.Subjects
+							.one('events')
+							.one($scope.selectedEvent.eventId.toString())
+							.one('attendance')
+							.one(student.attendanceId.toString())
+							.customPUT({
+								eventId: $scope.selectedEvent.eventId,
+								studentId: student.id,
+								participated: student.participated
+							})
+							.then(function () {
+								student.updateInProgress = false;
+								//_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
+								//	if (student.id === attendance.studentId) {
+								//		attendance.participated = student.participated;
+								//	}
+								//});
+							}, function () {
+								student.updateInProgress = false;
+							});
+					}
 				};
 
 			},

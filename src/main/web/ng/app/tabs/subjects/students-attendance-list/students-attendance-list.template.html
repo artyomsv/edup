@@ -1,7 +1,7 @@
 <div style="height:373px;">
 
 	<div class="row">
-		<div class="col-md-7">
+		<div class="col-md-8">
 			<div class="input-group">
                 <span class="input-group-addon" id="basic-addon1"
                       ng-class="{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}"></span>
@@ -9,13 +9,14 @@
 			</div>
 		</div>
 
-		<div class="col-md-5">
+		<div class="col-md-4">
 
 			<div class="dropdown pull-right" style="width: 100% !important;">
 				<select id="formatId"
 				        class="form-control"
 				        ng-model="eventStudentsSearch.format"
 				        ng-options="format for format in eventStudentsSearch.formats"
+				        ng-change="formatChanged()"
 						>
 				</select>
 			</div>
@@ -26,7 +27,18 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div id="events_students_contaner" style="height:320px;overflow: auto;margin-top: 10px">
-				<table class="table table-hover">
+
+				<div ng-show="!eventStudentsSearch.studentRecordsFound">
+
+					<div class="jumbotron well">
+						<h3>No students found!</h3>
+
+						<p>Please select another event or change search filter.</p>
+					</div>
+
+				</div>
+
+				<table ng-show="eventStudentsSearch.studentRecordsFound" class="table table-hover">
 					<thead>
 					<tr>
 						<th>Name</th>
@@ -44,23 +56,30 @@
 						    ng-class-even="'active'"
 								>
 
-							<td>{{ student.name }} {{ student.lastName }}</td>
-							<td class="text-center">{{ student.personId }}</td>
-							<td class="text-center">
+							<td style="width:30%;">
+								<div tooltip="{{student.fullName}}" tooltip-enable="student.fullName.length > 25" class="tooltip-300max">
+									{{ student.fullName | limitTo: 25}}{{student.fullName.length > 25 ? '...' : ''}}
+								</div>
+							</td>
+							<td class="text-center">{{ student.personId}}</td>
+							<td style="width:50px;" class="text-center">
 								<input type="checkbox"
 								       name="checkboxes"
 								       id="registeredStudentId"
 								       ng-checked="student.active"
 								       ng-click="updateStudentAttendance(student)"/>
 							</td>
-							<td ng-show="selectedEvent.havePassed">
+							<td style="width:50px;" ng-show="selectedEvent.havePassed">
 
-								<div ng-show="student.showAbsenceToggle" ng-init="htmlSwitchStatus = true" toggle-switch
+								<div ng-show="student.showAbsenceToggle"
+								     toggle-switch
+								     ng-init="student.updateInProgress = false"
+								     is-disabled="student.updateInProgress"
 								     class="switch-success switch-mini"
 								     on-label="Yes"
 								     off-label="No"
 								     ng-model="student.participated"
-								     ng-switch="performDataSwitch(student)"
+								     ng-change="onStudentAbsenceEvent(student)"
 										>
 								</div>
 
@@ -73,10 +92,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!--on-label='<i class="glyphicon glyphicon-ok-circle"></i>'-->
-	<!--off-label='<i class="glyphicon glyphicon-ban-circle"></i>'-->
-	<!--html="true"-->
 
 </div>
 

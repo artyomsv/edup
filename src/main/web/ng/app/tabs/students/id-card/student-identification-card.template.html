@@ -1,21 +1,42 @@
 <div>
 	<div class="form-horizontal">
-		<div class="col-md-12 column">
-			<table class="identification-card" width="100%">
-				<tr>
-					<td>
-						<h4><b>{{ selectedStudent.name }} {{ selectedStudent.lastName}}</b></h4>
-					</td>
-					<td rowspan="2" width="180px">
-						<img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<h4>{{ selectedStudent.personId }}</h4>
-					</td>
-				</tr>
-			</table>
+		<div>
+
+			<div class="col-md-6 column">
+				<div tooltip="{{selectedStudent.name }}" class="tooltip-300max" tooltip-enable="selectedStudent.name.length > 25">
+					<h4><b>{{ selectedStudent.name | limitTo: 25}}{{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4>
+				</div>
+				<div tooltip="{{selectedStudent.lastName }}" class="tooltip-300max" tooltip-enable="selectedStudent.lastName.length > 25">
+					<h4><b>{{ selectedStudent.lastName | limitTo: 25}}{{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4>
+				</div>
+				<div>
+					<h4>{{ selectedStudent.personId }}</h4>
+				</div>
+			</div>
+
+			<div class="col-md-6 column">
+				<img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>
+			</div>
+
+
+			<!--<table class="identification-card" width="100%">-->
+			<!--<tr>-->
+			<!--<td>-->
+			<!--<h4><b>{{ selectedStudent.name | limitTo: 25}} {{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4>-->
+			<!--</td>-->
+			<!--<td>-->
+			<!--<h4><b>{{ selectedStudent.lastName | limitTo: 25}} {{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4>-->
+			<!--</td>-->
+			<!--<td rowspan="2" width="180px">-->
+			<!--<img alt="140x140" src="{{selectedStudent.photoUrl}}" class="img-rounded pull-right"/>-->
+			<!--</td>-->
+			<!--</tr>-->
+			<!--<tr>-->
+			<!--<td>-->
+			<!--<h4>{{ selectedStudent.personId }}</h4>-->
+			<!--</td>-->
+			<!--</tr>-->
+			<!--</table>-->
 		</div>
 
 		<div class="col-md-12 column" style="padding-top: 20px">

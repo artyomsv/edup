@@ -109,8 +109,6 @@ module.exports = function (grunt) {
                     'vendor/bower_components/angular-file-upload/angular-file-upload.min.js',
                     'vendor/bower_components/angular-utils-pagination/dirPagination.js',
                     'vendor/bower_components/angular-money-directive/angular-money-directive.js',
-                    'vendor/bower_components/angular-strap/dist/angular-strap.min.js',
-                    'vendor/bower_components/angular-strap/dist/angular-strap.tpl.min.js',
                     'vendor/bower_components/alertifyjs/dist/js/alertify.js',
                     'vendor/bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js',
                     'vendor/bower_components/typeahead.js/dist/bloodhound.min.js',

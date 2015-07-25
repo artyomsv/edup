@@ -2,7 +2,7 @@
 
 	<div class="row clearfix">
 
-		<div class="col-md-7 column">
+		<div ng-class="{'col-md-7 column' :  studentsSearch.studentRecordsFound, 'col-md-12 column' :  !studentsSearch.studentRecordsFound}">
 			<div class="panel panel-success">
 
 				<div class="panel-heading panel-success-override">
@@ -24,7 +24,7 @@
 
 		</div>
 
-		<div class="col-md-5 column">
+		<div ng-show="studentsSearch.studentRecordsFound" class="col-md-5 column">
 
 			<div class="row">
 				<div class="panel panel-success">

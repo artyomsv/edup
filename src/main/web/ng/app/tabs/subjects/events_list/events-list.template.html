@@ -1,7 +1,18 @@
 <div class="container-fluid">
 
 	<div id="events_list_contaner" style="height:400px;overflow: auto">
-		<table class="table table-hover">
+
+		<div ng-show="!events.eventRecordsFound">
+
+			<div class="jumbotron well">
+				<h3>No events found!</h3>
+				<p>Please register new event.</p>
+			</div>
+
+		</div>
+
+
+		<table ng-show="events.eventRecordsFound" class="table table-hover">
 			<thead>
 			<tr>
 				<th>Name</th>
