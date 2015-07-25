@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 
@@ -16,13 +18,18 @@ import java.util.Date;
 public class LeanStudentDto {
 
     private Long id;
-    @NotNull(groups = StudentUpdateCheck.class)
+    @NotNull(groups = StudentUpdateCheck.class, message = "Student version may not be null")
     private Long versionId;
     @NotBlank(message = "Name is missing")
+    @Size(max = 32, message = "Name have to be {max} letters length")
     private String name;
     @NotBlank(message = "Last name missing")
+    @Size(max = 32, message = "Last name have to be {max} letters length")
     private String lastName;
+    @Pattern(regexp = "(\\d{6}+-\\d{5}+)", message = "Person number does not match pattern")
+    @Size(min = 0, max = 12, message = "Person number have to {max} letters length")
     private String personId;
+    @Size(min = 0, max = 24, message = "Phone have to be max {max} length")
     private String mobile;
     private Long age;
     @Past(message = "Birth date cannot be in future")

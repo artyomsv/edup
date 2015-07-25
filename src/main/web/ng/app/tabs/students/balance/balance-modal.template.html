@@ -43,19 +43,22 @@
 
 
 					<!-- Button -->
-					<div class="form-group text-center">
+					<div ng-init="balanceUpdateInProgress = false" class="form-group text-center">
 						<button ng-click="saving(balance)"
 						        id="addToBalanceButton"
+						        ng-disabled="balanceUpdateInProgress"
 						        class="btn btn-success btn-sm">Save
 						</button>
 						<button ng-click="resetValue()"
 						        id="clearBalanceUpdate"
 						        type="reset"
+						        ng-disabled="balanceUpdateInProgress"
 						        class="btn btn-primary  btn-sm">Reset
 						</button>
 						<button id="cancelBalanceUpdate"
 						        class="btn btn-warning  btn-sm"
 						        data-dismiss="modal"
+						        ng-disabled="balanceUpdateInProgress"
 						        ng-click="balance = null">Cancel
 						</button>
 					</div>

@@ -1,42 +1,39 @@
 <div class="container-fluid">
 
-	<form role="form" name="newSubjectEventForm" novalidate>
+	<form role="form" name="newSubjectEventForm">
 
 		<div class="row">
-
+			<!-- SUBJECT NAME -->
 			<div class="col-md-8 column">
-				<div  class="form-group" id="bloodhound">
+				<div class="form-group" id="bloodhound">
 					<div class="input-group" id="subjectTypeAheadInput">
 						<span class="input-group-addon" id="basic-addon2" ng-class="{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}"></span>
 
 						<div id="scrollable-dropdown-menu">
-							<input type="text" class="form-control typeahead tt-query" placeholder="Subject" ng-model="subjectEvent.subjectName" ng-keyup="updateSelectedSubject()">
+							<input required type="text" class="form-control typeahead tt-query" placeholder="Subject" ng-model="subjectEvent.subjectName" ng-keyup="updateSelectedSubject()">
 						</div>
 					</div>
 				</div>
 			</div>
-
+			<!-- AMOUNT -->
 			<div class="col-md-4 column">
-				<div class="form-group" ng-class="{'has-error': newSubjectEventForm.number.$invalid}">
+				<div class="form-group">
 					<div class="input-group">
 						<span class="input-group-addon">&euro;</span>
 						<input required id="amount" class="form-control ng-valid ng-valid-min ng-dirty ng-valid-number" money="" ng-model="subjectEvent.amount" autofocus="" placeholder="Amount" precision="2">
 					</div>
 				</div>
 			</div>
-
 		</div>
 
-
 		<div class="row">
-
+			<!-- EVENT DATE -->
 			<div class="col-md-4 column">
-
 				<div class="form-group">
 					<div class="dropdown">
 						<a class="dropdown-toggle" id="subjectEventDateId" role="button" data-toggle="dropdown" data-target="#" href="#">
 							<div class="input-group">
-								<input datepicker-popup="yyyy-MM-dd" type="text" class="form-control" data-ng-model="subjectEvent.eventDate" placeholder="Date">
+								<input required datepicker-popup="yyyy-MM-dd" type="text" class="form-control" data-ng-model="subjectEvent.eventDate" placeholder="Event date">
 								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 							</div>
 						</a>
@@ -49,12 +46,13 @@
 				</div>
 			</div>
 
-			<div class="col-md-3 column">
+			<!-- TIME FROM -->
+			<div class="col-md-4 column">
 				<div class="form-group">
 					<div class="dropdown">
 						<a class="dropdown-toggle" id="subjectEventTimeFromId" role="button" data-toggle="dropdown" data-target="#" href="#">
 							<div class="input-group">
-								<input datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeFrom" placeholder="Date">
+								<input required datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeFrom" placeholder="Time from">
 								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 							</div>
 						</a>
@@ -66,13 +64,13 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="col-md-3 column">
+			<!-- TIME TO -->
+			<div class="col-md-4 column">
 				<div class="form-group">
 					<div class="dropdown">
 						<a class="dropdown-toggle" id="subjectEventTimeToId" role="button" data-toggle="dropdown" data-target="#" href="#">
 							<div class="input-group">
-								<input datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeTo" placeholder="Date">
+								<input required datepicker-popup="HH:mm" type="text" class="form-control" data-ng-model="subjectEvent.eventTimeTo" placeholder="Time till">
 								<span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
 							</div>
 						</a>
@@ -84,13 +82,15 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<div class="col-md-2 column">
+		<div class="row">
+			<!-- SAVE BUTTON-->
+			<div class="col-md-3 column">
 				<div class="form-group">
 					<button style="width: 100%" type="submit" class="btn btn-success btn-sm" ng-click="saveNewEvent(subjectEvent)">Save</button>
 				</div>
 			</div>
-
 		</div>
 
 	</form>

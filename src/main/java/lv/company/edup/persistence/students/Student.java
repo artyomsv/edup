@@ -1,10 +1,11 @@
 package lv.company.edup.persistence.students;
 
-import lv.company.edup.infrastructure.utils.AppCollectionUtils;
+import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.students.properties.PropertyName;
 import lv.company.edup.persistence.students.properties.StudentProperty;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -159,12 +160,16 @@ public abstract class Student implements Serializable {
 
     protected void indexProperties() {
         if (!indexed && CollectionUtils.isNotEmpty(properties)) {
-            map = AppCollectionUtils.mapToCollection(properties, new AppCollectionUtils.KeyTransformer<StudentProperty, PropertyName>() {
-                @Override
-                public PropertyName transform(StudentProperty studentProperty) {
-                    return studentProperty.getName();
-                }
-            });
+
+            map = IndexBuilder.<PropertyName, StudentProperty>get()
+                    .key(new Transformer<StudentProperty, PropertyName>() {
+                        @Override
+                        public PropertyName transform(StudentProperty input) {
+                            return input.getName();
+                        }
+                    })
+                    .mapToCollection(properties);
+
         }
     }
 

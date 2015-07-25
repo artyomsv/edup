@@ -1,11 +1,12 @@
 package lv.company.edup.services.students;
 
-import lv.company.edup.infrastructure.utils.AppCollectionUtils;
+import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.balance.TransactionType;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.impl.JPA;
+import org.apache.commons.collections4.Transformer;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Lock;
@@ -45,12 +46,15 @@ public class TransactionTypeService {
         ODataCriteria criteria = new ODataCriteria();
         ODataResult<TransactionType> result = searchService.search(criteria, TransactionType.class);
 
-        map = AppCollectionUtils.map(result.getValues(), new AppCollectionUtils.KeyTransformer<TransactionType, String>() {
-            @Override
-            public String transform(TransactionType transactionType) {
-                return transactionType.getCode();
-            }
-        });
+        map = IndexBuilder.<String, TransactionType>get()
+                .key(new Transformer<TransactionType, String>() {
+                    @Override
+                    public String transform(TransactionType input) {
+                        return input.getCode();
+                    }
+                })
+                .map(result.getValues());
+
     }
 
 

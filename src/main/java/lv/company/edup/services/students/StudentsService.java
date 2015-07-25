@@ -8,8 +8,8 @@ import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
-import lv.company.edup.infrastructure.utils.AppCollectionUtils;
 import lv.company.edup.infrastructure.utils.FakeUtils;
+import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.persistence.students.Student;
 import lv.company.edup.persistence.students.current.CurrentStudentVersion;
@@ -28,6 +28,7 @@ import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.ejb.Stateless;
@@ -166,12 +167,16 @@ public class StudentsService {
         pairs.put(Arrays.asList(PropertyName.BIRTH_DATE, PropertyName.MOBILE_PHONE, PropertyName.PERSONAL_NUMBER), StudentProperty_.name);
         List<StudentProperty> properties = propertyRepository.findByMultipleAttributes(pairs);
         if (CollectionUtils.isNotEmpty(properties)) {
-            Map<Long, Collection<StudentProperty>> map = AppCollectionUtils.mapToCollection(properties, new AppCollectionUtils.KeyTransformer<StudentProperty, Long>() {
-                @Override
-                public Long transform(StudentProperty studentProperty) {
-                    return studentProperty.getVersionId();
-                }
-            });
+
+            Map<Long, Collection<StudentProperty>> map = IndexBuilder.<Long, StudentProperty>get()
+                    .key(new Transformer<StudentProperty, Long>() {
+                        @Override
+                        public Long transform(StudentProperty input) {
+                            return input.getVersionId();
+                        }
+                    })
+                    .mapToCollection(properties);
+
             for (Student version : versions) {
                 if (version == null) {
                     continue;

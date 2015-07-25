@@ -4,11 +4,9 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Last name</th>
-            <th>Age</th>
-            <th>ID</th>
-            <th>Phone</th>
-            <!--<th>Active</th>-->
+            <th class="text-center">Age</th>
+            <th class="text-center">ID</th>
+            <th class="text-center">Phone</th>
             <th></th>
         </tr>
         </thead>
@@ -24,13 +22,12 @@
             pagination-id="studentsPaginationId"
                 >
 
-            <td>{{ student.name }}</td>
-            <td>{{ student.lastName }}</td>
-            <td>{{ student.age }}</td>
-            <td>{{ student.personId }}</td>
-            <td>{{ student.mobile }}</td>
+            <td>{{ student.name }} {{ student.lastName }}</td>
+            <td class="text-center">{{ student.age }}</td>
+            <td class="text-center">{{ student.personId }}</td>
+            <td class="text-center">{{ student.mobile }}</td>
             <!--<td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="student.active"></td>-->
-            <td>
+            <td class="text-center">
                 <button href="#information" type="button" class="btn btn-success btn-xs" ng-click="openStudentDetailModal(student)">Details</button>
             </td>
         </tr>

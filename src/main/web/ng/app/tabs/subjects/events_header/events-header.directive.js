@@ -11,6 +11,12 @@ angular.module('edup.subjects')
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
 
+				var dismiss = function () {
+					var view = $('#addNewSubjectEventModal');
+					if (view) {
+						view.modal('hide');
+					}
+				};
 
 				var selectSubject = function (selectedSubjectName) {
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
@@ -118,10 +124,16 @@ angular.module('edup.subjects')
 						} else {
 							NotificationService.Error(angular.toJson(newSubjectEvent, true));
 						}
+					} else {
+						console.log(angular.toJson(newSubjectEvent, true));
 					}
 				};
 
 				$scope.updateSelectedSubject = function () {
+					if (!$scope.subjectEvent) {
+						$scope.subjectEvent = {};
+					}
+
 					var inputValue = $bloodhound.typeahead('val');
 					if ($scope.selectedSubject) {
 						if ($scope.selectedSubject.subjectName === inputValue) {

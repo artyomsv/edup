@@ -13,6 +13,7 @@ import org.junit.Test;
 import javax.validation.ConstraintViolation;
 
 import java.util.Collection;
+import java.util.Map;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -40,7 +41,9 @@ public class BalanceValidationTest {
         try {
             validationService.validate(dto);
         } catch (EdupConstraintViolationException e) {
-            assertConstraint(e.getConstraintViolations().iterator().next(), "amount", "may not be null");
+            assertThat(e.getConstraintViolations().size(), is(1));
+            Map<String, Collection<ConstraintViolation<?>>> map = e.get();
+            assertConstraint(map.get("amount").iterator().next(), "amount", "may not be null");
         }
     }
 
@@ -52,8 +55,9 @@ public class BalanceValidationTest {
             validationService.validate(dto);
         } catch (EdupConstraintViolationException e) {
             assertThat(e.getConstraintViolations().size(), is(2));
-            assertConstraint(find(e.getConstraintViolations(), "studentId"), "studentId", "Student ID cannot be negative!");
-            assertConstraint(find(e.getConstraintViolations(), "amount"), "amount", "may not be null");
+            Map<String, Collection<ConstraintViolation<?>>> map = e.get();
+            assertConstraint(map.get("studentId").iterator().next(), "studentId", "Student ID cannot be negative!");
+            assertConstraint(map.get("amount").iterator().next(), "amount", "may not be null");
         }
     }
 
@@ -88,8 +92,9 @@ public class BalanceValidationTest {
             validationService.validate(dto);
         } catch (EdupConstraintViolationException e) {
             assertThat(e.getConstraintViolations().size(), is(2));
-            assertConstraint(find(e.getConstraintViolations(), "amount"), "amount", "may not be null");
-            assertConstraint(find(e.getConstraintViolations(), "studentId"), "studentId", "may not be null");
+            Map<String, Collection<ConstraintViolation<?>>> map = e.get();
+            assertConstraint(map.get("studentId").iterator().next(), "studentId", "may not be null");
+            assertConstraint(map.get("amount").iterator().next(), "amount", "may not be null");
         }
     }
 

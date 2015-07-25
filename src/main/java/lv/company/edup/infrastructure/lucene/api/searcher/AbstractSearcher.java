@@ -2,10 +2,11 @@ package lv.company.edup.infrastructure.lucene.api.searcher;
 
 import lv.company.edup.infrastructure.lucene.impl.LuceneDocumentUtils;
 import lv.company.edup.infrastructure.lucene.impl.searcher.LuceneSorterQueryBuilder;
-import lv.company.edup.infrastructure.utils.AppCollectionUtils;
+import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
@@ -81,12 +82,14 @@ public abstract class AbstractSearcher<T> implements Searcher<T> {
             return Collections.emptyList();
         }
 
-        Map<Long, T> map = AppCollectionUtils.map(values, new AppCollectionUtils.KeyTransformer<T, Long>() {
-            @Override
-            public Long transform(T t) {
-                return getId(t);
-            }
-        });
+        Map<Long, T> map = IndexBuilder.<Long, T>get()
+                .key(new Transformer<T, Long>() {
+                    @Override
+                    public Long transform(T input) {
+                        return getId(input);
+                    }
+                })
+                .map(values);
 
         List<T> result = new ArrayList<T>();
         for (Long id : ids) {

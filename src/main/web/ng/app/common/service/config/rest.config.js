@@ -14,8 +14,7 @@ angular.module('edup.common').run(function (Restangular, UrlService, Notificatio
             msg = 'Failed on: ' + resp.config.method + ' to: ' + resp.config.url;
         }
         NotificationService.Error(msg);
-        console.log(angular.toJson(resp, true));
-        return false;
+        return true;
     });
 
     Restangular.setRestangularFields({
