@@ -1301,78 +1301,92 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('photoUpload', ['UrlService', 'FileUploader', '$window', '$timeout', 'NotificationService', 'RestService', function (UrlService, FileUploader, $window, $timeout, NotificationService, RestService) {
-        return {
-            restrict: 'E',
-            templateUrl: 'photo-upload',
-            scope: {
-                photoId: '=',
-                photoUrl: '='
-            },
-            priority: 10,
-            link: function (scope) {
-                scope.uploader = new FileUploader({
-                    url: UrlService.Files.Upload
-                });
-                scope.uploader.removeAfterUpload = true;
+	.directive('photoUpload', ['UrlService', 'FileUploader', '$window', '$timeout', 'NotificationService', 'RestService', function (UrlService, FileUploader, $window, $timeout, NotificationService, RestService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'photo-upload',
+			scope: {
+				photoId: '=',
+				photoUrl: '='
+			},
+			priority: 10,
+			link: function (scope) {
+				scope.photoIsSelected = false;
 
-                scope.deleteItem = function (id) {
-                    console.log('delete ' + id);
-                };
+				scope.uploader = new FileUploader({
+					url: UrlService.Files.Upload
+				});
+				scope.uploader.removeAfterUpload = true;
 
-                scope.openDownloadUrl = function (url) {
-                    $window.open(url, '_blank');
-                };
+				scope.deleteItem = function (id) {
+					scope.photoIsSelected = false;
+				};
 
-                scope.$on('clearFileUploadQueue', function (event, args) {
-                    scope.uploader.clearQueue();
-                    scope.photoUploaded = false;
-                });
+				scope.openDownloadUrl = function (url) {
+					$window.open(url, '_blank');
+				};
 
-                //scope.uploader.onWhenAddingFileFailed = function(item /*{File|FileLikeObject}*/, filter, options) {
-                //    console.info('onWhenAddingFileFailed', item, filter, options);
-                //};
-                //scope.uploader.onAfterAddingFile = function(fileItem) {
-                //    console.info('onAfterAddingFile', fileItem);
-                //};
-                //scope.uploader.onAfterAddingAll = function(addedFileItems) {
-                //    console.info('onAfterAddingAll', addedFileItems);
-                //};
-                //scope.uploader.onBeforeUploadItem = function(item) {
-                //    console.info('onBeforeUploadItem', item);
-                //};
-                //scope.uploader.onProgressItem = function(fileItem, progress) {
-                //    console.info('onProgressItem', fileItem, progress);
-                //};
-                //scope.uploader.onProgressAll = function(progress) {
-                //    console.info('onProgressAll', progress);
-                //};
-                scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
-                    scope.photoId = response.payload.id;
-                    scope.photoUrl = UrlService.Files.Download + '/' + scope.photoId;
-                    NotificationService.Success('Student photo uploaded!');
+				scope.handleItemRemoval = function (item) {
+					document.getElementById('photoUploader').value = '';
+					item.remove();
+					scope.photoIsSelected = false;
+				};
 
-                    $timeout(function () {
-                        scope.photoUploaded = true;
-                    }, 500);
-                };
-                scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
-                    NotificationService.Error('Failed to upload student photo!');
-                };
-                //scope. uploader.onCancelItem = function(fileItem, response, status, headers) {
-                //    console.info('onCancelItem', fileItem, response, status, headers);
-                //};
-                //scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
-                //    scope.photoUrl = UrlService.Download + '/' + response.id;
-                //    scope.photoUploaded = true;
-                //};
-                //scope.uploader.onCompleteAll = function() {
-                //    console.info('onCompleteAll');
-                //};
+				scope.$on('clearFileUploadQueue', function (event, args) {
+					scope.photoIsSelected = false;
+					scope.uploader.clearQueue();
+					scope.photoUploaded = false;
+				});
 
-            }
-        };
-    }]
+				scope.uploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {
+					scope.photoIsSelected = false;
+				};
+				scope.uploader.onAfterAddingFile = function (fileItem) {
+					scope.photoIsSelected = true;
+				};
+				scope.uploader.onAfterAddingAll = function (addedFileItems) {
+					scope.photoIsSelected = true;
+				};
+				//scope.uploader.onBeforeUploadItem = function(item) {
+				//    console.info('onBeforeUploadItem', item);
+				//};
+				//scope.uploader.onProgressItem = function(fileItem, progress) {
+				//    console.info('onProgressItem', fileItem, progress);
+				//};
+				//scope.uploader.onProgressAll = function(progress) {
+				//    console.info('onProgressAll', progress);
+				//};
+				scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
+					scope.photoId = response.payload.id;
+					scope.photoUrl = UrlService.Files.Download + '/' + scope.photoId;
+					NotificationService.Success('Student photo uploaded!');
+
+					$timeout(function () {
+						scope.photoUploaded = true;
+						scope.photoIsSelected = false;
+						document.getElementById('photoUploader').value = '';
+					}, 500);
+				};
+				scope.uploader.onErrorItem = function (fileItem, response, status, headers) {
+					NotificationService.Error('Failed to upload student photo!');
+					scope.photoIsSelected = false;
+					document.getElementById('photoUploader').value = '';
+				};
+				scope.uploader.onCancelItem = function (fileItem, response, status, headers) {
+					scope.photoIsSelected = false;
+					document.getElementById('photoUploader').value = '';
+				};
+				//scope.uploader.onCompleteItem = function(fileItem, response, status, headers) {
+				//    scope.photoUrl = UrlService.Download + '/' + response.id;
+				//    scope.photoUploaded = true;
+				//};
+				//scope.uploader.onCompleteAll = function() {
+				//    console.info('onCompleteAll');
+				//};
+
+			}
+		};
+	}]
 );
 'use strict';
 
@@ -2008,7 +2022,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-identification-card',
-    "<div><div class=form-horizontal><div><div class=\"col-md-6 column\"><div tooltip=\"{{selectedStudent.name }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.name.length > 25\"><h4><b>{{ selectedStudent.name | limitTo: 25}}{{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4></div><div tooltip=\"{{selectedStudent.lastName }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.lastName.length > 25\"><h4><b>{{ selectedStudent.lastName | limitTo: 25}}{{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4></div><div><h4>{{ selectedStudent.personId }}</h4></div></div><div class=\"col-md-6 column\"><img alt=140x140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></div></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div ng-show=false class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
+    "<div><div class=form-horizontal><div><div class=\"col-md-6 column\"><div tooltip=\"{{selectedStudent.name }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.name.length > 25\"><h4><b>{{ selectedStudent.name | limitTo: 25}}{{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4></div><div tooltip=\"{{selectedStudent.lastName }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.lastName.length > 25\"><h4><b>{{ selectedStudent.lastName | limitTo: 25}}{{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4></div><div><h4>{{ selectedStudent.personId }}</h4></div></div><div class=\"col-md-6 column\"><img alt=140x140 width=140 height=140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></div></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div ng-show=false class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
   );
 
 
@@ -2033,7 +2047,7 @@ angular.module('edup')
 
 
   $templateCache.put('photo-upload',
-    "<div style=\"padding: 10px\"><div><div ng-if=uploader><input type=file nv-file-select uploader=\"uploader\"></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span> Upload</button></td></tr></tbody></table></div><div ng-show=photoUrl><img alt=140x140 src={{photoUrl}} class=\"img-rounded text-center\"></div></div>"
+    "<div style=\"padding: 10px\"><div><div ng-if=uploader><input id=photoUploader ng-disabled=photoIsSelected type=file nv-file-select uploader=\"uploader\"></div></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span></button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span></button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=handleItemRemoval(item)><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr></tbody></table></div><div ng-show=photoUrl><img alt=140x140 width=140 height=140 src={{photoUrl}} class=\"img-rounded text-center\"></div>"
   );
 
 

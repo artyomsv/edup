@@ -476,3 +476,6 @@ body {
 .panel-body-override {
   background-color: rgba(244, 244, 244, 0.45) !important;
 }
+.tooltip-300max + .tooltip .tooltip-inner {
+  max-width: 300px;
+}
