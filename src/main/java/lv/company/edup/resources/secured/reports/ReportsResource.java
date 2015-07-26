@@ -2,6 +2,7 @@ package lv.company.edup.resources.secured.reports;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -22,7 +23,8 @@ public class ReportsResource {
     @Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getVisitingPlanJournal(@PathParam("subjectId") Long subjectId,
                                            @QueryParam("from") String from,
-                                           @QueryParam("to") String to) {
-        return facade.getVisitingPlanJournal(subjectId, from, to);
+                                           @QueryParam("to") String to,
+                                           @DefaultValue("false") @QueryParam("attendance") Boolean attendance) {
+        return facade.getVisitingPlanJournal(subjectId, from, to, attendance);
     }
 }

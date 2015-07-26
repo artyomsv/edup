@@ -12,6 +12,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -22,20 +23,22 @@ public class ReportsFacade extends ApplicationFacade {
     @Inject SubjectsService subjectsService;
     @Inject ReportsService reportsService;
 
-    public Response getVisitingPlanJournal(Long subjectId, String from, String to) {
+    public Response getVisitingPlanJournal(Long subjectId, String from, String to, boolean withAttendance) {
         SubjectDto subjectDto = subjectsService.find(subjectId);
         if (subjectDto == null) {
             throw new NotFoundException("Subject not found");
         }
 
-        byte[] data = new byte[0];
         try {
-            data = reportsService.renderVisitingJournalPlan(subjectDto, DateUtils.parseDate(from, "ddMMyyyy"), DateUtils.parseDate(to, "ddMMyyyy"));
+            Date fromDate = from != null ? DateUtils.parseDate(from, "ddMMyyyy") : new Date();
+            Date toDate = to != null ? DateUtils.parseDate(to, "ddMMyyyy") : DateUtils.addYears(new Date(), 100);
+
+            byte[] data = reportsService.renderVisitingJournalPlan(subjectDto, fromDate, toDate, withAttendance);
+            return streamResponse(data, "application/pdf", "report.pdf");
         } catch (ParseException e) {
             throw new InternalException(e);
         }
 
-        return streamResponse(data, "application/pdf", "report.pdf");
     }
 
 }

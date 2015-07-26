@@ -1,4 +1,4 @@
-<div style="height:373px;">
+<div style="height:418px;">
 
 	<div class="row">
 		<div class="col-md-8">
@@ -26,7 +26,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div id="events_students_contaner" style="height:320px;overflow: auto;margin-top: 10px">
+			<div id="events_students_contaner" style="height:340px;overflow: auto;margin-top: 10px">
 
 				<div ng-show="!eventStudentsSearch.studentRecordsFound">
 
@@ -78,6 +78,7 @@
 								     class="switch-success switch-mini"
 								     on-label="Yes"
 								     off-label="No"
+								     knob-label=""
 								     ng-model="student.participated"
 								     ng-change="onStudentAbsenceEvent(student)"
 										>
@@ -88,10 +89,13 @@
 					</div>
 					</tbody>
 				</table>
-
 			</div>
 		</div>
 	</div>
+
+	<button style="margin-top: 10px" class="btn btn-success btn-sm pull-right" type="button" ng-click="">
+		Confirm finished
+	</button>
 
 </div>
 

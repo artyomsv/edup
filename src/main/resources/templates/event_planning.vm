@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.1.0  -->
 <!-- 2015-07-26T14:18:11 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="events_planning" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="929d1954-ba3c-49f3-9479-56c3395fc1dd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="events_planning"
+              pageWidth="842" pageHeight="595"
+              orientation="Landscape"
+              columnWidth="802"
+              leftMargin="20"
+              rightMargin="20"
+              topMargin="20"
+              bottomMargin="20"
+              isIgnorePagination="false"
+              uuid="929d1954-ba3c-49f3-9479-56c3395fc1dd">
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -17,7 +29,7 @@
 			<staticText>
 				<reportElement x="290" y="60" width="184" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
 				<textElement>
-					<font size="14"/>
+									<font size="14" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[APMEKLĒJUMU ŽURNĀLS]]></text>
 			</staticText>
@@ -80,7 +92,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" isItalic="true" isUnderline="false"/>
+									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Id]]></text>
 			</staticText>
@@ -93,7 +105,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" isItalic="true" isUnderline="false"/>
+									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
@@ -106,14 +118,13 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true" isItalic="true" isUnderline="false"/>
+									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[${journalContextEventName}]]></text>
 			</staticText>
 
-    ##			------------------------------------------------------------------------
 
-        #foreach (${eventDate} in ${journalContextEvents} )
+			#foreach (${eventDate} in ${journalContextEvents} )
 
 					<staticText>
 						<reportElement x="${eventDate.xCoordinate}" y="21" width="${eventDate.xWidth}" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
@@ -124,12 +135,12 @@
 							<rightPen lineWidth="1.0"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
-							<font isBold="true" isItalic="true" isUnderline="false"/>
+													<font isBold="false" isItalic="false" size="6" isUnderline="false"/>
 						</textElement>
 						<text><![CDATA[${eventDate.date}]]></text>
 					</staticText>
 
-            #foreach (${eventTime} in ${eventDate.times})
+				#foreach (${eventTime} in ${eventDate.times})
 							<staticText>
 								<reportElement x="${eventTime.xCoordinate}" y="41" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
 								<box>
@@ -139,21 +150,20 @@
 									<rightPen lineWidth="1.0"/>
 								</box>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true" isItalic="true" isUnderline="false"/>
+																	<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 								</textElement>
 								<text><![CDATA[${eventTime.time}]]></text>
 							</staticText>
 
-            #end
+				#end
 
-        #end
+			#end
 
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="${journalContextDetailsBandHeight}" splitType="Stretch">
-
-        #foreach (${student} in ${journalContextStudents})
+		#foreach (${student} in ${journalContextStudents})
+					<band height="20" splitType="Stretch">
 					<staticText>
 						<reportElement x="0" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
 						<box>
@@ -163,7 +173,7 @@
 							<rightPen lineWidth="1.0"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
-							<font isBold="true" isItalic="true" isUnderline="false"/>
+													<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 						</textElement>
 						<text><![CDATA[${student.order}]]></text>
 					</staticText>
@@ -175,16 +185,17 @@
 							<bottomPen lineWidth="1.0"/>
 							<rightPen lineWidth="1.0"/>
 						</box>
-						<textElement textAlignment="Center" verticalAlignment="Middle">
-							<font isBold="true" isItalic="true" isUnderline="false"/>
+											<textElement textAlignment="Left" verticalAlignment="Middle">
+												<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+												<paragraph leftIndent="5"/>
 						</textElement>
 						<text><![CDATA[${student.fullName}]]></text>
 					</staticText>
 
-            #foreach (${eventDate} in ${student.studentEventData})
-                #foreach (${eventTimeCell} in ${eventDate.times})
+			  #foreach (${eventDate} in ${student.studentEventData})
+				  #foreach (${eventTimeCell} in ${eventDate.times})
 									<staticText>
-										<reportElement x="${eventTimeCell.xCoordinate}" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+																			<reportElement mode="Opaque" backcolor="${eventTimeCell.backColor}" x="${eventTimeCell.xCoordinate}" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
 										<box>
 											<topPen lineWidth="1.0"/>
 											<leftPen lineWidth="1.0"/>
@@ -192,23 +203,23 @@
 											<rightPen lineWidth="1.0"/>
 										</box>
 										<textElement textAlignment="Center" verticalAlignment="Middle">
-											<font isBold="true" isItalic="true" isUnderline="false"/>
+																					<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
 										</textElement>
-										<text><![CDATA[]]></text>
+																			<text><![CDATA[${eventTimeCell.participated}]]></text>
 									</staticText>
-                #end
-            #end
+				  #end
+			  #end
+					</band>
+		#end
 
-        #end
-		</band>
 	</detail>
 	<columnFooter>
-		<band height="45" splitType="Stretch"/>
+			<band height="10" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+			<band height="10" splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+			<band height="10" splitType="Stretch"/>
 	</summary>
 </jasperReport>
