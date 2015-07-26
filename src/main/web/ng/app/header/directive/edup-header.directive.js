@@ -13,9 +13,6 @@ angular.module('edup.header')
                     return viewLocation === $location.path();
                 };
 
-                $scope.downloadReport = function () {
-                };
-
                 $scope.logoutUser = function () {
                     RestService.Private.LogOut.post().then(function () {
                         $window.location.href = UrlService.BaseUrl;

@@ -53632,7 +53632,10 @@ angular.module('edup.common')
 				Upload: baseUrl + '/api/private/files/upload',
 				Download: baseUrl + '/api/private/files/download'
 			},
-			Subjects: baseUrl + '/api/private/subjects'
+			Subjects: baseUrl + '/api/private/subjects',
+			Reports: {
+				Events : baseUrl + '/api/private/reports/visiting/plan/subject'
+			}
 		};
 
 	}
@@ -53677,6 +53680,35 @@ angular.module('edup.header', ['ui.router']);
 
 angular.module('edup.header')
 
+    .directive('edupHeader', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'edup-header',
+
+            controller: ['$scope', '$window', '$location', 'RestService', 'UrlService', function ($scope, $window, $location, RestService, UrlService) {
+
+                $scope.isActive = function (viewLocation) {
+                    return viewLocation === $location.path();
+                };
+
+                $scope.logoutUser = function () {
+                    RestService.Private.LogOut.post().then(function () {
+                        $window.location.href = UrlService.BaseUrl;
+                    });
+                };
+            }],
+
+            link: function () {
+
+            }
+
+        };
+    }
+);
+'use strict';
+
+angular.module('edup.header')
+
 	.controller('NavbarController', ['$scope', '$state', 'RestService', function ($scope, $state, RestService) {
 
 		$scope.application = {
@@ -53700,38 +53732,6 @@ angular.module('edup.header')
 		});
 
 	}]
-);
-'use strict';
-
-angular.module('edup.header')
-
-    .directive('edupHeader', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'edup-header',
-
-            controller: ['$scope', '$window', '$location', 'RestService', 'UrlService', function ($scope, $window, $location, RestService, UrlService) {
-
-                $scope.isActive = function (viewLocation) {
-                    return viewLocation === $location.path();
-                };
-
-                $scope.downloadReport = function () {
-                };
-
-                $scope.logoutUser = function () {
-                    RestService.Private.LogOut.post().then(function () {
-                        $window.location.href = UrlService.BaseUrl;
-                    });
-                };
-            }],
-
-            link: function () {
-
-            }
-
-        };
-    }
 );
 'use strict';
 
@@ -54685,13 +54685,6 @@ angular.module('edup.subjects')
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
 
-				var dismiss = function () {
-					var view = $('#addNewSubjectEventModal');
-					if (view) {
-						view.modal('hide');
-					}
-				};
-
 				var selectSubject = function (selectedSubjectName) {
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
@@ -54703,7 +54696,7 @@ angular.module('edup.subjects')
 
 				var typeAhead = TypeAheadService.Build();
 
-				var $bloodhound = $('#bloodhound .typeahead');
+				var $bloodhound = $('#subject-event-typeahead .typeahead');
 
 				$bloodhound.typeahead({
 						hint: true,
@@ -55127,6 +55120,105 @@ angular.module('edup.subjects')
 ;
 'use strict';
 
+angular.module('edup.reports', [
+
+]);
+'use strict';
+
+angular.module('edup.reports')
+
+	.directive('eventAttendanceModal', ['$filter', 'UrlService', function ($filter, UrlService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'event-attendance-modal',
+			controller: ['$scope', '$timeout', 'moment', 'RestService', 'TypeAheadService', function ($scope, $timeout, moment, RestService, TypeAheadService) {
+
+				$scope.plannedEventDetails = {
+					selectedSubject: null,
+					dateFromPicker: null,
+					dateToPicker: null,
+				};
+
+				var selectSubject = function (selectedSubjectName) {
+					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
+						return subject.subjectName === selectedSubjectName;
+					});
+					console.log(angular.toJson($scope.selectedSubject));
+				};
+
+
+				var typeAhead = TypeAheadService.Build();
+
+				var $bloodhound = $('#subject-event-typeahead-modal .typeahead');
+
+				$bloodhound.typeahead({
+						hint: true,
+						highlight: true,
+						minLength: 1
+					},
+					{
+						name: 'subjectsTypeAhead',
+						source: typeAhead
+					}
+				);
+
+				$bloodhound.bind('typeahead:selected', function (obj, datum) {
+					selectSubject(datum);
+				});
+
+				$scope.plannedEventJournal = function () {
+					$scope.plannedEventDetails = {
+						showAttendance: false
+					};
+				};
+
+				$scope.finishedEventReport = function () {
+					$scope.plannedEventDetails = {
+						showAttendance: true
+					};
+				};
+
+
+
+			}],
+			link: function (scope) {
+
+				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+
+				};
+
+				scope.performReportDownload = function (details) {
+					if (details && details.selectedSubject && details.dateFromPicker && details.dateToPicker) {
+						var query = {
+							from: $filter('date')(details.dateFromPicker, 'ddMMyyyy'),
+							to: $filter('date')(details.dateToPicker, 'ddMMyyyy'),
+							attendance: scope.plannedEventDetails.showAttendance
+						};
+						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
+						window.open(url);
+						scope.dismissModal();
+					}
+
+				};
+
+			}
+		};
+
+
+	}]
+);
+'use strict';
+
+angular.module('edup.reports')
+
+	.controller('ReportsController', ['$scope', function ($scope) {
+
+	}]
+);
+
+
+'use strict';
+
 angular.module('edup.tabs', [
 	'ngSanitize',
 	'toggle-switch',
@@ -55134,6 +55226,7 @@ angular.module('edup.tabs', [
 	'infinite-scroll',
 	'angularFileUpload',
 	'fiestah.money',
+	'edup.reports',
 	'edup.calendar',
 	'edup.subjects',
 	'edup.students'
@@ -55189,7 +55282,7 @@ angular.module('edup')
 
 
   $templateCache.put('edup-header',
-    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header style=\"margin-right: 30px\"><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button><div class=navbar-brand>Educational planning application: {{application.version}}</div></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/subjects')}\"><a href=#subjects>Subjects</a></li><li class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=downloadReport()><a href=#>Visiting Journal</a></li><li><a href=#>Another action</a></li><li><a href=#>Something else here</a></li><li class=divider></li><li><a href=#>Separated link</a></li><li class=divider></li><li><a href=#>One more separated link</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div>"
+    "<div><nav class=\"navbar navbar-default\"><div class=container-fluid><div class=navbar-header style=\"margin-right: 30px\"><button type=button class=\"navbar-toggle collapsed\" data-toggle=collapse data-target=#bs-example-navbar-collapse-1><span class=sr-only>Toggle navigation</span> <span class=icon-bar></span> <span class=icon-bar></span> <span class=icon-bar></span></button><div class=navbar-brand>Educational planning application: {{application.version}}</div></div><div class=\"collapse navbar-collapse\" id=bs-example-navbar-collapse-1><ul class=\"nav navbar-nav\"><li ng-class=\"{ active: isActive('/students')}\"><a href=#students>Students<span class=sr-only>(current)</span></a></li><li ng-class=\"{ active: isActive('/subjects')}\"><a href=#subjects>Subjects</a></li><li ng-controller=ReportsController class=dropdown><a href=#report class=dropdown-toggle data-toggle=dropdown role=button aria-expanded=false>Reports<span class=caret></span></a><ul class=dropdown-menu role=menu><li ng-click=plannedEventJournal() data-toggle=modal data-target=#eventAttendanceModalView><a href=#>Planned event journal</a></li><li ng-click=finishedEventReport() data-toggle=modal data-target=#eventAttendanceModalView><a href=#>Finished event report</a></li></ul></li></ul><ul class=\"nav navbar-nav navbar-right\"><li><a href=# target=_self ng-click=logoutUser()>Log out</a></li></ul></div></div></nav></div><event-attendance-modal></event-attendance-modal>"
   );
 
 
@@ -55200,6 +55293,11 @@ angular.module('edup')
 
   $templateCache.put('calendar',
     "<div class=mainForm ng-controller=CalendarController><div class=\"col-md-12 column\"><div class=\"col-md-3 form-inline\"><div class=\"btn-group pull-left\"><button class=\"btn btn-primary btn-sm\" ng-click=updateTitle() mwl-date-modifier date=calendarDay decrement=calendarView>&lt;&lt; Prev</button> <button class=\"btn btn-sm\" ng-click=updateTitle() mwl-date-modifier date=calendarDay set-to-today>Today</button> <button class=\"btn btn-primary btn-sm\" ng-click=updateTitle() mwl-date-modifier date=calendarDay increment=calendarView>Next &gt;&gt;</button></div></div><div class=col-md-2><div class=btn-group><h4>{{ currentDay }}</h4></div></div><div class=\"col-md-3 form-inline\"><div class=\"btn-group pull-right\"><button class=\"btn btn-primary btn-sm\" ng-click=\"setCalendarView('year')\">Year</button> <button class=\"btn btn-primary btn-sm\" ng-click=\"setCalendarView('month')\">Month</button> <button class=\"btn btn-primary btn-sm\" ng-click=\"setCalendarView('week')\">Week</button> <button class=\"btn btn-primary btn-sm\" ng-click=\"setCalendarView('day')\">Day</button></div></div><div class=\"col-md-4 form-inline\"><h4>Today events:</h4></div></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><div class=\"col-md-8 column\"><mwl-calendar events=events view=calendarView view-title=calendarTitle current-day=calendarDay on-event-click=eventClicked(calendarEvent) edit-event-html=\"'<i class=\\'glyphicon glyphicon-pencil\\'></i>'\" delete-event-html=\"'<i class=\\'glyphicon glyphicon-remove\\'></i>'\" on-edit-event-click=eventEdited(calendarEvent) on-delete-event-click=eventDeleted(calendarEvent)></mwl-calendar></div><div class=\"col-md-4 column\"><div ng-repeat=\"event in events\"><h4><div class=label ng-class=\"{ 'label-primary': event.type === 'info', 'label-warning': event.type === 'warning', 'label-danger': event.type === 'important'}\" data-toggle=tooltip data-placement=top title=\"Tooltip on top\" tooltip=\"{{ event.title }}\" tooltip-trigger=\"{{{true: 'mouseenter', false: 'never'}[myForm.username.$invalid]}}\">({{event.startsAt| date:'HH:mm'}} - {{event.endsAt | date:'HH:mm'}}) {{event.title | limitTo: 33}} {{event.title.length > 33 ? '...' : ''}}</div></h4></div></div></div></div>"
+  );
+
+
+  $templateCache.put('event-attendance-modal',
+    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div>{{plannedEventDetails}}</div>"
   );
 
 
@@ -55274,7 +55372,7 @@ angular.module('edup')
 
 
   $templateCache.put('events-header',
-    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=\"col-md-8 column\"><div class=form-group id=bloodhound><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div></div><div class=row><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=subjectEvent.eventDate placeholder=\"Event date\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventDate data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeFromId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeFrom placeholder=\"Time from\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeFrom data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'minute'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeToId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeTo placeholder=\"Time till\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeTo data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'minute', minuteStep: 10}\"></datetimepicker></ul></div></div></div></div><div class=row><div class=\"col-md-3 column\"><div class=form-group><button style=\"width: 100%\" type=submit class=\"btn btn-success btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div></form></div>"
+    "<div class=container-fluid><form role=form name=newSubjectEventForm><div class=row><div class=\"col-md-8 column\"><div class=form-group id=subject-event-typeahead><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=subjectEvent.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=\"form-control ng-valid ng-valid-min ng-dirty ng-valid-number\" money=\"\" ng-model=subjectEvent.amount autofocus placeholder=Amount precision=2></div></div></div></div><div class=row><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=subjectEvent.eventDate placeholder=\"Event date\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventDate data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateId' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeFromId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeFrom placeholder=\"Time from\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeFrom data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeFromId' , startView:'hour', minView:'minute'}\"></datetimepicker></ul></div></div></div><div class=\"col-md-4 column\"><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventTimeToId role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=HH:mm class=form-control data-ng-model=subjectEvent.eventTimeTo placeholder=\"Time till\"> <span class=input-group-addon><i class=\"glyphicon glyphicon-time\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=subjectEvent.eventTimeTo data-before-render=\"renderTimePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventTimeToId' , startView:'hour', minView:'minute', minuteStep: 10}\"></datetimepicker></ul></div></div></div></div><div class=row><div class=\"col-md-3 column\"><div class=form-group><button style=\"width: 100%\" type=submit class=\"btn btn-success btn-sm\" ng-click=saveNewEvent(subjectEvent)>Save</button></div></div></div></form></div>"
   );
 
 
@@ -55289,7 +55387,7 @@ angular.module('edup')
 
 
   $templateCache.put('students-attendance-list',
-    "<div style=height:373px><div class=row><div class=col-md-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\" style=\"width: 100% !important\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\" ng-change=formatChanged()></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:320px;overflow: auto;margin-top: 10px\"><div ng-show=!eventStudentsSearch.studentRecordsFound><div class=\"jumbotron well\"><h3>No students found!</h3><p>Please select another event or change search filter.</p></div></div><table ng-show=eventStudentsSearch.studentRecordsFound class=\"table table-hover\"><thead><tr><th>Name</th><th class=text-center>ID</th><th class=text-center>Registered</th><th class=text-center ng-show=selectedEvent.havePassed>Participated</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=width:30%><div tooltip={{student.fullName}} tooltip-enable=\"student.fullName.length > 25\" class=tooltip-300max>{{ student.fullName | limitTo: 25}}{{student.fullName.length > 25 ? '...' : ''}}</div></td><td class=text-center>{{ student.personId}}</td><td style=width:50px class=text-center><input type=checkbox name=checkboxes id=registeredStudentId ng-checked=student.active ng-click=\"updateStudentAttendance(student)\"></td><td style=width:50px ng-show=selectedEvent.havePassed><div ng-show=student.showAbsenceToggle toggle-switch ng-init=\"student.updateInProgress = false\" is-disabled=student.updateInProgress class=\"switch-success switch-mini\" on-label=Yes off-label=No knob-label=\"\" ng-model=student.participated ng-change=onStudentAbsenceEvent(student)></div></td></tr></div></tbody></table></div></div></div></div>"
+    "<div style=height:418px><div class=row><div class=col-md-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\" style=\"width: 100% !important\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\" ng-change=formatChanged()></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:340px;overflow: auto;margin-top: 10px\"><div ng-show=!eventStudentsSearch.studentRecordsFound><div class=\"jumbotron well\"><h3>No students found!</h3><p>Please select another event or change search filter.</p></div></div><table ng-show=eventStudentsSearch.studentRecordsFound class=\"table table-hover\"><thead><tr><th>Name</th><th class=text-center>ID</th><th class=text-center>Registered</th><th class=text-center ng-show=selectedEvent.havePassed>Participated</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=width:30%><div tooltip={{student.fullName}} tooltip-enable=\"student.fullName.length > 25\" class=tooltip-300max>{{ student.fullName | limitTo: 25}}{{student.fullName.length > 25 ? '...' : ''}}</div></td><td class=text-center>{{ student.personId}}</td><td style=width:50px class=text-center><input type=checkbox name=checkboxes id=registeredStudentId ng-checked=student.active ng-click=\"updateStudentAttendance(student)\"></td><td style=width:50px ng-show=selectedEvent.havePassed><div ng-show=student.showAbsenceToggle toggle-switch ng-init=\"student.updateInProgress = false\" is-disabled=student.updateInProgress class=\"switch-success switch-mini\" on-label=Yes off-label=No knob-label=\"\" ng-model=student.participated ng-change=onStudentAbsenceEvent(student)></div></td></tr></div></tbody></table></div></div></div><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=\"\">Confirm finished</button></div>"
   );
 
 }]);

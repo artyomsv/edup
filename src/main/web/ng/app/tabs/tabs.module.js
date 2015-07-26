@@ -7,6 +7,7 @@ angular.module('edup.tabs', [
 	'infinite-scroll',
 	'angularFileUpload',
 	'fiestah.money',
+	'edup.reports',
 	'edup.calendar',
 	'edup.subjects',
 	'edup.students'

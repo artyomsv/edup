@@ -31,7 +31,7 @@ public class ReportsFacade extends ApplicationFacade {
 
         try {
             Date fromDate = from != null ? DateUtils.parseDate(from, "ddMMyyyy") : new Date();
-            Date toDate = to != null ? DateUtils.parseDate(to, "ddMMyyyy") : DateUtils.addYears(new Date(), 100);
+            Date toDate = to != null ? DateUtils.addDays(DateUtils.parseDate(to, "ddMMyyyy"), 1) : DateUtils.addYears(new Date(), 100);
 
             byte[] data = reportsService.renderVisitingJournalPlan(subjectDto, fromDate, toDate, withAttendance);
             return streamResponse(data, "application/pdf", "report.pdf");

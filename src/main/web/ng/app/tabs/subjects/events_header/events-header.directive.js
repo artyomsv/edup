@@ -11,13 +11,6 @@ angular.module('edup.subjects')
 				$scope.subjects = [];
 				$scope.selectedSubject = null;
 
-				var dismiss = function () {
-					var view = $('#addNewSubjectEventModal');
-					if (view) {
-						view.modal('hide');
-					}
-				};
-
 				var selectSubject = function (selectedSubjectName) {
 					$scope.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
@@ -29,7 +22,7 @@ angular.module('edup.subjects')
 
 				var typeAhead = TypeAheadService.Build();
 
-				var $bloodhound = $('#bloodhound .typeahead');
+				var $bloodhound = $('#subject-event-typeahead .typeahead');
 
 				$bloodhound.typeahead({
 						hint: true,
