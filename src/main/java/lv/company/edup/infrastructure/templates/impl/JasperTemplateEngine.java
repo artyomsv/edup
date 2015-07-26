@@ -29,17 +29,30 @@ import java.util.Map;
 @ApplicationScoped
 public class JasperTemplateEngine implements TemplateEngine {
 
+    public static final String JR_DATA_SOURCE = "JRDataSource";
+
     @Override
-    public byte[] render(Template template, Map<String, Object> context, Type type) {
+    public void init() {
+
+    }
+
+    @Override
+    public byte[] render(byte[] template, Map<String, Object> context, Type type) {
 
         try {
-            JRProperties.setProperty("net.sf.jasperreports.default.pdf.encoding","UTF-8");
-            JRProperties.setProperty("net.sf.jasperreports.default.pdf.embedded","true");
+            JRProperties.setProperty("net.sf.jasperreports.default.pdf.encoding", "UTF-8");
+            JRProperties.setProperty("net.sf.jasperreports.default.pdf.embedded", "true");
 
-            JRDataSource dataSource = new JREmptyDataSource();
+            Object dataSource = context.get(JR_DATA_SOURCE);
 
-            JasperReport compiledJasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(template.getTemplate()));
-            JasperPrint jasperPrint = JasperFillManager.fillReport(compiledJasperReport, context, dataSource);
+            JasperReport compiledJasperReport = JasperCompileManager.compileReport(new ByteArrayInputStream(template));
+            JasperPrint jasperPrint;
+            if (dataSource != null) {
+                jasperPrint = JasperFillManager.fillReport(compiledJasperReport, context, (JRDataSource) dataSource);
+            } else {
+                jasperPrint = JasperFillManager.fillReport(compiledJasperReport, context, new JREmptyDataSource());
+
+            }
 //            JasperPrint jasperPrint = JasperFillManager.fillReport(new ByteArrayInputStream(template.getCompiledTemplate()), context, dataSource);
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -70,7 +83,13 @@ public class JasperTemplateEngine implements TemplateEngine {
         } catch (JRException e) {
             throw new InternalException(e);
         }
+    }
+
+    @Override
+    public byte[] render(Template template, Map<String, Object> context, Type type) {
+        return render(template.getTemplate(), context, type);
 
     }
+
 
 }

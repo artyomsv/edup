@@ -34,7 +34,7 @@ public class TemplateCache {
         templates = new EnumMap<>(TemplateName.class);
         try {
             for (TemplateName name : TemplateName.values()) {
-                templates.put(name, new Template(read(name.compiledFile), read(name.file), name));
+                templates.put(name, new Template(read(name.file), name));
                 logger.log(Level.INFO, "File {0} was caches as template", name.file);
             }
         } catch (IOException e) {

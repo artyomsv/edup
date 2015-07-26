@@ -1,6 +1,7 @@
 package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lv.company.edup.services.students.validation.StudentUpdateCheck;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,6 +16,7 @@ import java.util.Date;
 
 @XmlRootElement
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class LeanStudentDto {
 
     private Long id;

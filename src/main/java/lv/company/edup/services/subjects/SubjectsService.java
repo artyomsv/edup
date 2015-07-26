@@ -60,6 +60,10 @@ public class SubjectsService {
 
     @Inject @JPA ODataSearchService searchService;
 
+    public SubjectDto find(Long id) {
+        return mapper.map(subjectRepository.find(id), SubjectDto.class);
+    }
+
     public ODataResult<SubjectDto> search(ODataCriteria criteria) {
         ODataResult<SubjectDto> search;
         try {

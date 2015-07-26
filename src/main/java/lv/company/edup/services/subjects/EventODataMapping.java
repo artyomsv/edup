@@ -8,12 +8,17 @@ import javax.persistence.metamodel.SingularAttribute;
 
 public class EventODataMapping extends AbstractODataJPAMapping<SubjectEvents> {
 
+    public enum Mapping {
+        EventId, SubjectId, Status, EventDate, From, To
+    }
+
     public EventODataMapping() {
-        mapAttribute("EventId").to(SubjectEvents_.eventId);
-        mapAttribute("Status").to(SubjectEvents_.status);
-        mapAttribute("EventDate").to(SubjectEvents_.eventDate);
-        mapAttribute("From").to(SubjectEvents_.from);
-        mapAttribute("To").to(SubjectEvents_.to);
+        mapAttribute(Mapping.EventDate).to(SubjectEvents_.eventId);
+        mapAttribute(Mapping.SubjectId).to(SubjectEvents_.subjectId);
+        mapAttribute(Mapping.Status).to(SubjectEvents_.status);
+        mapAttribute(Mapping.EventDate).to(SubjectEvents_.eventDate);
+        mapAttribute(Mapping.From).to(SubjectEvents_.from);
+        mapAttribute(Mapping.To).to(SubjectEvents_.to);
     }
 
     @Override

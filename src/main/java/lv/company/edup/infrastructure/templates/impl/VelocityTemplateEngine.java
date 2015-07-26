@@ -28,6 +28,7 @@ public class VelocityTemplateEngine implements TemplateEngine {
     private Logger logger = Logger.getLogger(VelocityTemplateEngine.class.getSimpleName());
 
     @PostConstruct
+    @Override
     public void init() {
         try {
             Velocity.init(properties);
@@ -37,9 +38,9 @@ public class VelocityTemplateEngine implements TemplateEngine {
     }
 
     @Override
-    public byte[] render(Template template, Map<String, Object> objects, Type type) {
+    public byte[] render(byte[] template, Map<String, Object> objects, Type type) {
         if (type != Type.HTML) {
-            throw new InternalException("Velocity supports onlu html rendering");
+            throw new InternalException("Velocity supports only html rendering");
         }
         VelocityContext context = new VelocityContext();
 
@@ -53,11 +54,16 @@ public class VelocityTemplateEngine implements TemplateEngine {
 
         StringWriter writer = new StringWriter();
         try {
-            Velocity.evaluate(context, writer, template.getName().name(), new String(template.getTemplate(), "UTF-8"));
+            Velocity.evaluate(context, writer, "velocity_template_engine", new String(template, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return writer.toString().getBytes(Charset.forName("UTF-8"));
+    }
+
+    @Override
+    public byte[] render(Template template, Map<String, Object> objects, Type type) {
+        return render(template.getTemplate(), objects, type);
     }
 
     @Inject

@@ -20,6 +20,8 @@ public class IndexBuilder<Key, Value> {
     private Transformer<Value, Key> key;
     private Predicate<Value> predicate;
     private Factory<Collection<Value>> factory;
+    private Factory<Map<Key, Value>> index;
+    private Factory<Map<Key, Collection<Value>>> collectionIndex;
     private Comparator<Value> comparator;
 
     private IndexBuilder() {
@@ -38,8 +40,9 @@ public class IndexBuilder<Key, Value> {
 
         checkPredicate();
         checkFactory();
+        checkCollectionIndex();
 
-        Map<Key, Collection<Value>> map = map(values, key, factory, predicate);
+        Map<Key, Collection<Value>> map = map(values, key, factory, predicate, collectionIndex);
         if (comparator != null) {
             for (Collection<Value> collection : map.values()) {
                 List<Class<?>> interfaces = ClassUtils.getAllInterfaces(collection.getClass());
@@ -61,8 +64,9 @@ public class IndexBuilder<Key, Value> {
 
         checkPredicate();
         checkFactory();
+        checkIndex();
 
-        return map(values, key, predicate);
+        return map(values, key, predicate, index);
     }
 
     public IndexBuilder<Key, Value> key(Transformer<Value, Key> key) {
@@ -85,15 +89,26 @@ public class IndexBuilder<Key, Value> {
         return this;
     }
 
+    public IndexBuilder<Key, Value> index(Factory<Map<Key, Value>> index) {
+        this.index = index;
+        return this;
+    }
+
+    public IndexBuilder<Key, Value> indexForCollections(Factory<Map<Key, Collection<Value>>> index) {
+        this.collectionIndex = index;
+        return this;
+    }
+
     private Map<Key, Collection<Value>> map(Collection<Value> coll,
                                             Transformer<Value, Key> extractor,
                                             Factory<Collection<Value>> factory,
-                                            Predicate<Value> predicate) {
+                                            Predicate<Value> predicate,
+                                            Factory<Map<Key, Collection<Value>>> index) {
         if (CollectionUtils.isEmpty(coll)) {
             return Collections.emptyMap();
         }
 
-        Map<Key, Collection<Value>> map = new HashMap<Key, Collection<Value>>();
+        Map<Key, Collection<Value>> map = index.create();
         for (Value value : coll) {
             if (predicate.evaluate(value)) {
                 Key key = extractor.transform(value);
@@ -115,12 +130,13 @@ public class IndexBuilder<Key, Value> {
 
     private Map<Key, Value> map(Collection<Value> values,
                                 Transformer<Value, Key> extractor,
-                                Predicate<Value> predicate) {
+                                Predicate<Value> predicate,
+                                Factory<Map<Key, Value>> index) {
         if (CollectionUtils.isEmpty(values)) {
             return Collections.emptyMap();
         }
 
-        Map<Key, Value> map = new HashMap<Key, Value>();
+        Map<Key, Value> map = index.create();
         for (Value value : values) {
             if (predicate.evaluate(value)) {
                 Key key = extractor.transform(value);
@@ -150,6 +166,28 @@ public class IndexBuilder<Key, Value> {
                 @Override
                 public boolean evaluate(Value object) {
                     return true;
+                }
+            };
+        }
+    }
+
+    private void checkCollectionIndex() {
+        if (collectionIndex == null) {
+            collectionIndex = new Factory<Map<Key, Collection<Value>>>() {
+                @Override
+                public Map<Key, Collection<Value>> create() {
+                    return new HashMap<>();
+                }
+            };
+        }
+    }
+
+    private void checkIndex() {
+        if (index == null) {
+            index = new Factory<Map<Key, Value>>() {
+                @Override
+                public Map<Key, Value> create() {
+                    return new HashMap<>();
                 }
             };
         }
