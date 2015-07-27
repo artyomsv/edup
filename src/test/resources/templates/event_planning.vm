@@ -22,7 +22,7 @@
 			<staticText>
 				<reportElement x="171" y="24" width="460" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" size="19" isBold="false" pdfEncoding="Identity-H"/>
+					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H" size="19" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Interešu izglītības iestāde "Skola SoVa"]]></text>
 			</staticText>
@@ -92,7 +92,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+					<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 				</textElement>
 				<text><![CDATA[Id]]></text>
 			</staticText>
@@ -105,7 +105,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+					<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
@@ -118,7 +118,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+					<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 				</textElement>
 				<text><![CDATA[${journalContextEventName}]]></text>
 			</staticText>
@@ -135,7 +135,7 @@
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="false" isItalic="false" size="6" isUnderline="false"/>
+						<font isBold="false" isItalic="false" size="6" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 					</textElement>
 					<text><![CDATA[${eventDate.date}]]></text>
 				</staticText>
@@ -150,7 +150,7 @@
 							<rightPen lineWidth="1.0"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
-							<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+							<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 						</textElement>
 						<text><![CDATA[${eventTime.time}]]></text>
 					</staticText>
@@ -173,7 +173,7 @@
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+						<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 					</textElement>
 					<text><![CDATA[${student.order}]]></text>
 				</staticText>
@@ -186,7 +186,7 @@
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+						<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<text><![CDATA[${student.fullName}]]></text>
@@ -203,7 +203,7 @@
 								<rightPen lineWidth="1.0"/>
 							</box>
 							<textElement textAlignment="Center" verticalAlignment="Middle">
-								<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
+								<font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H" />
 							</textElement>
 							<text><![CDATA[${eventTimeCell.participated}]]></text>
 						</staticText>

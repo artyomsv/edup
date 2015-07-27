@@ -10,7 +10,7 @@
 
     <session-config>
         <session-timeout>5</session-timeout>
-        <tracking-mode>SSL</tracking-mode>
+        <!--<tracking-mode>SSL</tracking-mode>-->
     </session-config>
 
     <login-config>
@@ -43,9 +43,9 @@
             <role-name>USER</role-name>
         </auth-constraint>
 
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
     </security-constraint>
 
     <security-constraint>
@@ -57,35 +57,35 @@
             <http-method>GET</http-method>
         </web-resource-collection>
 
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
     </security-constraint>
 
-    <!--<security-constraint>-->
-    <!--<display-name>Protected API root</display-name>-->
+    <security-constraint>
+        <display-name>Protected API root</display-name>
 
-    <!--<web-resource-collection>-->
-    <!--<web-resource-name>Protected API root</web-resource-name>-->
-    <!--<url-pattern>/api/private/*</url-pattern>-->
-    <!--<http-method>GET</http-method>-->
-    <!--<http-method>POST</http-method>-->
-    <!--<http-method>HEAD</http-method>-->
-    <!--<http-method>PUT</http-method>-->
-    <!--<http-method>OPTIONS</http-method>-->
-    <!--<http-method>TRACE</http-method>-->
-    <!--<http-method>DELETE</http-method>-->
-    <!--</web-resource-collection>-->
+        <web-resource-collection>
+            <web-resource-name>Protected API root</web-resource-name>
+            <url-pattern>/api/private/*</url-pattern>
+            <http-method>GET</http-method>
+            <http-method>POST</http-method>
+            <http-method>HEAD</http-method>
+            <http-method>PUT</http-method>
+            <http-method>OPTIONS</http-method>
+            <http-method>TRACE</http-method>
+            <http-method>DELETE</http-method>
+        </web-resource-collection>
 
-        <!--<auth-constraint>-->
-        <!--<role-name>ADMIN</role-name>-->
-        <!--<role-name>USER</role-name>-->
-        <!--</auth-constraint>-->
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>USER</role-name>
+        </auth-constraint>
 
-    <!--<user-data-constraint>-->
-    <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
-    <!--</user-data-constraint>-->
-    <!--</security-constraint>-->
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    </security-constraint>
 
     <security-role>
         <role-name>ADMIN</role-name>

@@ -18,6 +18,7 @@ angular.module('edup.students')
 					student.id = $scope.selectedStudent.id;
 					student.versionId = $scope.selectedStudent.versionId;
 					student.birthDate = new Date(student.birthDateString);
+					console.log(angular.toJson(student));
 					if (student && student.name && student.lastName && student.id && student.versionId) {
 						RestService.Private.Students.one(student.id.toString())
 							.customPUT(student)

@@ -14,212 +14,212 @@
               bottomMargin="20"
               isIgnorePagination="false"
               uuid="929d1954-ba3c-49f3-9479-56c3395fc1dd">
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band height="98" splitType="Stretch">
-			<staticText>
-				<reportElement x="171" y="24" width="460" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" size="19" isBold="false" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Interešu izglītības iestāde "Skola SoVa"]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="290" y="60" width="184" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement>
-									<font size="14" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[APMEKLĒJUMU ŽURNĀLS]]></text>
-			</staticText>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="51" splitType="Stretch">
-			<staticText>
-				<reportElement x="21" y="5" width="130" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" isBold="false" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Uzņēmuma nosaukums:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="21" y="23" width="130" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" isBold="false" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Adrese:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="162" y="23" width="169" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[A Dombrovska 44-76, LV-1010]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="162" y="5" width="169" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[SIA "DesArts" ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="670" y="5" width="129" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[Reģ. Nr. 3951803045]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="670" y="21" width="129" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
-				</textElement>
-				<text><![CDATA[LV40103523453]]></text>
-			</staticText>
-		</band>
-	</pageHeader>
-	<columnHeader>
-		<band height="61" splitType="Stretch">
-			<staticText>
-				<reportElement x="0" y="0" width="40" height="61" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[Id]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="40" y="0" width="100" height="61" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="140" y="0" width="${journalContextColumnsWidth}" height="21" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-				<box>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-				</textElement>
-				<text><![CDATA[${journalContextEventName}]]></text>
-			</staticText>
+  <background>
+    <band splitType="Stretch"/>
+  </background>
+  <title>
+    <band height="98" splitType="Stretch">
+      <staticText>
+        <reportElement x="171" y="24" width="460" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" pdfEncoding="Identity-H" size="19" isBold="false"/>
+        </textElement>
+        <text><![CDATA[Interešu izglītības iestāde "Skola SoVa"]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="290" y="60" width="184" height="30" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement>
+          <font size="14" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[APMEKLĒJUMU ŽURNĀLS]]></text>
+      </staticText>
+    </band>
+  </title>
+  <pageHeader>
+    <band height="51" splitType="Stretch">
+      <staticText>
+        <reportElement x="21" y="5" width="130" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Right" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" isBold="false" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[Uzņēmuma nosaukums:]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="21" y="23" width="130" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Right" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" isBold="false" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[Adrese:]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="162" y="23" width="169" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Left" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[A Dombrovska 44-76, LV-1010]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="162" y="5" width="169" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Left" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[SIA "DesArts" ]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="670" y="5" width="129" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Left" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[Reģ. Nr. 3951803045]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="670" y="21" width="129" height="16" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <textElement textAlignment="Left" verticalAlignment="Middle">
+          <font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[LV40103523453]]></text>
+      </staticText>
+    </band>
+  </pageHeader>
+  <columnHeader>
+    <band height="61" splitType="Stretch">
+      <staticText>
+        <reportElement x="0" y="0" width="40" height="61" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[Id]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="40" y="0" width="100" height="61" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[Name]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="140" y="0" width="${journalContextColumnsWidth}" height="21" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[${journalContextEventName}]]></text>
+      </staticText>
 
 
-			#foreach (${eventDate} in ${journalContextEvents} )
+      #foreach (${eventDate} in ${journalContextEvents} )
 
-					<staticText>
-						<reportElement x="${eventDate.xCoordinate}" y="21" width="${eventDate.xWidth}" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-						<box>
-							<topPen lineWidth="1.0"/>
-							<leftPen lineWidth="1.0"/>
-							<bottomPen lineWidth="1.0"/>
-							<rightPen lineWidth="1.0"/>
-						</box>
-						<textElement textAlignment="Center" verticalAlignment="Middle">
-													<font isBold="false" isItalic="false" size="6" isUnderline="false"/>
-						</textElement>
-						<text><![CDATA[${eventDate.date}]]></text>
-					</staticText>
+      <staticText>
+        <reportElement x="${eventDate.xCoordinate}" y="21" width="${eventDate.xWidth}" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="6" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[${eventDate.date}]]></text>
+      </staticText>
 
-				#foreach (${eventTime} in ${eventDate.times})
-							<staticText>
-								<reportElement x="${eventTime.xCoordinate}" y="41" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-								<box>
-									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="1.0"/>
-									<rightPen lineWidth="1.0"/>
-								</box>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-																	<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-								</textElement>
-								<text><![CDATA[${eventTime.time}]]></text>
-							</staticText>
+      #foreach (${eventTime} in ${eventDate.times})
+      <staticText>
+        <reportElement x="${eventTime.xCoordinate}" y="41" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[${eventTime.time}]]></text>
+      </staticText>
 
-				#end
+      #end
 
-			#end
+      #end
 
-		</band>
-	</columnHeader>
-	<detail>
-		#foreach (${student} in ${journalContextStudents})
-					<band height="20" splitType="Stretch">
-					<staticText>
-						<reportElement x="0" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-						<box>
-							<topPen lineWidth="1.0"/>
-							<leftPen lineWidth="1.0"/>
-							<bottomPen lineWidth="1.0"/>
-							<rightPen lineWidth="1.0"/>
-						</box>
-						<textElement textAlignment="Center" verticalAlignment="Middle">
-													<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-						</textElement>
-						<text><![CDATA[${student.order}]]></text>
-					</staticText>
-					<staticText>
-						<reportElement x="40" y="${student.yCoordinate}" width="100" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-						<box>
-							<topPen lineWidth="1.0"/>
-							<leftPen lineWidth="1.0"/>
-							<bottomPen lineWidth="1.0"/>
-							<rightPen lineWidth="1.0"/>
-						</box>
-											<textElement textAlignment="Left" verticalAlignment="Middle">
-												<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-												<paragraph leftIndent="5"/>
-						</textElement>
-						<text><![CDATA[${student.fullName}]]></text>
-					</staticText>
+    </band>
+  </columnHeader>
+  <detail>
+    #foreach (${student} in ${journalContextStudents})
+    <band height="20" splitType="Stretch">
+      <staticText>
+        <reportElement x="0" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[${student.order}]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="40" y="${student.yCoordinate}" width="100" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Left" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+          <paragraph leftIndent="5"/>
+        </textElement>
+        <text><![CDATA[${student.fullName}]]></text>
+      </staticText>
 
-			  #foreach (${eventDate} in ${student.studentEventData})
-				  #foreach (${eventTimeCell} in ${eventDate.times})
-									<staticText>
-																			<reportElement mode="Opaque" backcolor="${eventTimeCell.backColor}" x="${eventTimeCell.xCoordinate}" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textElement textAlignment="Center" verticalAlignment="Middle">
-																					<font isBold="false" isItalic="false" size="7" isUnderline="false"/>
-										</textElement>
-																			<text><![CDATA[${eventTimeCell.participated}]]></text>
-									</staticText>
-				  #end
-			  #end
-					</band>
-		#end
+      #foreach (${eventDate} in ${student.studentEventData})
+      #foreach (${eventTimeCell} in ${eventDate.times})
+      <staticText>
+        <reportElement mode="Opaque" backcolor="${eventTimeCell.backColor}" x="${eventTimeCell.xCoordinate}" y="${student.yCoordinate}" width="40" height="20" uuid="${journalContextStudentsUuid.randomUUID()}"/>
+        <box>
+          <topPen lineWidth="1.0"/>
+          <leftPen lineWidth="1.0"/>
+          <bottomPen lineWidth="1.0"/>
+          <rightPen lineWidth="1.0"/>
+        </box>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font isBold="false" isItalic="false" size="7" isUnderline="false" fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
+        </textElement>
+        <text><![CDATA[${eventTimeCell.participated}]]></text>
+      </staticText>
+      #end
+      #end
+    </band>
+    #end
 
-	</detail>
-	<columnFooter>
-			<band height="10" splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-			<band height="10" splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-			<band height="10" splitType="Stretch"/>
-	</summary>
+  </detail>
+  <columnFooter>
+    <band height="10" splitType="Stretch"/>
+  </columnFooter>
+  <pageFooter>
+    <band height="10" splitType="Stretch"/>
+  </pageFooter>
+  <summary>
+    <band height="10" splitType="Stretch"/>
+  </summary>
 </jasperReport>

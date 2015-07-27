@@ -111,7 +111,7 @@ angular.module('edup.common')
         if (location.indexOf('127.0.0.1') > -1) {
             baseUrl = 'http://127.0.0.1:8088/';
         } else {
-            baseUrl = 'https://' + location + ':8443/edup/ng';
+            baseUrl = 'http://' + location + ':8484/edup/ng';
         }
 
         paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -403,9 +403,9 @@ angular.module('edup.common')
 		var baseUrl;
 
 		if (location.indexOf('127.0.0.1') > -1) {
-			baseUrl = 'https://localhost:8443/edup';
+			baseUrl = 'http://localhost:8484/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = 'http://' + location + ':8484/edup';
 		}
 
 		return {
@@ -2088,7 +2088,7 @@ angular.module('edup')
 
 
   $templateCache.put('event-attendance-modal',
-    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div>{{plannedEventDetails}}</div>"
+    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div></div>"
   );
 
 
