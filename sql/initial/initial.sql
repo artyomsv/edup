@@ -1,31 +1,42 @@
 -- CREATE DATABASE edup OWNER postgres;
 
+DROP VIEW V_EVENT_ATTENDANCE;
+DROP VIEW V_SUBJECT_EVENTS;
+DROP VIEW V_SUBJECT_EVENTS_DETAILS;
+DROP TABLE SUBJECT_EVENT_ATTENDANCE;
+DROP TABLE SUBJECT_EVENTS;
+DROP TABLE SUBJECTS;
+
+DROP SEQUENCE public.SUBJECT_EVENT_ATTENDANCE_SEQUENCE;
+DROP SEQUENCE public.SUBJECT_EVENTS_SEQUENCE;
+DROP SEQUENCE public.SUBJECTS_SEQUENCE;
+
 DROP VIEW public.V_STUDENT_DOCUMENTS;
 DROP TABLE public.STUDENT_DOCUMENTS;
 
 DROP TABLE public.files;
-DROP SEQUENCE public.file_sequence RESTRICT;
+DROP SEQUENCE public.FILES_SEQUENCE;
 
-DROP VIEW public.V_STUDENT_BALANCE RESTRICT;
+DROP VIEW public.V_STUDENT_BALANCE;
 DROP TABLE public.STUDENT_TRANSACTIONS;
 DROP TABLE public.TRANSACTION_TYPE;
-DROP SEQUENCE public.STUDENT_TRANSACTIONS_SEQUENCE RESTRICT;
-DROP SEQUENCE public.TRANSACTIONS_TYPE_SEQUENCE RESTRICT;
+DROP SEQUENCE public.STUDENT_TRANSACTIONS_SEQUENCE;
+DROP SEQUENCE public.TRANSACTIONS_TYPE_SEQUENCE;
 
-DROP VIEW public.v_students RESTRICT;
+DROP VIEW public.v_students;
 DROP TABLE public.student_properties;
 DROP TABLE public.students_version_mapping;
 DROP TABLE public.students;
 
-DROP SEQUENCE public.student_id_sequence RESTRICT;
-DROP SEQUENCE public.student_property_sequence RESTRICT;
-DROP SEQUENCE public.student_version_sequence RESTRICT;
+DROP SEQUENCE public.student_id_sequence;
+DROP SEQUENCE public.student_property_sequence;
+DROP SEQUENCE public.student_version_sequence;
 DROP FUNCTION public.getstudentid();
 DROP FUNCTION public.update_current_student_version();
 
 
-DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE RESTRICT;
-DROP SEQUENCE public.FAKTURA_REPORT_ID_SEQUENCE RESTRICT;
+DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE;
+DROP SEQUENCE public.FAKTURA_REPORT_ID_SEQUENCE;
 
 ------------------------------------------------------------------------------------------------------
 -------------------------------------- 0.0.2 ---------------------------------------------------------

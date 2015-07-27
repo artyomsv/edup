@@ -1,0 +1,33 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-8 column">
+			<div class="input-group">
+                <span class="input-group-addon" id="basic-addon1"
+                      ng-class="{'glyphicon glyphicon-refresh searchTextInput': basicSearch.spin , 'glyphicon glyphicon-search searchTextInput': !basicSearch.spin}"></span>
+				<input type="text" class="form-control" placeholder="search" ng-model="searchValue" ng-keyup="executeSearch(searchValue)">
+			</div>
+		</div>
+		<div class="col-md-3 column">
+			<div class="btn-group btn-group-sm" role="group">
+				<button type="button" class="btn btn-default" ng-class="{ active: studentPaging.perPage === 10}" ng-click="setRecordsPerPage(10)">10</button>
+				<button type="button" class="btn btn-default" ng-class="{ active: studentPaging.perPage === 25}" ng-click="setRecordsPerPage(25)">25</button>
+				<button type="button" class="btn btn-default" ng-class="{ active: studentPaging.perPage === 50}" ng-click="setRecordsPerPage(50)">50</button>
+			</div>
+		</div>
+
+		<div class="col-md-1">
+			<h3>
+				<span class="glyphicon glyphicon-plus pull-right"
+				      style="cursor: pointer;position: absolute; padding-top: 5px;"
+				      data-toggle="modal"
+				      data-target="#addNewStudentModalView"
+				      ng-click="resetNewStudent()">
+					</span>
+			</h3>
+		</div>
+	</div>
+
+	<new-student></new-student>
+</div>
+
+

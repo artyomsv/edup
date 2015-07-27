@@ -35,7 +35,7 @@
 
   <profiles>
     <profile>
-      <id>Deployment</id>
+      <id>Deployment_Localhost</id>
       <build>
         <plugins>
           <plugin>
@@ -55,7 +55,7 @@
       </build>
     </profile>
     <profile>
-      <id>Local</id>
+      <id>Configuratiom_Local</id>
       <build>
         <plugins>
           <plugin>
@@ -64,7 +64,7 @@
             <configuration>
               <webResources>
                 <resource>
-                  <directory>src/localhost/webapp</directory>
+                  <directory>src/environment/localhost/webapp</directory>
                 </resource>
               </webResources>
             </configuration>
@@ -73,12 +73,37 @@
       </build>
     </profile>
     <profile>
-      <id>Amazon</id>
+      <id>Configuration_Eptron</id>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>src/environment/eptron/webapp</directory>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>Configuration_Amazon</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>src/environment/amazon/webapp</directory>
+                </resource>
+              </webResources>
+            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -103,7 +128,7 @@
                   <arguments>
                     <argument>install</argument>
                   </arguments>
-                  <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+                  <workingDirectory>${basedir}/src/main/ng</workingDirectory>
                 </configuration>
               </execution>
               <execution>
@@ -117,7 +142,7 @@
                   <arguments>
                     <argument>dist</argument>
                   </arguments>
-                  <workingDirectory>${basedir}/src/main/web/ng</workingDirectory>
+                  <workingDirectory>${basedir}/src/main/ng</workingDirectory>
                 </configuration>
               </execution>
             </executions>
@@ -185,17 +210,17 @@
             <phase>process-resources</phase>
             <configuration>
               <tasks>
-                <copy file="${project.basedir}/src/main/web/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
+                <copy file="${project.basedir}/src/main/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"
                       tofile="${project.basedir}/target/edup/ng/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html"/>
 
                 <copy todir="${project.basedir}/target/edup/ng//vendor/bower_components/bootstrap/dist/fonts">
-                  <fileset dir="${project.basedir}/src/main/web/ng/vendor/bower_components/bootstrap/dist/fonts">
+                  <fileset dir="${project.basedir}/src/main/ng/vendor/bower_components/bootstrap/dist/fonts">
                     <include name="*.*"/>
                   </fileset>
                 </copy>
 
                 <copy todir="${project.basedir}/target/edup/ng/dist/">
-                  <fileset dir="${project.basedir}/src/main/web/ng/dist/">
+                  <fileset dir="${project.basedir}/src/main/ng/dist/">
                     <include name="*.*"/>
                   </fileset>
                 </copy>

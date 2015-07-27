@@ -1,2 +1,2 @@
-#curl -vS -F upload=@"unknown.png" -H "Accept: application/json" http://license.id-me.com:8484/edup/api/private/files/upload -o response.json
-curl -vS -F upload=@"unknown.png" -H "Accept: application/json" https://localhost:8443/edup/api/private/files/upload -o response.json
+curl -vS -F upload=@"unknown.png" -H "Accept: application/json" http://license.id-me.com:8484/edup/api/private/files/upload -o response.json
+#curl -vS -F upload=@"unknown.png" -H "Accept: application/json" https://localhost:8443/edup/api/private/files/upload -o response.json
