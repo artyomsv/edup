@@ -111,7 +111,7 @@ public class SubjectsService {
             subjectId = subject.getSubjectId();
         } else {
             ODataResult<SubjectDto> result = searchSubject(subjectDto);
-            if (result.getCount() != 0) {
+            if (result.getCount() != 1) {
                 subjectId = createSubject(subjectDto);
             } else {
                 subjectId = result.getValues().iterator().next().getSubjectId();
@@ -245,7 +245,6 @@ public class SubjectsService {
     public ODataResult<SubjectDto> searchSubject(SubjectDto dto) {
         ODataCriteria criteria = new ODataCriteria()
                 .getAllValues()
-                .setHead(true)
                 .setCount(true)
                 .setFilter("Name eq '" + dto.getSubjectName() + "'");
 
