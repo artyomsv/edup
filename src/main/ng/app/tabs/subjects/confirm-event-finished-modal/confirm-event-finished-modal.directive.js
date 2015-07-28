@@ -2,86 +2,49 @@
 
 angular.module('edup.subjects')
 
-	.directive('confirmEventFinishedModal', function ($filter, UrlService) {
+	.directive('confirmEventFinishedModal', function () {
 		return {
 			restrict: 'E',
 			templateUrl: 'confirm-event-finished-modal',
-			controller: function ($scope, $timeout, moment, RestService, TypeAheadService) {
+			controller: function ($scope, $timeout, moment, RestService) {
 
-				$scope.plannedEventDetails = {
-					selectedSubject: null,
-					dateFromPicker: null,
-					dateToPicker: null,
-				};
-
-				var selectSubject = function (selectedSubjectName) {
-					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
-						return subject.subjectName === selectedSubjectName;
-					});
-					console.log(angular.toJson($scope.selectedSubject));
-				};
-
-
-				var typeAhead = TypeAheadService.Build();
-
-				var $bloodhound = $('#subject-event-typeahead-modal .typeahead');
-
-				$bloodhound.typeahead({
-						hint: true,
-						highlight: true,
-						minLength: 1
-					},
-					{
-						name: 'subjectsTypeAhead',
-						source: typeAhead
+				$scope.confirmEventIsFinished = function () {
+					if ($scope.studentsManagemnt.confirmation) {
+						return;
 					}
-				);
 
-				$bloodhound.bind('typeahead:selected', function (obj, datum) {
-					selectSubject(datum);
-				});
+					$scope.studentsManagemnt.confirmation = true;
 
-				$scope.plannedEventJournal = function () {
-					$scope.plannedEventDetails = {
-						selectedSubject: null,
-						dateFromPicker: null,
-						dateToPicker: null,
-						subjectName: null,
-						showAttendance: false
-					};
-				};
+					var payload = _.cloneDeep($scope.selectedEvent);
+					payload.status = 'FINALIZED';
 
-				$scope.finishedEventReport = function () {
-					$scope.plannedEventDetails = {
-						selectedSubject: null,
-						dateFromPicker: null,
-						dateToPicker: null,
-						subjectName: null,
-						showAttendance: true
-					};
+					RestService.Private.Subjects
+						.one('events')
+						.one(payload.eventId.toString())
+						.customPUT(payload)
+						.then(function (response) {
+							$scope.selectedEvent.status = payload.status;
+							$scope.selectedEvent.currentStatus = 'CONFIRMED';
+							var event = _.find($scope.events.values, function (event) {
+								return event.eventId === payload.eventId;
+							});
+
+							if (event) {
+								event.status = $scope.selectedEvent.status;
+								event.currentStatus = $scope.selectedEvent.currentStatus;
+							}
+
+							$scope.dismissModal();
+							$scope.studentsManagemnt.confirmation = false;
+						}, function (error) {
+							$scope.studentsManagemnt.confirmation = false;
+						});
+
 				};
 
 
 			},
 			link: function (scope) {
-
-				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
-
-				};
-
-				scope.performReportDownload = function (details) {
-					if (details && details.selectedSubject && details.dateFromPicker && details.dateToPicker) {
-						var query = {
-							from: $filter('date')(details.dateFromPicker, 'ddMMyyyy'),
-							to: $filter('date')(details.dateToPicker, 'ddMMyyyy'),
-							attendance: scope.plannedEventDetails.showAttendance
-						};
-						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
-						window.open(url);
-						scope.dismissModal();
-					}
-
-				};
 
 			}
 		};

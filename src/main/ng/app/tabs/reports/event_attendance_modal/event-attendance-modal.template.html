@@ -27,7 +27,7 @@
 							</a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 								<datetimepicker data-ng-model="plannedEventDetails.dateFromPicker"
-								                data-before-render="renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)"
+								                data-before-render="renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)"
 								                data-datetimepicker-config="{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}"></datetimepicker>
 							</ul>
 						</div>
@@ -45,7 +45,7 @@
 							</a>
 							<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 								<datetimepicker data-ng-model="plannedEventDetails.dateToPicker"
-								                data-before-render="renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)"
+								                data-before-render="renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)"
 								                data-datetimepicker-config="{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}"></datetimepicker>
 							</ul>
 						</div>

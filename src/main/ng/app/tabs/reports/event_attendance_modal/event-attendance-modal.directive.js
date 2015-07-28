@@ -65,7 +65,7 @@ angular.module('edup.reports')
 			},
 			link: function (scope) {
 
-				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+				scope.renderDatePickerForReport = function ($view, $dates, $leftDate, $upDate, $rightDate) {
 
 				};
 
