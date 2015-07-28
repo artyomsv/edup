@@ -9,7 +9,7 @@ import lv.company.edup.services.students.StudentsService;
 import lv.company.edup.services.students.TransactionService;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentDto;
-import lv.company.edup.services.students.validation.StudentUpdateCheck;
+import lv.company.edup.services.students.validation.UpdateCheck;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -53,7 +53,7 @@ public class StudentsFacade extends ApplicationFacade {
         return created(payload.getId(), payload.getVersionId());
     }
 
-    @Validated(groups = {Default.class, StudentUpdateCheck.class})
+    @Validated(groups = {Default.class, UpdateCheck.class})
     public Response updateStudent(@Valid StudentDto dto, Long id, String etag) {
         if (StringUtils.isBlank(etag)) {
             throw new BadRequestException("Missing etag");

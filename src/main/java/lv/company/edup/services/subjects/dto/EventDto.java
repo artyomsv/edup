@@ -3,6 +3,7 @@ package lv.company.edup.services.subjects.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lv.company.edup.persistence.subjects.EventStatus;
+import lv.company.edup.services.students.validation.UpdateCheck;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,7 @@ import java.util.Date;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class EventDto {
 
+    @NotNull(groups = {UpdateCheck.class})
     private Long eventId;
     @NotNull(message = "Subject envelope cannot be null")
     @Valid
@@ -27,6 +29,7 @@ public class EventDto {
     @NotNull(message = "Event is missing price")
     private Long price;
     private EventStatus status;
+    private Long students;
 
     public Long getEventId() {
         return eventId;
@@ -82,5 +85,13 @@ public class EventDto {
 
     public void setStatus(EventStatus status) {
         this.status = status;
+    }
+
+    public Long getStudents() {
+        return students;
+    }
+
+    public void setStudents(Long students) {
+        this.students = students;
     }
 }

@@ -32,7 +32,7 @@ public class BalanceFacade extends ApplicationFacade {
             throw new NotFoundException("Missing student id");
         }
 
-        Long save = transactionService.debitTransaction(dto);
+        Long save = transactionService.performTransaction(dto, true);
         if (dto.getCash()) {
             documentsService.addDocument(student, dto.getAmount(), dto.getComments());
         }

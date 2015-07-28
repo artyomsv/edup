@@ -7,8 +7,13 @@ import lv.company.edup.persistence.balance.CurrentBalanceRepository;
 import lv.company.edup.persistence.balance.CurrentBalance_;
 import lv.company.edup.persistence.balance.Transaction;
 import lv.company.edup.persistence.balance.TransactionRepository;
+import lv.company.edup.persistence.balance.TransactionType;
+import lv.company.edup.persistence.subjects.AttendanceRepository;
+import lv.company.edup.persistence.subjects.domain.Attendance;
+import lv.company.edup.persistence.subjects.domain.Attendance_;
 import lv.company.edup.services.students.dto.CurrentBalanceDto;
 import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
@@ -32,12 +37,14 @@ public class TransactionService {
 
     public static final String CASH = "D1";
     public static final String BANK = "D2";
+    public static final String AUTO = "K1";
     @Inject @JPA ODataSearchService searchService;
     @Inject UriUtils utils;
     @Inject CurrentBalanceRepository currentRepository;
     @Inject TransactionRepository repository;
     @Inject ObjectMapper mapper;
     @Inject TransactionTypeService typeService;
+    @Inject AttendanceRepository attendanceRepository;
 
     public CurrentBalanceDto currentStudentBalance(Long id) {
         CurrentBalance balance = currentRepository.find(id);
@@ -80,16 +87,35 @@ public class TransactionService {
         return search.cloneFromValues(mapper.map(values, StudentBalanceDto.class));
     }
 
-    public Long debitTransaction(StudentBalanceDto dto) {
+    public Long performTransaction(StudentBalanceDto dto, boolean debit) {
+        return performTransaction(dto, debit, dto.getCash() ? typeService.getType(CASH) : typeService.getType(BANK));
+    }
+
+    public Long performTransaction(StudentBalanceDto dto, boolean debit, TransactionType type) {
         Transaction transaction = new Transaction();
-        transaction.setDebit(dto.getAmount());
-        transaction.setCredit(0L);
+        transaction.setDebit(debit ? dto.getAmount() : 0L);
+        transaction.setCredit(!debit ? dto.getAmount() : 0L);
         transaction.setCreated(new Date());
         transaction.setDescription(dto.getComments());
-        transaction.setType(dto.getCash() ? typeService.getType(CASH).getId() : typeService.getType(BANK).getId());
+        transaction.setType(type.getId());
         transaction.setStudentId(dto.getStudentId());
         repository.persist(transaction);
         return transaction.getId();
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public void updateStudentsBalance(EventDto dto) {
+        List<Attendance> attribute = attendanceRepository.findByAttribute(Collections.singleton(dto.getEventId()), Attendance_.eventId);
+        for (Attendance attendance : attribute) {
+            if (attendance.getParticipated() || !attendance.getNotified()) {
+                StudentBalanceDto balanceDto = new StudentBalanceDto();
+                balanceDto.setAmount(dto.getPrice());
+                balanceDto.setStudentId(attendance.getStudentId());
+                attendance.setBalanceAdjusted(true);
+                performTransaction(balanceDto, false, typeService.getType(AUTO));
+            }
+        }
+
     }
 
 }

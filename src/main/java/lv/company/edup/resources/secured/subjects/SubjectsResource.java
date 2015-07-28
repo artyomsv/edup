@@ -67,6 +67,12 @@ public class SubjectsResource {
         return facade.createSubjectEvent(dto);
     }
 
+    @PUT
+    @Path("events/{eventId}")
+    public Response updateSubjectEvent(@PathParam("eventId") Long eventId, EventDto dto) {
+        return facade.updateSubjectEvent(eventId, dto);
+    }
+
     @GET
     @Path("events/attendance")
     public Response searchAttendance() {

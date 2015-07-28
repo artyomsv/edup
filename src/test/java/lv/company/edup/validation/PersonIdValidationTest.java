@@ -3,7 +3,7 @@ package lv.company.edup.validation;
 import lv.company.edup.infrastructure.exceptions.EdupConstraintViolationException;
 import lv.company.edup.infrastructure.validation.ValidationService;
 import lv.company.edup.services.students.dto.StudentDto;
-import lv.company.edup.services.students.validation.StudentUpdateCheck;
+import lv.company.edup.services.students.validation.UpdateCheck;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +51,7 @@ public class PersonIdValidationTest {
     public void emptyStudentForUpdate() throws Exception {
         StudentDto dto = new StudentDto();
         try {
-            validationService.validate(StudentUpdateCheck.class, dto);
+            validationService.validate(UpdateCheck.class, dto);
         } catch (EdupConstraintViolationException e) {
             assertThat(e.getConstraintViolations().size(), is(1));
             Map<String, Collection<ConstraintViolation<?>>> map = e.get();

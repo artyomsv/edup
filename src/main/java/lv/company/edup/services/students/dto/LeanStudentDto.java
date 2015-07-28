@@ -2,7 +2,7 @@ package lv.company.edup.services.students.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lv.company.edup.services.students.validation.StudentUpdateCheck;
+import lv.company.edup.services.students.validation.UpdateCheck;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotBlank;
@@ -20,7 +20,7 @@ import java.util.Date;
 public class LeanStudentDto {
 
     private Long id;
-    @NotNull(groups = StudentUpdateCheck.class, message = "Student version may not be null")
+    @NotNull(groups = UpdateCheck.class, message = "Student version may not be null")
     private Long versionId;
     @NotBlank(message = "Name is missing")
     @Size(max = 32, message = "Name have to be {max} letters length")

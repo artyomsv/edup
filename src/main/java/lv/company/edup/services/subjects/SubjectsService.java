@@ -19,11 +19,9 @@ import lv.company.edup.persistence.subjects.domain.Attendance_;
 import lv.company.edup.persistence.subjects.domain.Event;
 import lv.company.edup.persistence.subjects.domain.Subject;
 import lv.company.edup.persistence.subjects.view.AttendanceView;
-import lv.company.edup.persistence.subjects.view.SubjectEventDetailsRepository;
+import lv.company.edup.persistence.subjects.view.SubjectEventRepository;
 import lv.company.edup.persistence.subjects.view.SubjectEvents;
-import lv.company.edup.persistence.subjects.view.SubjectEventsDetails;
 import lv.company.edup.services.subjects.dto.AttendanceDto;
-import lv.company.edup.services.subjects.dto.EventDetailsDto;
 import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.edup.services.subjects.dto.SubjectDto;
 import lv.company.odata.api.ODataCriteria;
@@ -56,7 +54,7 @@ public class SubjectsService {
     @Inject EventRepository eventRepository;
     @Inject CurrentStudentVersionRepository studentRepository;
     @Inject AttendanceRepository attendanceRepository;
-    @Inject SubjectEventDetailsRepository eventDetailsRepository;
+    @Inject SubjectEventRepository subjetEventRepository;
 
     @Inject @JPA ODataSearchService searchService;
 
@@ -79,16 +77,6 @@ public class SubjectsService {
     }
 
     public Long createSubject(SubjectDto dto) {
-        ODataCriteria criteria = new ODataCriteria()
-                .getAllValues()
-                .setHead(true)
-                .setCount(true)
-                .setFilter("Name eq '" + dto.getSubjectName() + "'");
-
-        ODataResult<SubjectDto> search = search(criteria);
-        if (search.getCount() != 0) {
-            throw new BadRequestException("Subject name already used");
-        }
 
         Subject subject = new Subject();
         subject.setSubjectName(dto.getSubjectName());
@@ -122,7 +110,12 @@ public class SubjectsService {
             }
             subjectId = subject.getSubjectId();
         } else {
-            subjectId = createSubject(subjectDto);
+            ODataResult<SubjectDto> result = searchSubject(subjectDto);
+            if (result.getCount() != 0) {
+                subjectId = createSubject(subjectDto);
+            } else {
+                subjectId = result.getValues().iterator().next().getSubjectId();
+            }
         }
 
         Event event = new Event();
@@ -236,16 +229,40 @@ public class SubjectsService {
         }
     }
 
-    public EventDetailsDto getEventDetails(Long eventId) {
-        SubjectEventsDetails details = eventDetailsRepository.find(eventId);
-        EventDetailsDto detailsDto = null;
+    public EventDto getEventDetails(Long eventId) {
+        SubjectEvents details = subjetEventRepository.find(eventId);
+        EventDto detailsDto = null;
         if (details != null) {
-            detailsDto = mapper.map(details, EventDetailsDto.class);
+            detailsDto = mapper.map(details, EventDto.class);
             ODataCriteria criteria = new ODataCriteria();
             criteria.getAllValues().setCount(true).appendCustomFilter("EventId", SearchOperator.equal(), String.valueOf(eventId));
             ODataResult<AttendanceView> search = searchService.search(criteria, AttendanceView.class);
             detailsDto.setStudents(search.getCount());
         }
         return detailsDto;
+    }
+
+    public ODataResult<SubjectDto> searchSubject(SubjectDto dto) {
+        ODataCriteria criteria = new ODataCriteria()
+                .getAllValues()
+                .setHead(true)
+                .setCount(true)
+                .setFilter("Name eq '" + dto.getSubjectName() + "'");
+
+        return search(criteria);
+    }
+
+    @TransactionAttribute(TransactionAttributeType.MANDATORY)
+    public void updateEvent(EventDto dto) {
+        Event event = eventRepository.find(dto.getEventId());
+        if (event == null) {
+            throw new NotFoundException("Missing event with [" + dto.getEventId() + "] ID");
+        }
+
+        if (event.getStatus() == EventStatus.FINALIZED) {
+            throw new BadRequestException("Event is finalized and cannot be updated");
+        }
+
+        mapper.map(dto, event);
     }
 }
