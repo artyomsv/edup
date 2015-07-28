@@ -463,30 +463,30 @@ angular.module('edup.header', ['ui.router']);
 
 angular.module('edup.header')
 
-    .directive('edupHeader', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'edup-header',
+	.directive('edupHeader', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'edup-header',
 
-            controller: ['$scope', '$window', '$location', 'RestService', 'UrlService', function ($scope, $window, $location, RestService, UrlService) {
+			controller: ['$scope', '$window', '$location', 'RestService', 'UrlService', function ($scope, $window, $location, RestService, UrlService) {
 
-                $scope.isActive = function (viewLocation) {
-                    return viewLocation === $location.path();
-                };
+				$scope.isActive = function (viewLocation) {
+					return viewLocation === $location.path();
+				};
 
-                $scope.logoutUser = function () {
-                    RestService.Private.LogOut.post().then(function () {
-                        $window.location.href = UrlService.BaseUrl;
-                    });
-                };
-            }],
+				$scope.logoutUser = function () {
+					RestService.Private.LogOut.post().then(function () {
+						$window.location.href = UrlService.BaseUrl;
+					});
+				};
+			}],
 
-            link: function () {
+			link: function () {
 
-            }
+			}
 
-        };
-    }
+		};
+	}
 );
 'use strict';
 
@@ -535,16 +535,16 @@ angular.module('edup.footer')
 
 angular.module('edup.footer')
 
-    .directive('edupFooter', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'edup-footer',
-            link: function () {
+	.directive('edupFooter', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'edup-footer',
+			link: function () {
 
-            }
+			}
 
-        };
-    }
+		};
+	}
 );
 'use strict';
 
@@ -557,89 +557,89 @@ angular.module('edup.calendar', [
 
 angular.module('edup.calendar')
 
-    .controller('CalendarController', ['$scope', '$modal', 'moment', 'calendarTitle', function ($scope, $modal, moment, calendarTitle) {
+	.controller('CalendarController', ['$scope', '$modal', 'moment', 'calendarTitle', function ($scope, $modal, moment, calendarTitle) {
 
-        var update = function () {
-            $scope.currentDay = calendarTitle.month();
-        };
+		var update = function () {
+			$scope.currentDay = calendarTitle.month();
+		};
 
-        update();
+		update();
 
-        //These variables MUST be set as a minimum for the calendar to work
-        $scope.calendarView = 'month';
-        $scope.calendarDay = new Date();
-        $scope.events = [
-            {
-                title: 'My event title', // The title of the event
-                type: 'info', // The type of the event (determines its color). Can be important, warning, info, inverse, success or special
-                startsAt: moment().subtract(2, 'day').toDate(), // A javascript date object for when the event starts
-                endsAt: moment().add(2, 'days').toDate(), // A javascript date object for when the event ends
-                editable: false, // If edit-event-html is set and this field is explicitly set to false then dont make it editable
-                deletable: false, // If delete-event-html is set and this field is explicitly set to false then dont make it deleteable
-                incrementsBadgeTotal: true //If set to false then will not count towards the badge total amount on the month and year view
-            },
-            {
-                title: 'This some strange warning event',
-                type: 'warning',
-                startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
-                endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate()
-            },
-            {
-                title: 'Information event',
-                type: 'info',
-                startsAt: moment().subtract(1, 'day').toDate(),
-                endsAt: moment().add(5, 'days').toDate()
-            },
-            {
-                title: 'This is a really long and importnat event title',
-                type: 'important',
-                startsAt: moment().startOf('day').add(5, 'hours').toDate(),
-                endsAt: moment().startOf('day').add(19, 'hours').toDate()
-            }
-        ];
+		//These variables MUST be set as a minimum for the calendar to work
+		$scope.calendarView = 'month';
+		$scope.calendarDay = new Date();
+		$scope.events = [
+			{
+				title: 'My event title', // The title of the event
+				type: 'info', // The type of the event (determines its color). Can be important, warning, info, inverse, success or special
+				startsAt: moment().subtract(2, 'day').toDate(), // A javascript date object for when the event starts
+				endsAt: moment().add(2, 'days').toDate(), // A javascript date object for when the event ends
+				editable: false, // If edit-event-html is set and this field is explicitly set to false then dont make it editable
+				deletable: false, // If delete-event-html is set and this field is explicitly set to false then dont make it deleteable
+				incrementsBadgeTotal: true //If set to false then will not count towards the badge total amount on the month and year view
+			},
+			{
+				title: 'This some strange warning event',
+				type: 'warning',
+				startsAt: moment().startOf('week').subtract(2, 'days').add(8, 'hours').toDate(),
+				endsAt: moment().startOf('week').add(1, 'week').add(9, 'hours').toDate()
+			},
+			{
+				title: 'Information event',
+				type: 'info',
+				startsAt: moment().subtract(1, 'day').toDate(),
+				endsAt: moment().add(5, 'days').toDate()
+			},
+			{
+				title: 'This is a really long and importnat event title',
+				type: 'important',
+				startsAt: moment().startOf('day').add(5, 'hours').toDate(),
+				endsAt: moment().startOf('day').add(19, 'hours').toDate()
+			}
+		];
 
-        function showModal(action, event) {
-            $modal.open({
-                templateUrl: 'modalContent.html',
-                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
-                    $scope.$modalInstance = $modalInstance;
-                    $scope.action = action;
-                    $scope.event = event;
-                }]
-            });
-        }
+		function showModal(action, event) {
+			$modal.open({
+				templateUrl: 'modalContent.html',
+				controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+					$scope.$modalInstance = $modalInstance;
+					$scope.action = action;
+					$scope.event = event;
+				}]
+			});
+		}
 
-        $scope.eventClicked = function (event) {
-            $scope.currentDay = this.calendarTitle;
-            showModal('Clicked', event);
-        };
+		$scope.eventClicked = function (event) {
+			$scope.currentDay = this.calendarTitle;
+			showModal('Clicked', event);
+		};
 
-        $scope.eventEdited = function (event) {
-            $scope.currentDay = this.calendarTitle;
-            showModal('Edited', event);
-        };
+		$scope.eventEdited = function (event) {
+			$scope.currentDay = this.calendarTitle;
+			showModal('Edited', event);
+		};
 
-        $scope.eventDeleted = function (event) {
-            $scope.currentDay = this.calendarTitle;
-            showModal('Deleted', event);
-        };
+		$scope.eventDeleted = function (event) {
+			$scope.currentDay = this.calendarTitle;
+			showModal('Deleted', event);
+		};
 
-        $scope.toggle = function ($event, field, event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            event[field] = !event[field];
-        };
+		$scope.toggle = function ($event, field, event) {
+			$event.preventDefault();
+			$event.stopPropagation();
+			event[field] = !event[field];
+		};
 
-        $scope.setCalendarView = function (view) {
-            $scope.calendarView = view;
-            $scope.currentDay = this.calendarTitle;
-        };
+		$scope.setCalendarView = function (view) {
+			$scope.calendarView = view;
+			$scope.currentDay = this.calendarTitle;
+		};
 
-        $scope.updateTitle = function () {
-            $scope.currentDay = this.calendarTitle;
-        };
+		$scope.updateTitle = function () {
+			$scope.currentDay = this.calendarTitle;
+		};
 
-    }]
+	}]
 );
 
 
@@ -663,38 +663,38 @@ angular.module('edup.students', []);
 
 angular.module('edup.students')
 
-    .directive('studentAccounting', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'student-accounting',
+	.directive('studentAccounting', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'student-accounting',
 
-            controller: ['$scope', 'RestService', 'NotificationService', function ($scope, RestService, NotificationService) {
+			controller: ['$scope', 'RestService', 'NotificationService', function ($scope, RestService, NotificationService) {
 
-                $scope.updateStudentBalance = function(balance, student) {
-                    if (balance && balance.amount) {
-                        var balanceDto = {
-                            studentId: student.id,
-                            amount: balance.amount * 100,
-                            comments: balance.comment,
-                            cash: balance.cash ? balance.cash : true
-                        };
+				$scope.updateStudentBalance = function (balance, student) {
+					if (balance && balance.amount) {
+						var balanceDto = {
+							studentId: student.id,
+							amount: balance.amount * 100,
+							comments: balance.comment,
+							cash: balance.cash ? balance.cash : true
+						};
 
-                        RestService.Private.Balance.customPOST(balanceDto).then(function (response) {
-                            var recordId = response.payload;
-                            if (recordId) {
-                                student.balance += balance.amount;
-                                $scope.balance = null;
-                                NotificationService.Success(balance.amount + ' EUR was added to ' + student.name + ' ' + student.lastName + ' student!');
-                            }
-                        });
-                    }
-                };
-            }],
+						RestService.Private.Balance.customPOST(balanceDto).then(function (response) {
+							var recordId = response.payload;
+							if (recordId) {
+								student.balance += balance.amount;
+								$scope.balance = null;
+								NotificationService.Success(balance.amount + ' EUR was added to ' + student.name + ' ' + student.lastName + ' student!');
+							}
+						});
+					}
+				};
+			}],
 
-            link: function (scope) {
-            }
-        };
-    }
+			link: function (scope) {
+			}
+		};
+	}
 );
 'use strict';
 
@@ -846,81 +846,81 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
-    .directive('studentDocuments', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'student-documents',
+	.directive('studentDocuments', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'student-documents',
 
-            controller: ['$scope', 'QueryService', 'RestService', 'PaginationService', 'UrlService', function ($scope, QueryService, RestService, PaginationService, UrlService) {
+			controller: ['$scope', 'QueryService', 'RestService', 'PaginationService', 'UrlService', function ($scope, QueryService, RestService, PaginationService, UrlService) {
 
-                $scope.initDocumentsPagination = function () {
-                    $scope.documentsPaging = {
-                        enabled: false,
-                        page: 1,
-                        perPage: 5,
-                        totalRecords: 0
-                    };
-                };
+				$scope.initDocumentsPagination = function () {
+					$scope.documentsPaging = {
+						enabled: false,
+						page: 1,
+						perPage: 5,
+						totalRecords: 0
+					};
+				};
 
-                $scope.initDocumentsPagination();
+				$scope.initDocumentsPagination();
 
-                $scope.documentsSearch = {
-                    spin: false
-                };
+				$scope.documentsSearch = {
+					spin: false
+				};
 
-                $scope.loadDocuments = function (top, skip, search) {
-                    $scope.basicSearch.spin = true;
-                    var query = QueryService.Query(top, skip, search, 'Created desc', 'StudentId eq ' + $scope.selectedStudent.id);
-                    RestService.Private.Documents.get(query).then(function (result) {
-                        $scope.documentsSearch.spin = false;
-                        $scope.documentsPaging.totalRecords = result.count;
-                        $scope.documents = result.values;
-                        _.forEach($scope.documents, function (document) {
-                            document.link = UrlService.Files.Download + '/' + document.fileId;
-                        });
-                    });
-                };
+				$scope.loadDocuments = function (top, skip, search) {
+					$scope.basicSearch.spin = true;
+					var query = QueryService.Query(top, skip, search, 'Created desc', 'StudentId eq ' + $scope.selectedStudent.id);
+					RestService.Private.Documents.get(query).then(function (result) {
+						$scope.documentsSearch.spin = false;
+						$scope.documentsPaging.totalRecords = result.count;
+						$scope.documents = result.values;
+						_.forEach($scope.documents, function (document) {
+							document.link = UrlService.Files.Download + '/' + document.fileId;
+						});
+					});
+				};
 
-                $scope.refreshDocumentsList = function () {
-                    $scope.documents = null;
-                    $scope.initDocumentsPagination();
-                    $scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging));
-                };
+				$scope.refreshDocumentsList = function () {
+					$scope.documents = null;
+					$scope.initDocumentsPagination();
+					$scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging));
+				};
 
-                $scope.documentsPageChanged = function (newPage, searchValue) {
-                    if (!$scope.documentsSearch.spin) {
-                        $scope.documentsPaging.page = newPage;
-                        $scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging), searchValue);
-                    }
-                };
+				$scope.documentsPageChanged = function (newPage, searchValue) {
+					if (!$scope.documentsSearch.spin) {
+						$scope.documentsPaging.page = newPage;
+						$scope.loadDocuments(PaginationService.Top($scope.documentsPaging), PaginationService.Skip($scope.documentsPaging), searchValue);
+					}
+				};
 
 
-            }],
+			}],
 
-            link: function (scope) {
-                scope.onShowDownloadToggle = function () {
-                    scope.showDownloadSection = true;
-                    scope.documentsButtonLabel = 'Hide';
-                };
+			link: function (scope) {
+				scope.onShowDownloadToggle = function () {
+					scope.showDownloadSection = true;
+					scope.documentsButtonLabel = 'Hide';
+				};
 
-                scope.offShowDownloadToggle = function () {
-                    scope.showDownloadSection = false;
-                    scope.documentsButtonLabel = 'Show';
-                };
+				scope.offShowDownloadToggle = function () {
+					scope.showDownloadSection = false;
+					scope.documentsButtonLabel = 'Show';
+				};
 
-                scope.toggleDownloadSection = function () {
-                    scope.showDownloadSection = !scope.showDownloadSection;
-                    if (scope.showDownloadSection) {
-                        scope.onShowDownloadToggle();
-                    } else {
-                        scope.offShowDownloadToggle();
-                    }
-                };
+				scope.toggleDownloadSection = function () {
+					scope.showDownloadSection = !scope.showDownloadSection;
+					if (scope.showDownloadSection) {
+						scope.onShowDownloadToggle();
+					} else {
+						scope.offShowDownloadToggle();
+					}
+				};
 
-                scope.offShowDownloadToggle();
-            }
-        };
-    }
+				scope.offShowDownloadToggle();
+			}
+		};
+	}
 );
 'use strict';
 
@@ -1456,7 +1456,6 @@ angular.module('edup.subjects')
 						showAttendance: true
 					};
 				};
-
 
 
 			}],
@@ -2102,7 +2101,6 @@ angular.module('edup.reports')
 				};
 
 
-
 			}],
 			link: function (scope) {
 
@@ -2143,7 +2141,7 @@ angular.module('edup.reports')
 'use strict';
 
 angular.module('edup.tabs', [
-	'ui.bootstrap',
+	'ui.bootstrap.datetimepicker',
 	'ngSanitize',
 	'toggle-switch',
 	'infinite-scroll',

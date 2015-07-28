@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('edup.tabs', [
-	'ui.bootstrap',
+	'ui.bootstrap.datetimepicker',
 	'ngSanitize',
 	'toggle-switch',
 	'infinite-scroll',
