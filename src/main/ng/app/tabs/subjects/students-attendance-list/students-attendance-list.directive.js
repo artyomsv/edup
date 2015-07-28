@@ -161,7 +161,6 @@ angular.module('edup.subjects')
 				};
 
 				$scope.onStudentAbsenceEvent = function (student) {
-					console.log(student.participated);
 					if (student.attendanceId) {
 						student.updateInProgress = true;
 						RestService.Private.Subjects
@@ -176,11 +175,6 @@ angular.module('edup.subjects')
 							})
 							.then(function () {
 								student.updateInProgress = false;
-								//_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
-								//	if (student.id === attendance.studentId) {
-								//		attendance.participated = student.participated;
-								//	}
-								//});
 							}, function () {
 								student.updateInProgress = false;
 							});

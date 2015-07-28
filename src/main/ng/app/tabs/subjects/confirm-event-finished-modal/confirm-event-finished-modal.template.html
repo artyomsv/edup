@@ -1,0 +1,25 @@
+<div app-modal id="eventFinalizingConfirmationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modalViewPadding" style="width: 300px !important;">
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Event confirmation:</h4>
+
+					<p>Please approve event is finalized.</p>
+
+					<p>{{selectedEvent.students}} student balance will be adjusted by {{selectedEvent.adjustedPrice | number: 2}} &euro;</p>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 column" style="padding-top: 10px">
+					<button style="margin-left: 15px" class="btn btn-success btn-sm pull-right" type="button" data-dismiss="modal">No</button>
+					<button class="btn btn-warning btn-sm pull-right" type="button" ng-click="confirmEventIsFinished()">Yes</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

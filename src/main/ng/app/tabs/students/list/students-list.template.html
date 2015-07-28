@@ -1,0 +1,60 @@
+<div class="container-fluid" style="padding-top: 20px">
+
+	<div ng-show="!studentsSearch.studentRecordsFound">
+		<div class="jumbotron well">
+			<h3>No students found!</h3>
+
+			<p>Change search query for result.</p>
+		</div>
+	</div>
+
+	<table ng-show="studentsSearch.studentRecordsFound" class="table table-hover" style="table-layout:fixed;">
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th class="text-center">Age</th>
+			<th class="text-center">ID</th>
+			<th class="text-center">Phone</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody>
+
+		<tr dir-paginate="student in students | itemsPerPage: studentPaging.perPage"
+		    current-page="studentPaging.page"
+		    total-items="studentPaging.totalRecords"
+		    ng-class-odd="'success'"
+		    ng-class-even="'active'"
+		    ng-click="setSelected(student.id)"
+		    ng-class="{'missing-data-row': !student.mobile, 'selected-row': student.id === selectedStudent.id}"
+		    pagination-id="studentsPaginationId"
+				>
+			<td style="width: 50%!important;word-wrap:break-word;">
+				<div tooltip="{{student.fullName }}" class="tooltip-300max" tooltip-enable="student.fullName.length > 30">
+					{{ student.fullName | limitTo: 30}}{{student.fullName.length > 30 ? '...' : ''}}
+				</div>
+			</td>
+			<td style="width: 10%!important;" class="text-center">{{ student.age }}</td>
+			<td style="width: 10%!important;word-wrap:break-word;" class="text-center">{{ student.personId }}</td>
+			<td style="width: 10%!important;word-wrap:break-word;" class="text-center">{{ student.mobile }}</td>
+			<!--<td><input type="checkbox" name="checkboxes" id="checkboxes-1" ng-disabled="true" ng-checked="student.active"></td>-->
+			<td style="width: 10%!important;" class="text-center">
+				<button href="#information" type="button" class="btn btn-success btn-xs" ng-click="openStudentDetailModal(student)">Details</button>
+			</td>
+		</tr>
+
+		</tbody>
+	</table>
+
+	<div class="row">
+		<div class="col-xs-12 text-center">
+			<dir-pagination-controls on-page-change="studentsPageChanged(newPageNumber, searchValue)" pagination-id="studentsPaginationId"></dir-pagination-controls>
+		</div>
+	</div>
+
+
+	<student-details></student-details>
+
+</div>
+
+

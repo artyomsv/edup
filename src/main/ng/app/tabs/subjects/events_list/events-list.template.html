@@ -6,6 +6,7 @@
 
 			<div class="jumbotron well">
 				<h3>No events found!</h3>
+
 				<p>Please register new event.</p>
 			</div>
 
@@ -15,10 +16,11 @@
 		<table ng-show="events.eventRecordsFound" class="table table-hover">
 			<thead>
 			<tr>
-				<th>Name</th>
-				<th>Date</th>
-				<th>From</th>
-				<th>To</th>
+				<th class="text-center">Name</th>
+				<th class="text-center">Date</th>
+				<th class="text-center">From</th>
+				<th class="text-center">To</th>
+				<th></th>
 			</tr>
 			</thead>
 			<tbody>
@@ -31,9 +33,14 @@
 				    ng-click="setSelected(event)">
 
 					<td>{{ event.subject.subjectName }}</td>
-					<td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td>
-					<td>{{ event.from | date:'HH:mm'}}</td>
-					<td>{{ event.to | date:'HH:mm'}}</td>
+					<td class="text-center">{{ event.eventDate | date:'yyyy/MM/dd'}}</td>
+					<td class="text-center">{{ event.from | date:'HH:mm'}}</td>
+					<td class="text-center">{{ event.to | date:'HH:mm'}}</td>
+					<td class="text-center" width="40px">
+						<span>
+							<i ng-class="{'glyphicon glyphicon-chevron-up event_future': event.currentStatus === 'FUTURE' , 'glyphicon glyphicon-chevron-down event_past': event.currentStatus === 'PAST'  , 'glyphicon glyphicon-thumbs-up event_confirmed': event.currentStatus === 'CONFIRMED'}"></i>
+						</span>
+					</td>
 				</tr>
 				<!--<div ng-show='events.loading'>Loading data...</div>-->
 

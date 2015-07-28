@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('edup.tabs', [
+	'ui.bootstrap',
 	'ngSanitize',
 	'toggle-switch',
-	'ui.bootstrap.datetimepicker',
 	'infinite-scroll',
 	'angularFileUpload',
 	'fiestah.money',

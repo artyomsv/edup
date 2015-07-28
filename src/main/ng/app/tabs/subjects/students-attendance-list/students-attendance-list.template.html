@@ -26,7 +26,7 @@
 
 	<div class="row">
 		<div class="col-md-12">
-			<div id="events_students_contaner" style="height:340px;overflow: auto;margin-top: 10px">
+			<div id="events_students_contaner" style="height:370px;overflow: auto;margin-top: 10px">
 
 				<div ng-show="!eventStudentsSearch.studentRecordsFound">
 
@@ -63,7 +63,8 @@
 							</td>
 							<td class="text-center">{{ student.personId}}</td>
 							<td style="width:50px;" class="text-center">
-								<input type="checkbox"
+								<input ng-disabled="selectedEvent.status ==='FINALIZED'"
+								       type="checkbox"
 								       name="checkboxes"
 								       id="registeredStudentId"
 								       ng-checked="student.active"
@@ -74,7 +75,7 @@
 								<div ng-show="student.showAbsenceToggle"
 								     toggle-switch
 								     ng-init="student.updateInProgress = false"
-								     is-disabled="student.updateInProgress"
+								     is-disabled="student.updateInProgress || selectedEvent.status ==='FINALIZED'"
 								     class="switch-success switch-mini"
 								     on-label="Yes"
 								     off-label="No"
@@ -92,10 +93,6 @@
 			</div>
 		</div>
 	</div>
-
-	<button style="margin-top: 10px" class="btn btn-success btn-sm pull-right" type="button" ng-click="">
-		Confirm finished
-	</button>
 
 </div>
 

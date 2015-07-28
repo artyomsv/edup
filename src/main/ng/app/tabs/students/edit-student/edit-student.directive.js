@@ -13,7 +13,7 @@ angular.module('edup.students')
 						return;
 					}
 
-					$scope.studentProcessingInProgress = true;
+					//$scope.studentProcessingInProgress = true;
 
 					student.id = $scope.selectedStudent.id;
 					student.versionId = $scope.selectedStudent.versionId;

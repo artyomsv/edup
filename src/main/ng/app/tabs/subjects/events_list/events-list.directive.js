@@ -6,19 +6,19 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-list',
-			controller: function ($scope, $timeout, QueryService, RestService) {
+			controller: function ($scope, $timeout, moment, QueryService, RestService) {
 
 				$scope.events = {
 					values: [],
 					total: 0,
 					loading: false,
-					firstLoad : true,
+					firstLoad: true,
 					eventRecordsFound: true
 				};
 
 				$scope.setSelected = function (event) {
 					$scope.events.firstLoad = false;
-					$scope.loadEventDetails(event.eventId);
+					$scope.loadEventDetails(event);
 				};
 
 				$scope.loadMoreEvens = function (force) {
@@ -49,6 +49,15 @@ angular.module('edup.subjects')
 								_.forEach(events, function (event) {
 									event.priceAdjusted = event.price / 100;
 									$scope.events.values.push(event);
+
+									if (event.status === 'FINALIZED') {
+										event.currentStatus = 'CONFIRMED';
+									} else if (moment().isAfter(event.eventDate)) {
+										event.currentStatus = 'PAST';
+									} else {
+										event.currentStatus = 'FUTURE';
+									}
+
 								});
 
 								$scope.events.total = response.count;

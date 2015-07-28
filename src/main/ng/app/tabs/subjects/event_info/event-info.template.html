@@ -14,7 +14,7 @@
 						<table>
 							<tr>
 								<td><b>Subject name:</b></td>
-								<td style="padding-left: 10px">{{selectedEvent.subject.subjectName}}</td>
+								<td style="padding-left: 10px">{{selectedEvent.subject.subjectName}} ({{selectedEvent.eventId}})</td>
 							</tr>
 							<tr>
 								<td><b>Event date:</b></td>
@@ -38,25 +38,33 @@
 						</div>
 					</div>
 
-
 				</div>
 			</div>
 		</div>
 
 		<div class="row">
+
+			<confirm-event-finished-modal></confirm-event-finished-modal>
 			<div class="col-md-12">
-				<div class="pull-right">
-					<button class="btn btn-success btn-sm"
-					        type="button"
-					        data-toggle="collapse"
-					        data-target="#studentManageView"
-					        aria-expanded="false"
-					        aria-controls="studentManageView"
-					        ng-click="processExpand()"
-							>
-						Manage
-					</button>
-				</div>
+				<button class="btn btn-success btn-sm pull-right"
+				        style="margin-left: 15px;"
+				        type="button"
+				        data-toggle="collapse"
+				        data-target="#studentManageView"
+				        aria-expanded="false"
+				        aria-controls="studentManageView"
+				        ng-click="processExpand()">
+					Manage
+				</button>
+
+				<button ng-show="selectedEvent.currentStatus ==='PAST'"
+				        class="btn btn-success btn-sm pull-right"
+				        data-toggle="modal"
+				        data-target="#eventFinalizingConfirmationModal"
+				        type="button">
+					Confirm finished
+				</button>
+
 			</div>
 		</div>
 

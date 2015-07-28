@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('edup.common', [
-    'restangular',
-    'angularUtils.directives.dirPagination',
+	'restangular',
+	'angularUtils.directives.dirPagination',
 ]);
 'use strict';
 
@@ -102,20 +102,20 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .config(['paginationTemplateProvider', function (paginationTemplateProvider) {
+	.config(['paginationTemplateProvider', function (paginationTemplateProvider) {
 
-        var location = window.location.hostname;
+		var location = window.location.hostname;
 
-        var baseUrl;
+		var baseUrl;
 
-        if (location.indexOf('127.0.0.1') > -1) {
-            baseUrl = 'http://127.0.0.1:8088/';
-        } else {
-            baseUrl = 'https://' + location + ':8443/edup/ng';
-        }
+		if (location.indexOf('127.0.0.1') > -1) {
+			baseUrl = 'http://127.0.0.1:8088/';
+		} else {
+			baseUrl = 'https://' + location + ':8443/edup/ng';
+		}
 
-        paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
-    }]
+		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
+	}]
 );
 'use strict';
 
@@ -937,7 +937,7 @@ angular.module('edup.students')
 						return;
 					}
 
-					$scope.studentProcessingInProgress = true;
+					//$scope.studentProcessingInProgress = true;
 
 					student.id = $scope.selectedStudent.id;
 					student.versionId = $scope.selectedStudent.versionId;
@@ -1398,33 +1398,127 @@ angular.module('edup.subjects', [
 
 angular.module('edup.subjects')
 
+	.directive('confirmEventFinishedModal', ['$filter', 'UrlService', function ($filter, UrlService) {
+		return {
+			restrict: 'E',
+			templateUrl: 'confirm-event-finished-modal',
+			controller: ['$scope', '$timeout', 'moment', 'RestService', 'TypeAheadService', function ($scope, $timeout, moment, RestService, TypeAheadService) {
+
+				$scope.plannedEventDetails = {
+					selectedSubject: null,
+					dateFromPicker: null,
+					dateToPicker: null,
+				};
+
+				var selectSubject = function (selectedSubjectName) {
+					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
+						return subject.subjectName === selectedSubjectName;
+					});
+					console.log(angular.toJson($scope.selectedSubject));
+				};
+
+
+				var typeAhead = TypeAheadService.Build();
+
+				var $bloodhound = $('#subject-event-typeahead-modal .typeahead');
+
+				$bloodhound.typeahead({
+						hint: true,
+						highlight: true,
+						minLength: 1
+					},
+					{
+						name: 'subjectsTypeAhead',
+						source: typeAhead
+					}
+				);
+
+				$bloodhound.bind('typeahead:selected', function (obj, datum) {
+					selectSubject(datum);
+				});
+
+				$scope.plannedEventJournal = function () {
+					$scope.plannedEventDetails = {
+						selectedSubject: null,
+						dateFromPicker: null,
+						dateToPicker: null,
+						subjectName: null,
+						showAttendance: false
+					};
+				};
+
+				$scope.finishedEventReport = function () {
+					$scope.plannedEventDetails = {
+						selectedSubject: null,
+						dateFromPicker: null,
+						dateToPicker: null,
+						subjectName: null,
+						showAttendance: true
+					};
+				};
+
+
+
+			}],
+			link: function (scope) {
+
+				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+
+				};
+
+				scope.performReportDownload = function (details) {
+					if (details && details.selectedSubject && details.dateFromPicker && details.dateToPicker) {
+						var query = {
+							from: $filter('date')(details.dateFromPicker, 'ddMMyyyy'),
+							to: $filter('date')(details.dateToPicker, 'ddMMyyyy'),
+							attendance: scope.plannedEventDetails.showAttendance
+						};
+						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
+						window.open(url);
+						scope.dismissModal();
+					}
+
+				};
+
+			}
+		};
+
+
+	}]
+);
+'use strict';
+
+angular.module('edup.subjects')
+
 	.directive('eventInfo', function () {
 		return {
 			restrict: 'E',
 			templateUrl: 'event-info',
-			controller: ['$scope', 'moment', 'RestService', 'QueryService', function ($scope, moment, RestService, QueryService) {
+			controller: ['$scope', 'moment', '$filter', 'RestService', 'QueryService', function ($scope, moment, $filter, RestService, QueryService) {
 
 				$scope.studentsManagemnt = {
-					expanded: false
+					expanded: false,
+					confirmation: false
 				};
 
 				$scope.selectedEvent = {
 					loaded: false
 				};
 
-				$scope.loadEventDetails = function (eventId) {
-					if (eventId) {
+				$scope.loadEventDetails = function (event) {
+					if (event && event.eventId) {
 
-						RestService.Private.Subjects.one('events').one(eventId.toString()).get().then(function (response) {
+						RestService.Private.Subjects.one('events').one(event.eventId.toString()).get().then(function (response) {
 							if (response.payload) {
 								$scope.selectedEvent = response.payload;
 								$scope.selectedEvent.loaded = true;
 								$scope.selectedEvent.adjustedPrice = $scope.selectedEvent.price / 100;
 								$scope.selectedEvent.havePassed = moment().isAfter($scope.selectedEvent.eventDate);
+								$scope.selectedEvent.currentStatus = event.currentStatus;
 
 								$scope.resetEventStudentsSearch($scope.selectedEvent.havePassed);
 
-								$scope.loadAttendance(eventId);
+								$scope.loadAttendance(event.eventId);
 							}
 						});
 					}
@@ -1447,6 +1541,40 @@ angular.module('edup.subjects')
 				$scope.processExpand = function () {
 					$scope.studentsManagemnt.expanded = !$scope.studentsManagemnt.expanded;
 					$scope.executeSearch();
+				};
+
+				$scope.confirmEventIsFinished = function () {
+					if ($scope.studentsManagemnt.confirmation) {
+						return;
+					}
+
+					$scope.studentsManagemnt.confirmation = true;
+
+					var payload = _.cloneDeep($scope.selectedEvent);
+					payload.status = 'FINALIZED';
+
+					RestService.Private.Subjects
+						.one('events')
+						.one(payload.eventId.toString())
+						.customPUT(payload)
+						.then(function (response) {
+							$scope.selectedEvent.status = payload.status;
+							$scope.selectedEvent.currentStatus = 'CONFIRMED';
+							var event = _.find($scope.events.values, function (event) {
+								return event.eventId === payload.eventId;
+							});
+
+							if (event) {
+								event.status = $scope.selectedEvent.status;
+								event.currentStatus = $scope.selectedEvent.currentStatus;
+							}
+
+							$scope.dismissModal();
+							$scope.studentsManagemnt.confirmation = false;
+						}, function (error) {
+							$scope.studentsManagemnt.confirmation = false;
+						});
+
 				};
 
 			}],
@@ -1616,19 +1744,19 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'events-list',
-			controller: ['$scope', '$timeout', 'QueryService', 'RestService', function ($scope, $timeout, QueryService, RestService) {
+			controller: ['$scope', '$timeout', 'moment', 'QueryService', 'RestService', function ($scope, $timeout, moment, QueryService, RestService) {
 
 				$scope.events = {
 					values: [],
 					total: 0,
 					loading: false,
-					firstLoad : true,
+					firstLoad: true,
 					eventRecordsFound: true
 				};
 
 				$scope.setSelected = function (event) {
 					$scope.events.firstLoad = false;
-					$scope.loadEventDetails(event.eventId);
+					$scope.loadEventDetails(event);
 				};
 
 				$scope.loadMoreEvens = function (force) {
@@ -1659,6 +1787,15 @@ angular.module('edup.subjects')
 								_.forEach(events, function (event) {
 									event.priceAdjusted = event.price / 100;
 									$scope.events.values.push(event);
+
+									if (event.status === 'FINALIZED') {
+										event.currentStatus = 'CONFIRMED';
+									} else if (moment().isAfter(event.eventDate)) {
+										event.currentStatus = 'PAST';
+									} else {
+										event.currentStatus = 'FUTURE';
+									}
+
 								});
 
 								$scope.events.total = response.count;
@@ -1867,7 +2004,6 @@ angular.module('edup.subjects')
 				};
 
 				$scope.onStudentAbsenceEvent = function (student) {
-					console.log(student.participated);
 					if (student.attendanceId) {
 						student.updateInProgress = true;
 						RestService.Private.Subjects
@@ -1882,11 +2018,6 @@ angular.module('edup.subjects')
 							})
 							.then(function () {
 								student.updateInProgress = false;
-								//_.forEach($scope.eventStudentsSearch.attendance, function (attendance) {
-								//	if (student.id === attendance.studentId) {
-								//		attendance.participated = student.participated;
-								//	}
-								//});
 							}, function () {
 								student.updateInProgress = false;
 							});
@@ -2012,9 +2143,9 @@ angular.module('edup.reports')
 'use strict';
 
 angular.module('edup.tabs', [
+	'ui.bootstrap',
 	'ngSanitize',
 	'toggle-switch',
-	'ui.bootstrap.datetimepicker',
 	'infinite-scroll',
 	'angularFileUpload',
 	'fiestah.money',
@@ -2158,8 +2289,13 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('confirm-event-finished-modal',
+    "<div app-modal id=eventFinalizingConfirmationModal class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\" style=\"width: 300px !important\"><div class=row><div class=col-md-12><h4>Event confirmation:</h4><p>Please approve event is finalized.</p><p>{{selectedEvent.students}} student balance will be adjusted by {{selectedEvent.adjustedPrice | number: 2}} &euro;</p></div></div><div class=row><div class=\"col-md-12 column\" style=\"padding-top: 10px\"><button style=\"margin-left: 15px\" class=\"btn btn-success btn-sm pull-right\" type=button data-dismiss=modal>No</button> <button class=\"btn btn-warning btn-sm pull-right\" type=button ng-click=confirmEventIsFinished()>Yes</button></div></div></div></div></div>"
+  );
+
+
   $templateCache.put('event-info',
-    "<div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Event information</div><div class=\"panel-body panel-body-override container-fluid\"><div class=row><div class=col-md-12><div class=row><div class=col-md-8><table><tr><td><b>Subject name:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.subject.subjectName}}</td></tr><tr><td><b>Event date:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.eventDate | date:'yyyy/MM/dd'}}</td></tr><tr><td><b>Time:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.from | date:'HH:mm'}} - {{selectedEvent.to | date:'HH:mm'}}</td></tr><tr><td><b>Price:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.adjustedPrice | number : 2}} &euro;</td></tr></table></div><div class=col-md-4><div class=pull-right ng-show=selectedEvent.loaded><div>Students <span class=badge>{{selectedEvent.students}}</span></div></div></div></div></div></div><div class=row><div class=col-md-12><div class=pull-right><button class=\"btn btn-success btn-sm\" type=button data-toggle=collapse data-target=#studentManageView aria-expanded=false aria-controls=studentManageView ng-click=processExpand()>Manage</button></div></div></div><div class=collapse id=studentManageView style=\"margin-top: 15px\"><students-attendance-list></students-attendance-list></div></div></div>"
+    "<div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Event information</div><div class=\"panel-body panel-body-override container-fluid\"><div class=row><div class=col-md-12><div class=row><div class=col-md-8><table><tr><td><b>Subject name:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.subject.subjectName}} ({{selectedEvent.eventId}})</td></tr><tr><td><b>Event date:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.eventDate | date:'yyyy/MM/dd'}}</td></tr><tr><td><b>Time:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.from | date:'HH:mm'}} - {{selectedEvent.to | date:'HH:mm'}}</td></tr><tr><td><b>Price:</b></td><td style=\"padding-left: 10px\">{{selectedEvent.adjustedPrice | number : 2}} &euro;</td></tr></table></div><div class=col-md-4><div class=pull-right ng-show=selectedEvent.loaded><div>Students <span class=badge>{{selectedEvent.students}}</span></div></div></div></div></div></div><div class=row><confirm-event-finished-modal></confirm-event-finished-modal><div class=col-md-12><button class=\"btn btn-success btn-sm pull-right\" style=\"margin-left: 15px\" type=button data-toggle=collapse data-target=#studentManageView aria-expanded=false aria-controls=studentManageView ng-click=processExpand()>Manage</button> <button ng-show=\"selectedEvent.currentStatus ==='PAST'\" class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#eventFinalizingConfirmationModal type=button>Confirm finished</button></div></div><div class=collapse id=studentManageView style=\"margin-top: 15px\"><students-attendance-list></students-attendance-list></div></div></div>"
   );
 
 
@@ -2169,7 +2305,7 @@ angular.module('edup')
 
 
   $templateCache.put('events-list',
-    "<div class=container-fluid><div id=events_list_contaner style=\"height:400px;overflow: auto\"><div ng-show=!events.eventRecordsFound><div class=\"jumbotron well\"><h3>No events found!</h3><p>Please register new event.</p></div></div><table ng-show=events.eventRecordsFound class=\"table table-hover\"><thead><tr><th>Name</th><th>Date</th><th>From</th><th>To</th></tr></thead><tbody><div infinite-scroll=loadMoreEvens(false) infinite-scroll-distance=3 infinite-scroll-container=\"'#events_list_contaner'\"><tr ng-repeat=\"event in events.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-class=\"{'selected-row': event.eventId === selectedEvent.eventId}\" ng-click=setSelected(event)><td>{{ event.subject.subjectName }}</td><td>{{ event.eventDate | date:'yyyy/MM/dd'}}</td><td>{{ event.from | date:'HH:mm'}}</td><td>{{ event.to | date:'HH:mm'}}</td></tr></div></tbody></table></div></div>"
+    "<div class=container-fluid><div id=events_list_contaner style=\"height:400px;overflow: auto\"><div ng-show=!events.eventRecordsFound><div class=\"jumbotron well\"><h3>No events found!</h3><p>Please register new event.</p></div></div><table ng-show=events.eventRecordsFound class=\"table table-hover\"><thead><tr><th class=text-center>Name</th><th class=text-center>Date</th><th class=text-center>From</th><th class=text-center>To</th><th></th></tr></thead><tbody><div infinite-scroll=loadMoreEvens(false) infinite-scroll-distance=3 infinite-scroll-container=\"'#events_list_contaner'\"><tr ng-repeat=\"event in events.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\" ng-class=\"{'selected-row': event.eventId === selectedEvent.eventId}\" ng-click=setSelected(event)><td>{{ event.subject.subjectName }}</td><td class=text-center>{{ event.eventDate | date:'yyyy/MM/dd'}}</td><td class=text-center>{{ event.from | date:'HH:mm'}}</td><td class=text-center>{{ event.to | date:'HH:mm'}}</td><td class=text-center width=40px><span><i ng-class=\"{'glyphicon glyphicon-chevron-up event_future': event.currentStatus === 'FUTURE' , 'glyphicon glyphicon-chevron-down event_past': event.currentStatus === 'PAST'  , 'glyphicon glyphicon-thumbs-up event_confirmed': event.currentStatus === 'CONFIRMED'}\"></i></span></td></tr></div></tbody></table></div></div>"
   );
 
 
@@ -2179,7 +2315,7 @@ angular.module('edup')
 
 
   $templateCache.put('students-attendance-list',
-    "<div style=height:418px><div class=row><div class=col-md-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\" style=\"width: 100% !important\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\" ng-change=formatChanged()></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:340px;overflow: auto;margin-top: 10px\"><div ng-show=!eventStudentsSearch.studentRecordsFound><div class=\"jumbotron well\"><h3>No students found!</h3><p>Please select another event or change search filter.</p></div></div><table ng-show=eventStudentsSearch.studentRecordsFound class=\"table table-hover\"><thead><tr><th>Name</th><th class=text-center>ID</th><th class=text-center>Registered</th><th class=text-center ng-show=selectedEvent.havePassed>Participated</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=width:30%><div tooltip={{student.fullName}} tooltip-enable=\"student.fullName.length > 25\" class=tooltip-300max>{{ student.fullName | limitTo: 25}}{{student.fullName.length > 25 ? '...' : ''}}</div></td><td class=text-center>{{ student.personId}}</td><td style=width:50px class=text-center><input type=checkbox name=checkboxes id=registeredStudentId ng-checked=student.active ng-click=\"updateStudentAttendance(student)\"></td><td style=width:50px ng-show=selectedEvent.havePassed><div ng-show=student.showAbsenceToggle toggle-switch ng-init=\"student.updateInProgress = false\" is-disabled=student.updateInProgress class=\"switch-success switch-mini\" on-label=Yes off-label=No knob-label=\"\" ng-model=student.participated ng-change=onStudentAbsenceEvent(student)></div></td></tr></div></tbody></table></div></div></div><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=\"\">Confirm finished</button></div>"
+    "<div style=height:418px><div class=row><div class=col-md-8><div class=input-group><span class=input-group-addon id=basic-addon1 ng-class=\"{'glyphicon glyphicon-refresh searchTextInput': eventStudentsSearch.spin , 'glyphicon glyphicon-search searchTextInput': !eventStudentsSearch.spin}\"></span> <input class=form-control placeholder=search ng-model=eventStudentsSearch.searchValue ng-keyup=executeSearch()></div></div><div class=col-md-4><div class=\"dropdown pull-right\" style=\"width: 100% !important\"><select id=formatId class=form-control ng-model=eventStudentsSearch.format ng-options=\"format for format in eventStudentsSearch.formats\" ng-change=formatChanged()></select></div></div></div><div class=row><div class=col-md-12><div id=events_students_contaner style=\"height:370px;overflow: auto;margin-top: 10px\"><div ng-show=!eventStudentsSearch.studentRecordsFound><div class=\"jumbotron well\"><h3>No students found!</h3><p>Please select another event or change search filter.</p></div></div><table ng-show=eventStudentsSearch.studentRecordsFound class=\"table table-hover\"><thead><tr><th>Name</th><th class=text-center>ID</th><th class=text-center>Registered</th><th class=text-center ng-show=selectedEvent.havePassed>Participated</th></tr></thead><tbody><div infinite-scroll=loadMoreStudents() nfinite-scroll-distance=4 infinite-scroll-container=\"'#events_students_contaner'\"><tr ng-repeat=\"student in eventStudentsSearch.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=width:30%><div tooltip={{student.fullName}} tooltip-enable=\"student.fullName.length > 25\" class=tooltip-300max>{{ student.fullName | limitTo: 25}}{{student.fullName.length > 25 ? '...' : ''}}</div></td><td class=text-center>{{ student.personId}}</td><td style=width:50px class=text-center><input ng-disabled=\"selectedEvent.status ==='FINALIZED'\" type=checkbox name=checkboxes id=registeredStudentId ng-checked=student.active ng-click=\"updateStudentAttendance(student)\"></td><td style=width:50px ng-show=selectedEvent.havePassed><div ng-show=student.showAbsenceToggle toggle-switch ng-init=\"student.updateInProgress = false\" is-disabled=\"student.updateInProgress || selectedEvent.status ==='FINALIZED'\" class=\"switch-success switch-mini\" on-label=Yes off-label=No knob-label=\"\" ng-model=student.participated ng-change=onStudentAbsenceEvent(student)></div></td></tr></div></tbody></table></div></div></div></div>"
   );
 
 }]);

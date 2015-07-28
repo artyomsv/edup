@@ -1,0 +1,70 @@
+<div app-modal id="addToBalanceModalView" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content modalViewPadding">
+			<form>
+				<fieldset>
+					<!-- Form Name -->
+					<legend>Add money to account</legend>
+
+					<div class="form-group">
+						<label for="amount">Enter a monetary amount:</label>
+
+						<div class="input-group">
+							<span class="input-group-addon">&euro;</span>
+							<input required
+							       id="amount"
+							       class="form-control"
+							       money=""
+							       ng-model="balance.amount"
+							       autofocus=""
+							       precision="2">
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="comments">Comments</label>
+						<textarea ng-model="balance.comment" class="form-control fixedTextArea" id="comments" name="comments"></textarea>
+					</div>
+
+					<div class="form-group col-md-12 column">
+						<div class="col-md-6 column">
+							<label>
+								<input type="radio" name="operationType" value="true" ng-model="balance.cash" ng-checked="true">
+								Cash
+							</label>
+						</div>
+						<div class="col-md-6 column">
+							<label>
+								<input type="radio" name="operationType" value="false" ng-model="balance.cash">
+								Transfer
+							</label>
+						</div>
+					</div>
+
+
+					<!-- Button -->
+					<div ng-init="balanceUpdateInProgress = false" class="form-group text-center">
+						<button ng-click="saving(balance)"
+						        id="addToBalanceButton"
+						        ng-disabled="balanceUpdateInProgress"
+						        class="btn btn-success btn-sm">Save
+						</button>
+						<button ng-click="resetValue()"
+						        id="clearBalanceUpdate"
+						        type="reset"
+						        ng-disabled="balanceUpdateInProgress"
+						        class="btn btn-primary  btn-sm">Reset
+						</button>
+						<button id="cancelBalanceUpdate"
+						        class="btn btn-warning  btn-sm"
+						        data-dismiss="modal"
+						        ng-disabled="balanceUpdateInProgress"
+						        ng-click="balance = null">Cancel
+						</button>
+					</div>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</div>
