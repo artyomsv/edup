@@ -20,7 +20,7 @@
   <properties>
     <version.major>0</version.major>
     <version.minor>4</version.minor>
-    <version.tag>6</version.tag>
+    <version.tag>7</version.tag>
   </properties>
 
   <dependencyManagement>
@@ -417,6 +417,25 @@
       <artifactId>cachefilter</artifactId>
       <version>2.3.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.easybatch</groupId>
+      <artifactId>easybatch-core</artifactId>
+      <version>3.0.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.easybatch</groupId>
+      <artifactId>easybatch-jpa</artifactId>
+      <version>3.0.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.reactivex</groupId>
+      <artifactId>rxjava</artifactId>
+      <version>1.0.12</version>
+    </dependency>
+
   </dependencies>
 
 

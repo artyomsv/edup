@@ -20,15 +20,16 @@ public class IndexBuilder<Key, Value> {
     private Transformer<Value, Key> key;
     private Predicate<Value> predicate;
     private Factory<Collection<Value>> factory;
-    private Factory<Map<Key, Value>> index;
-    private Factory<Map<Key, Collection<Value>>> collectionIndex;
+    private Transformer<Value, ?> transformer;
+    private Factory<Map<Key, Value>> map;
+    private Factory<Map<Key, Collection<Value>>> valuesCollection;
     private Comparator<Value> comparator;
 
     private IndexBuilder() {
     }
 
-    public static <Key, Value> IndexBuilder<Key, Value> get() {
-        return new IndexBuilder<Key, Value>();
+    public static <Key, To> IndexBuilder<Key, To> get() {
+        return new IndexBuilder<Key, To>();
     }
 
     public Map<Key, Collection<Value>> mapToCollection(Collection<Value> values) {
@@ -42,7 +43,7 @@ public class IndexBuilder<Key, Value> {
         checkFactory();
         checkCollectionIndex();
 
-        Map<Key, Collection<Value>> map = map(values, key, factory, predicate, collectionIndex);
+        Map<Key, Collection<Value>> map = map(values, key, factory, predicate, valuesCollection);
         if (comparator != null) {
             for (Collection<Value> collection : map.values()) {
                 List<Class<?>> interfaces = ClassUtils.getAllInterfaces(collection.getClass());
@@ -66,7 +67,7 @@ public class IndexBuilder<Key, Value> {
         checkFactory();
         checkIndex();
 
-        return map(values, key, predicate, index);
+        return map(values, key, predicate, map);
     }
 
     public IndexBuilder<Key, Value> key(Transformer<Value, Key> key) {
@@ -90,12 +91,12 @@ public class IndexBuilder<Key, Value> {
     }
 
     public IndexBuilder<Key, Value> index(Factory<Map<Key, Value>> index) {
-        this.index = index;
+        this.map = index;
         return this;
     }
 
     public IndexBuilder<Key, Value> indexForCollections(Factory<Map<Key, Collection<Value>>> index) {
-        this.collectionIndex = index;
+        this.valuesCollection = index;
         return this;
     }
 
@@ -172,8 +173,8 @@ public class IndexBuilder<Key, Value> {
     }
 
     private void checkCollectionIndex() {
-        if (collectionIndex == null) {
-            collectionIndex = new Factory<Map<Key, Collection<Value>>>() {
+        if (valuesCollection == null) {
+            valuesCollection = new Factory<Map<Key, Collection<Value>>>() {
                 @Override
                 public Map<Key, Collection<Value>> create() {
                     return new HashMap<>();
@@ -183,8 +184,8 @@ public class IndexBuilder<Key, Value> {
     }
 
     private void checkIndex() {
-        if (index == null) {
-            index = new Factory<Map<Key, Value>>() {
+        if (map == null) {
+            map = new Factory<Map<Key, Value>>() {
                 @Override
                 public Map<Key, Value> create() {
                     return new HashMap<>();

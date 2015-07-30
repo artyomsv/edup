@@ -9,9 +9,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexCommit;
+import org.apache.lucene.index.IndexDeletionPolicy;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.similarities.DefaultSimilarity;
 import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
@@ -27,9 +31,11 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -41,6 +47,8 @@ public class IndexConfigProvider {
     private Map<IndexType, DirectoryReader> directoryReaderMap = new ConcurrentHashMap<IndexType, DirectoryReader>();
     private Map<IndexType, Collection<? extends IndexAttribute>> fullTextSearchAttributes;
     private Map<IndexType, IndexSearcher> searcherMap = new ConcurrentHashMap<IndexType, IndexSearcher>();
+
+    private Map<IndexType, SearcherManager> managerMap = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
@@ -55,10 +63,14 @@ public class IndexConfigProvider {
                 StudentIndexAttribute.BIRTH_DATE));
 
         fullTextSearchAttributes.put(IndexType.SUBJECT, Collections.singletonList(SubjectsIndexAttribute.NAME));
+
+
+        BooleanQuery.setMaxClauseCount(1024 * 100);
+        IndexWriterConfig indexWriterConfig = buildIndexWriterConfig();
     }
 
     public IndexWriter buildWriter(IndexType type) throws IOException {
-        IndexWriterConfig config = get();
+        IndexWriterConfig config = buildIndexWriterConfig();
 
         if (!directoryMap.containsKey(type)) {
             prepareDirectory(type);
@@ -112,7 +124,7 @@ public class IndexConfigProvider {
         LuceneDictionary dictionary = new LuceneDictionary(directoryReaderMap.get(type), LuceneDocumentUtils.ALL);
         SpellChecker spellChecker = new SpellChecker(directoryMap.get(type));
 
-        spellChecker.indexDictionary(dictionary, get(), false);
+        spellChecker.indexDictionary(dictionary, buildIndexWriterConfig(), false);
         return indexSearcher;
     }
 
@@ -124,11 +136,23 @@ public class IndexConfigProvider {
         return null;
     }
 
-    private IndexWriterConfig get() {
+    private IndexWriterConfig buildIndexWriterConfig() {
         IndexWriterConfig config = new IndexWriterConfig(new AppAnalyzer());
-//        config.setMergedSegmentWarmer(new SimpleMergedSegmentWarmer(new PrintStreamInfoStream(System.out)));
-//        config.setMergeScheduler(new ConcurrentMergeScheduler());
-        config.setRAMBufferSizeMB(256);
+        config.setWriteLockTimeout(TimeUnit.SECONDS.toMillis(60));
+        config.setIndexDeletionPolicy(new IndexDeletionPolicy() {
+            @Override
+            public void onInit(List<? extends IndexCommit> commits) throws IOException {
+                int size = commits.size();
+                for (int i = 0; i < size - 1; i++) {
+                    commits.get(i).delete();
+                }
+            }
+
+            @Override
+            public void onCommit(List<? extends IndexCommit> commits) throws IOException {
+
+            }
+        });
         return config;
     }
 }
