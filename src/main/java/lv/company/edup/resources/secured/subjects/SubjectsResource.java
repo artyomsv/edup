@@ -29,23 +29,10 @@ public class SubjectsResource {
         return facade.searchSubjects();
     }
 
-    @GET
-    @Path("rebuild")
-    public Response rebuildSubjects() {
-        return facade.rebuildSubjects();
-    }
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response saveSubject(SubjectDto dto) {
         return facade.createSubject(dto);
-    }
-
-    @GET
-    @Path("events/fill/{id}")
-    @Deprecated
-    public Response fillSubjectEvents(@PathParam("id") Long id) {
-        return facade.fillSubjectEvents(17);
     }
 
     @GET

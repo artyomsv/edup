@@ -81,16 +81,6 @@ public class SubjectsFacade extends ApplicationFacade {
         return ok();
     }
 
-    public Response rebuildSubjects() {
-        subjectsService.rebuildIndex();
-        return ok();
-    }
-
-    public Response fillSubjectEvents(long subjectId) {
-        subjectsService.generateSubjectEvents(subjectId);
-        return ok();
-    }
-
     public Response getSubjectEventDetails(Long eventId) {
         return ok(subjectsService.getEventDetails(eventId));
     }

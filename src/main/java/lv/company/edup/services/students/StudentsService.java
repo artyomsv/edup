@@ -8,7 +8,6 @@ import lv.company.edup.infrastructure.lucene.impl.indexer.StudentsIndexWriter;
 import lv.company.edup.infrastructure.lucene.impl.searcher.StudentsSearcher;
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
-import lv.company.edup.infrastructure.utils.FakeUtils;
 import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.EntityPayload;
 import lv.company.edup.persistence.students.Student;
@@ -204,22 +203,6 @@ public class StudentsService {
                 }
             });
         }
-    }
-
-    @Deprecated
-    public Boolean fillFakeData(int count) {
-        for (int i = 0; i < count; i++) {
-            StudentDto dto = FakeUtils.buildStudent();
-            createStudentVersion(dto);
-            indexer.add(dto);
-        }
-        return true;
-    }
-
-    public void rebuild() {
-        List<CurrentStudentVersion> all = currentStudentVersionRepository.findAll();
-        List<StudentDto> map = mapper.map(all, StudentDto.class);
-        indexer.add(map);
     }
 
     public Student fetchLeanStudent(Long id) {

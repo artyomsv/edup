@@ -217,10 +217,6 @@ public class SubjectsService {
         attendanceRepository.delete(attendance);
     }
 
-    public void rebuildIndex() {
-        writer.add(mapper.map(subjectRepository.findAll(), SubjectDto.class));
-    }
-
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     @Deprecated
     public void generateSubjectEvents(long subjectId) {

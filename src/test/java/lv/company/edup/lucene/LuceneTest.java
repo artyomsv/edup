@@ -86,19 +86,21 @@ public class LuceneTest {
 
         configProvider.init();
 
-        when(repository.findByAttribute(anyCollectionOf(Long.class), (SingularAttribute<CurrentStudentVersion, Long>) any(CurrentStudentVersion_.class))).thenAnswer(new Answer<Collection<StudentDto>>() {
-            @Override
-            public Collection<StudentDto> answer(InvocationOnMock invocationOnMock) throws Throwable {
-                Object[] arguments = invocationOnMock.getArguments();
-                Collection<StudentDto> result = new ArrayList<StudentDto>();
-                Collection<Long> ids = (Collection<Long>) arguments[0];
+        when(repository.findByAttribute(anyCollectionOf(Long.class),
+                (SingularAttribute<CurrentStudentVersion, Long>) any(CurrentStudentVersion_.class)))
+                .thenAnswer(new Answer<Collection<StudentDto>>() {
+                    @Override
+                    public Collection<StudentDto> answer(InvocationOnMock invocationOnMock) throws Throwable {
+                        Object[] arguments = invocationOnMock.getArguments();
+                        Collection<StudentDto> result = new ArrayList<StudentDto>();
+                        Collection<Long> ids = (Collection<Long>) arguments[0];
 
-                for (Long id : ids) {
-                    result.add(db.get(id));
-                }
-                return result;
-            }
-        });
+                        for (Long id : ids) {
+                            result.add(db.get(id));
+                        }
+                        return result;
+                    }
+                });
 
         init();
 

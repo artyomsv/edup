@@ -9,7 +9,7 @@ angular.module('edup.login')
 
             controller: function ($scope, $window, RestService, UrlService, NotificationService) {
                 $scope.submitLogin = function (user, password) {
-                    RestService.Public.Login.customPOST(
+                    RestService.Authentication.Login.customPOST(
                         'j_username=' + user + '&j_password=' + password,
                         undefined,
                         {},

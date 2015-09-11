@@ -14,7 +14,7 @@ angular.module('edup.header')
 				};
 
 				$scope.logoutUser = function () {
-					RestService.Private.LogOut.post().then(function () {
+					RestService.Authentication.LogOut.post().then(function () {
 						$window.location.href = UrlService.BaseUrl;
 					});
 				};

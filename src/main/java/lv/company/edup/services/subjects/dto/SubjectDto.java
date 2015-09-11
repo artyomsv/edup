@@ -17,6 +17,14 @@ public class SubjectDto {
     private String subjectName;
     private Date created;
 
+    public SubjectDto() {
+    }
+
+    public SubjectDto(Long subjectId, String subjectName) {
+        this.subjectId = subjectId;
+        this.subjectName = subjectName;
+    }
+
     public Long getSubjectId() {
         return subjectId;
     }
@@ -39,5 +47,15 @@ public class SubjectDto {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("SubjectDto{");
+        sb.append("subjectId=").append(subjectId);
+        sb.append(", subjectName='").append(subjectName).append('\'');
+        sb.append(", created=").append(created);
+        sb.append('}');
+        return sb.toString();
     }
 }

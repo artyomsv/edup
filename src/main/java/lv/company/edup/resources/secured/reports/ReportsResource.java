@@ -19,7 +19,7 @@ public class ReportsResource {
     @Inject ReportsFacade facade;
 
     @GET
-    @Path("visiting/plan/subject/{subjectId}")
+    @Path("subject/{subjectId}")
     @Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getVisitingPlanJournal(@PathParam("subjectId") Long subjectId,
                                            @QueryParam("from") String from,

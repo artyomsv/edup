@@ -30,20 +30,12 @@ public class FilesResource {
 
     @GET
     @Path("{id}")
-    @Produces(APPLICATION_JSON)
-    public Response getFileInformation(@PathParam("id") Long id) {
-        return facade.getFileInformation(id);
-    }
-
-    @GET
-    @Path("download/{id}")
     @Produces({TEXT_HTML, APPLICATION_JSON})
     public Response downloadFile(@PathParam("id") Long id) {
         return facade.downloadFile(id);
     }
 
     @POST
-    @Path("upload")
     @Consumes(MULTIPART_FORM_DATA)
     @Produces(APPLICATION_JSON)
     public Response upload(@Context HttpServletRequest request) {

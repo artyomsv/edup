@@ -69,15 +69,6 @@ public class StudentsFacade extends ApplicationFacade {
         return ok();
     }
 
-    public Response fill(int count) {
-        return ok(studentsService.fillFakeData(count));
-    }
-
-    public Response rebuild() {
-        studentsService.rebuild();
-        return ok();
-    }
-
     public Response getStudentBalance(Long id) {
         if (studentsService.fetchLeanStudent(id) == null) {
             throw new NotFoundException("Missing student with [" + id + "] id.");

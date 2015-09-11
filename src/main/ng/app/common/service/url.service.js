@@ -18,12 +18,12 @@ angular.module('edup.common')
 			BaseUrl: baseUrl,
 			Files: {
 				Info: baseUrl + '/api/private/files',
-				Upload: baseUrl + '/api/private/files/upload',
-				Download: baseUrl + '/api/private/files/download'
+				Upload: baseUrl + '/api/private/files',
+				Download: baseUrl + '/api/private/files'
 			},
 			Subjects: baseUrl + '/api/private/subjects',
 			Reports: {
-				Events : baseUrl + '/api/private/reports/visiting/plan/subject'
+				Events : baseUrl + '/api/private/reports/subject'
 			}
 		};
 

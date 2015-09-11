@@ -328,27 +328,30 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .service('RestService', ['Restangular', function (Restangular) {
+	.service('RestService', ['Restangular', function (Restangular) {
 
-        var privateResource = Restangular.one('private');
-        var publicResource = Restangular.one('public');
+		var authenticationResource = Restangular.one('authentication');
+		var privateResource = Restangular.one('private');
+		var publicResource = Restangular.one('public');
 
-        return {
-            Private: {
-                Students: privateResource.one('students'),
-                Balance: privateResource.one('balance'),
-                Documents: privateResource.one('documents'),
-                LogOut: privateResource.one('logout'),
-                Subjects: privateResource.one('subjects')
-            },
-            Public: {
-                Ping : publicResource.one('ping'),
-                Login: publicResource.one('login')
-            }
+		return {
+			Private: {
+				Students: privateResource.one('students'),
+				Balance: privateResource.one('balance'),
+				Documents: privateResource.one('documents'),
+				Subjects: privateResource.one('subjects')
+			},
+			Public: {
+				Ping: publicResource.one('ping')
+			},
+			Authentication: {
+				LogOut: authenticationResource.one('logout'),
+				Login: authenticationResource.one('login')
+			}
 
-        };
+		};
 
-    }]
+	}]
 );
 'use strict';
 
@@ -412,12 +415,12 @@ angular.module('edup.common')
 			BaseUrl: baseUrl,
 			Files: {
 				Info: baseUrl + '/api/private/files',
-				Upload: baseUrl + '/api/private/files/upload',
-				Download: baseUrl + '/api/private/files/download'
+				Upload: baseUrl + '/api/private/files',
+				Download: baseUrl + '/api/private/files'
 			},
 			Subjects: baseUrl + '/api/private/subjects',
 			Reports: {
-				Events : baseUrl + '/api/private/reports/visiting/plan/subject'
+				Events : baseUrl + '/api/private/reports/subject'
 			}
 		};
 
@@ -437,7 +440,7 @@ angular.module('edup.login')
 
             controller: ['$scope', '$window', 'RestService', 'UrlService', 'NotificationService', function ($scope, $window, RestService, UrlService, NotificationService) {
                 $scope.submitLogin = function (user, password) {
-                    RestService.Public.Login.customPOST(
+                    RestService.Authentication.Login.customPOST(
                         'j_username=' + user + '&j_password=' + password,
                         undefined,
                         {},
@@ -475,7 +478,7 @@ angular.module('edup.header')
 				};
 
 				$scope.logoutUser = function () {
-					RestService.Private.LogOut.post().then(function () {
+					RestService.Authentication.LogOut.post().then(function () {
 						$window.location.href = UrlService.BaseUrl;
 					});
 				};

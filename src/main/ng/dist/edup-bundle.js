@@ -53545,27 +53545,30 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .service('RestService', ['Restangular', function (Restangular) {
+	.service('RestService', ['Restangular', function (Restangular) {
 
-        var privateResource = Restangular.one('private');
-        var publicResource = Restangular.one('public');
+		var authenticationResource = Restangular.one('authentication');
+		var privateResource = Restangular.one('private');
+		var publicResource = Restangular.one('public');
 
-        return {
-            Private: {
-                Students: privateResource.one('students'),
-                Balance: privateResource.one('balance'),
-                Documents: privateResource.one('documents'),
-                LogOut: privateResource.one('logout'),
-                Subjects: privateResource.one('subjects')
-            },
-            Public: {
-                Ping : publicResource.one('ping'),
-                Login: publicResource.one('login')
-            }
+		return {
+			Private: {
+				Students: privateResource.one('students'),
+				Balance: privateResource.one('balance'),
+				Documents: privateResource.one('documents'),
+				Subjects: privateResource.one('subjects')
+			},
+			Public: {
+				Ping: publicResource.one('ping')
+			},
+			Authentication: {
+				LogOut: authenticationResource.one('logout'),
+				Login: authenticationResource.one('login')
+			}
 
-        };
+		};
 
-    }]
+	}]
 );
 'use strict';
 
@@ -53629,12 +53632,12 @@ angular.module('edup.common')
 			BaseUrl: baseUrl,
 			Files: {
 				Info: baseUrl + '/api/private/files',
-				Upload: baseUrl + '/api/private/files/upload',
-				Download: baseUrl + '/api/private/files/download'
+				Upload: baseUrl + '/api/private/files',
+				Download: baseUrl + '/api/private/files'
 			},
 			Subjects: baseUrl + '/api/private/subjects',
 			Reports: {
-				Events : baseUrl + '/api/private/reports/visiting/plan/subject'
+				Events : baseUrl + '/api/private/reports/subject'
 			}
 		};
 
@@ -53654,7 +53657,7 @@ angular.module('edup.login')
 
             controller: ['$scope', '$window', 'RestService', 'UrlService', 'NotificationService', function ($scope, $window, RestService, UrlService, NotificationService) {
                 $scope.submitLogin = function (user, password) {
-                    RestService.Public.Login.customPOST(
+                    RestService.Authentication.Login.customPOST(
                         'j_username=' + user + '&j_password=' + password,
                         undefined,
                         {},
@@ -53692,7 +53695,7 @@ angular.module('edup.header')
 				};
 
 				$scope.logoutUser = function () {
-					RestService.Private.LogOut.post().then(function () {
+					RestService.Authentication.LogOut.post().then(function () {
 						$window.location.href = UrlService.BaseUrl;
 					});
 				};
@@ -54615,92 +54618,55 @@ angular.module('edup.subjects', [
 
 angular.module('edup.subjects')
 
-	.directive('confirmEventFinishedModal', ['$filter', 'UrlService', function ($filter, UrlService) {
+	.directive('confirmEventFinishedModal', function () {
 		return {
 			restrict: 'E',
 			templateUrl: 'confirm-event-finished-modal',
-			controller: ['$scope', '$timeout', 'moment', 'RestService', 'TypeAheadService', function ($scope, $timeout, moment, RestService, TypeAheadService) {
+			controller: ['$scope', '$timeout', 'moment', 'RestService', function ($scope, $timeout, moment, RestService) {
 
-				$scope.plannedEventDetails = {
-					selectedSubject: null,
-					dateFromPicker: null,
-					dateToPicker: null,
-				};
-
-				var selectSubject = function (selectedSubjectName) {
-					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
-						return subject.subjectName === selectedSubjectName;
-					});
-					console.log(angular.toJson($scope.selectedSubject));
-				};
-
-
-				var typeAhead = TypeAheadService.Build();
-
-				var $bloodhound = $('#subject-event-typeahead-modal .typeahead');
-
-				$bloodhound.typeahead({
-						hint: true,
-						highlight: true,
-						minLength: 1
-					},
-					{
-						name: 'subjectsTypeAhead',
-						source: typeAhead
+				$scope.confirmEventIsFinished = function () {
+					if ($scope.studentsManagemnt.confirmation) {
+						return;
 					}
-				);
 
-				$bloodhound.bind('typeahead:selected', function (obj, datum) {
-					selectSubject(datum);
-				});
+					$scope.studentsManagemnt.confirmation = true;
 
-				$scope.plannedEventJournal = function () {
-					$scope.plannedEventDetails = {
-						selectedSubject: null,
-						dateFromPicker: null,
-						dateToPicker: null,
-						subjectName: null,
-						showAttendance: false
-					};
-				};
+					var payload = _.cloneDeep($scope.selectedEvent);
+					payload.status = 'FINALIZED';
 
-				$scope.finishedEventReport = function () {
-					$scope.plannedEventDetails = {
-						selectedSubject: null,
-						dateFromPicker: null,
-						dateToPicker: null,
-						subjectName: null,
-						showAttendance: true
-					};
+					RestService.Private.Subjects
+						.one('events')
+						.one(payload.eventId.toString())
+						.customPUT(payload)
+						.then(function (response) {
+							$scope.selectedEvent.status = payload.status;
+							$scope.selectedEvent.currentStatus = 'CONFIRMED';
+							var event = _.find($scope.events.values, function (event) {
+								return event.eventId === payload.eventId;
+							});
+
+							if (event) {
+								event.status = $scope.selectedEvent.status;
+								event.currentStatus = $scope.selectedEvent.currentStatus;
+							}
+
+							$scope.dismissModal();
+							$scope.studentsManagemnt.confirmation = false;
+						}, function (error) {
+							$scope.studentsManagemnt.confirmation = false;
+						});
+
 				};
 
 
 			}],
 			link: function (scope) {
 
-				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
-
-				};
-
-				scope.performReportDownload = function (details) {
-					if (details && details.selectedSubject && details.dateFromPicker && details.dateToPicker) {
-						var query = {
-							from: $filter('date')(details.dateFromPicker, 'ddMMyyyy'),
-							to: $filter('date')(details.dateToPicker, 'ddMMyyyy'),
-							attendance: scope.plannedEventDetails.showAttendance
-						};
-						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
-						window.open(url);
-						scope.dismissModal();
-					}
-
-				};
-
 			}
 		};
 
 
-	}]
+	}
 );
 'use strict';
 
@@ -54759,39 +54725,6 @@ angular.module('edup.subjects')
 					$scope.executeSearch();
 				};
 
-				$scope.confirmEventIsFinished = function () {
-					if ($scope.studentsManagemnt.confirmation) {
-						return;
-					}
-
-					$scope.studentsManagemnt.confirmation = true;
-
-					var payload = _.cloneDeep($scope.selectedEvent);
-					payload.status = 'FINALIZED';
-
-					RestService.Private.Subjects
-						.one('events')
-						.one(payload.eventId.toString())
-						.customPUT(payload)
-						.then(function (response) {
-							$scope.selectedEvent.status = payload.status;
-							$scope.selectedEvent.currentStatus = 'CONFIRMED';
-							var event = _.find($scope.events.values, function (event) {
-								return event.eventId === payload.eventId;
-							});
-
-							if (event) {
-								event.status = $scope.selectedEvent.status;
-								event.currentStatus = $scope.selectedEvent.currentStatus;
-							}
-
-							$scope.dismissModal();
-							$scope.studentsManagemnt.confirmation = false;
-						}, function (error) {
-							$scope.studentsManagemnt.confirmation = false;
-						});
-
-				};
 
 			}],
 			link: function (scope) {
@@ -55321,7 +55254,7 @@ angular.module('edup.reports')
 			}],
 			link: function (scope) {
 
-				scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+				scope.renderDatePickerForReport = function ($view, $dates, $leftDate, $upDate, $rightDate) {
 
 				};
 
@@ -55358,9 +55291,9 @@ angular.module('edup.reports')
 'use strict';
 
 angular.module('edup.tabs', [
-	'ui.bootstrap.datetimepicker',
 	'ngSanitize',
 	'toggle-switch',
+	'ui.bootstrap.datetimepicker',
 	'infinite-scroll',
 	'angularFileUpload',
 	'fiestah.money',
@@ -55435,7 +55368,7 @@ angular.module('edup')
 
 
   $templateCache.put('event-attendance-modal',
-    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePicker($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div></div>"
+    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy-MM-dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div></div>"
   );
 
 
