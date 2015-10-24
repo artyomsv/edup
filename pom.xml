@@ -20,7 +20,7 @@
   <properties>
     <version.major>0</version.major>
     <version.minor>4</version.minor>
-    <version.tag>7</version.tag>
+    <version.tag>8</version.tag>
   </properties>
 
   <dependencyManagement>
