@@ -216,7 +216,7 @@
 					<font fontName="Arial Unicode MS" pdfEncoding="Identity-H"/>
 					<paragraph rightIndent="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA["PVN:"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["PVN 21%:"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="360" y="63" width="60" height="20" uuid="8a5ada07-f32c-4cc2-ab4d-1952a43658bf">

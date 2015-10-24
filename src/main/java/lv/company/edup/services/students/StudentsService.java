@@ -47,7 +47,7 @@ import java.util.Map;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class StudentsService {
 
-    private static final String SECURED_FILES_DOWNLOAD = "/private/files/download";
+    private static final String SECURED_FILES_DOWNLOAD = "/private/files";
 
     @Inject @StudentReader StudentsSearcher searcher;
     @Inject @StudentWriter StudentsIndexWriter indexer;
