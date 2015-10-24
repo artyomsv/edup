@@ -6,7 +6,7 @@ angular.module('edup.subjects')
 		return {
 			restrict: 'E',
 			templateUrl: 'confirm-event-finished-modal',
-			controller: function ($scope, $timeout, moment, RestService) {
+			controller: function ($scope, $timeout, RestService) {
 
 				$scope.confirmEventIsFinished = function () {
 					if ($scope.studentsManagemnt.confirmation) {

@@ -105,7 +105,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/restangular/dist/restangular.js',
                     'vendor/bower_components/bootstrap/dist/js/bootstrap.js',
                     'vendor/bower_components/ng-sortable/dist/ng-sortable.js',
-                    'vendor/bower_components/moment/min/moment.min.js',
+                    'vendor/bower_components/moment/min/moment-with-locales.min.js',
                     'vendor/bower_components/angular-animate/angular-animate.min.js',
                     'vendor/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
                     'vendor/bower_components/angular-bootstrap-calendar/dist/js/angular-bootstrap-calendar-tpls.min.js',
@@ -120,6 +120,7 @@ module.exports = function (grunt) {
                     'vendor/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js',
                     'vendor/bower_components/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
                     'vendor/bower_components/angular-bootstrap-toggle-switch/angular-toggle-switch.min.js',
+                    'vendor/bower_components/angular-moment/angular-moment.min.js',
 
                     //'vendor/bower_components/angular-ui-utils/highlight.js',
 

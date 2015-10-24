@@ -184,7 +184,10 @@ angular.module('edup.subjects')
 			},
 
 			link: function (scope) {
-
+				scope.openStudentDetailModalInSubject = function (student) {
+					$('#student-details-modal-view').modal('show');
+					$('.nav-tabs a[href="#information"]').tab('show');
+				};
 			}
 		};
 	}

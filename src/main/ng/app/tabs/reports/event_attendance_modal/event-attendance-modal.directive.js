@@ -6,12 +6,12 @@ angular.module('edup.reports')
 		return {
 			restrict: 'E',
 			templateUrl: 'event-attendance-modal',
-			controller: function ($scope, $timeout, moment, RestService, TypeAheadService) {
+			controller: function ($scope, $timeout, RestService, TypeAheadService) {
 
 				$scope.plannedEventDetails = {
 					selectedSubject: null,
 					dateFromPicker: null,
-					dateToPicker: null,
+					dateToPicker: null
 				};
 
 				var selectSubject = function (selectedSubjectName) {

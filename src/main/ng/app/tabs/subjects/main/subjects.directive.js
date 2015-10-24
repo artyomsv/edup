@@ -7,7 +7,6 @@ angular.module('edup.subjects')
             restrict: 'E',
             templateUrl: 'subjects',
             link: function (scope) {
-
             }
         };
     }

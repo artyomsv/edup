@@ -70,13 +70,16 @@ angular.module('edup.subjects')
 
 				$scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
 					_.forEach($dates, function (date) {
-						if (moment(date.utcDateValue).isBefore(moment())) {
+						if (moment(date.localDateValue()).isBefore(moment().subtract(1, 'days'))) {
 							date.selectable = false;
 						}
 					});
 				};
 
 				$scope.renderTimePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {
+					_.forEach($dates, function (date) {
+						date.display = moment(date.localDateValue()).format('HH:mm');
+					});
 					$leftDate.selectable = false;
 					$upDate.selectable = false;
 					$rightDate.selectable = false;
@@ -100,6 +103,11 @@ angular.module('edup.subjects')
 						} else if (!_.isEmpty(newSubjectEvent.subjectName)) {
 							payload.subject.subjectName = newSubjectEvent.subjectName;
 							shouldSave = true;
+						}
+
+						if (moment(payload.to).isBefore(payload.from)) {
+							NotificationService.Error('End of subject is before the start!');
+							return;
 						}
 
 						if (shouldSave) {
