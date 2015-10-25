@@ -128,7 +128,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup/ng';
+			baseUrl = 'http://' + location + ':8484/edup/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -427,7 +427,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = 'http://' + location + ':8484/edup';
 		}
 
 		return {
@@ -1749,7 +1749,7 @@ angular.module('edup.subjects')
 
 									if (event.status === 'FINALIZED') {
 										event.currentStatus = 'CONFIRMED';
-									} else if (moment().isAfter(event.eventDate)) {
+									} else if (moment().isAfter(event.to)) {
 										event.currentStatus = 'PAST';
 									} else {
 										event.currentStatus = 'FUTURE';
@@ -2245,7 +2245,7 @@ angular.module('edup')
 
 
   $templateCache.put('photo-upload',
-    "<div style=\"padding: 10px\"><div><div ng-if=uploader><input id=photoUploader ng-disabled=photoIsSelected type=file nv-file-select uploader=\"uploader\"></div></div><table class=table><thead><tr><th width=50%>Name</th><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td><strong>{{ item.file.name }}</strong></td><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span></button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span></button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=handleItemRemoval(item)><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr></tbody></table></div><div ng-show=photoUrl><img alt=140x140 width=140 height=140 src={{photoUrl}} class=\"img-rounded text-center\"></div>"
+    "<div style=\"padding: 10px\"><div><div ng-if=uploader><input id=photoUploader ng-disabled=photoIsSelected type=file nv-file-select uploader=\"uploader\"></div></div><table class=table><thead><tr><th ng-show=uploader.isHTML5>Size</th><th ng-show=uploader.isHTML5>Progress</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr ng-repeat=\"item in uploader.queue\"><td ng-show=uploader.isHTML5 nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td><td ng-show=uploader.isHTML5><div class=progress style=\"margin-bottom: 0\"><div class=progress-bar role=progressbar ng-style=\"{ 'width': item.progress + '%' }\"></div></div></td><td class=text-center><span ng-show=item.isSuccess><i class=\"glyphicon glyphicon-ok\"></i></span> <span ng-show=item.isCancel><i class=\"glyphicon glyphicon-ban-circle\"></i></span> <span ng-show=item.isError><i class=\"glyphicon glyphicon-remove\"></i></span></td><td nowrap><button type=button class=\"btn btn-success btn-xs\" ng-click=item.upload() ng-disabled=\"item.isReady || item.isUploading || item.isSuccess\"><span class=\"glyphicon glyphicon-upload\"></span></button> <button type=button class=\"btn btn-warning btn-xs\" ng-click=item.cancel() ng-disabled=!item.isUploading><span class=\"glyphicon glyphicon-ban-circle\"></span></button> <button type=button class=\"btn btn-danger btn-xs\" ng-click=handleItemRemoval(item)><span class=\"glyphicon glyphicon-trash\"></span></button></td></tr></tbody></table></div><div ng-show=photoUrl><img alt=140x140 width=140 height=140 src={{photoUrl}} class=\"img-rounded text-center\"></div>"
   );
 
 

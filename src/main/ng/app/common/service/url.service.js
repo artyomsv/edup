@@ -11,7 +11,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = 'http://' + location + ':8484/edup';
 		}
 
 		return {

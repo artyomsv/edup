@@ -11,7 +11,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup/ng';
+			baseUrl = 'http://' + location + ':8484/edup/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');

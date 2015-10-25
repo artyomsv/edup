@@ -52,7 +52,7 @@ angular.module('edup.subjects')
 
 									if (event.status === 'FINALIZED') {
 										event.currentStatus = 'CONFIRMED';
-									} else if (moment().isAfter(event.eventDate)) {
+									} else if (moment().isAfter(event.to)) {
 										event.currentStatus = 'PAST';
 									} else {
 										event.currentStatus = 'FUTURE';

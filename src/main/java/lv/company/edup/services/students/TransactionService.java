@@ -107,7 +107,7 @@ public class TransactionService {
     public void updateStudentsBalance(EventDto dto) {
         List<Attendance> attribute = attendanceRepository.findByAttribute(Collections.singleton(dto.getEventId()), Attendance_.eventId);
         for (Attendance attendance : attribute) {
-            if (attendance.getParticipated() || !attendance.getNotified()) {
+            if (attendance.getParticipated()) {
                 StudentBalanceDto balanceDto = new StudentBalanceDto();
                 balanceDto.setAmount(dto.getPrice());
                 balanceDto.setStudentId(attendance.getStudentId());
