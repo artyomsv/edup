@@ -54,9 +54,9 @@ angular.module('edup.students')
 				$scope.studentsSearch.studentRecordsFound = result.count !== 0;
 				if ($scope.students.length > 0) {
 					if (id) {
-						$scope.loadFullStudent(id);
+						$scope.setSelected(id);
 					} else {
-						$scope.loadFullStudent($scope.students[0].id);
+						$scope.setSelected($scope.students[0].id);
 					}
 				} else {
 					$scope.studentSelected = false;
@@ -72,6 +72,7 @@ angular.module('edup.students')
 
 		$scope.setSelected = function (studentId) {
 			$scope.loadFullStudent(studentId);
+			$scope.reloadTransactions(studentId);
 		};
 
 		$scope.addToBalance = function (value) {

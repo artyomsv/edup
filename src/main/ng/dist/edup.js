@@ -128,7 +128,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = 'http://' + location + ':8484/edup/ng';
+			baseUrl = 'https://' + location + ':8443/edup/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -427,7 +427,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'http://' + location + ':8484/edup';
+			baseUrl = 'https://' + location + ':8443/edup';
 		}
 
 		return {
@@ -800,6 +800,52 @@ angular.module('edup.students')
 
 angular.module('edup.students')
 
+	.directive('studentBalanceHistory', function () {
+		return {
+			restrict: 'E',
+			templateUrl: 'student-balance-history',
+
+			controller: ['$scope', 'RestService', 'QueryService', function ($scope, RestService, QueryService) {
+
+				$scope.balanceHistory = {
+					count: 0,
+					values: {},
+					spin: false,
+					show: true
+				};
+
+				$scope.reloadTransactions = function (studentId) {
+					var query = QueryService.Query(3, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
+					RestService.Private.Balance.get(query).then(function (response) {
+						$scope.balanceHistory.count = response.count;
+						if ($scope.balanceHistory.count > 0) {
+							$scope.balanceHistory.values = {};
+							$scope.balanceHistory.show = true;
+							_.forEach(response.values, function (value, index) {
+								$scope.balanceHistory.values[index] = {
+									date: value.created,
+									amount: value.amount / 100,
+									description: value.comments
+								};
+							});
+						} else {
+							$scope.balanceHistory.show = false;
+							$scope.balanceHistory.values = {};
+						}
+					});
+				};
+
+			}],
+
+			link: function (scope) {
+			}
+		};
+	}
+);
+'use strict';
+
+angular.module('edup.students')
+
 	.directive('balanceModal', ['RestService', 'NotificationService', function (RestService, NotificationService) {
 		return {
 			restrict: 'E',
@@ -836,6 +882,7 @@ angular.module('edup.students')
 									scope.dismissModal();
 									NotificationService.Success(balance.amount + ' EUR was added to ' + scope.selectedStudent.name + ' ' + scope.selectedStudent.lastName + ' student!');
 									scope.balanceUpdateInProgress = false;
+									scope.reloadTransactions(scope.selectedStudent.id);
 								}
 							}, function (error) {
 								scope.balanceUpdateInProgress = false;
@@ -1179,9 +1226,9 @@ angular.module('edup.students')
 				$scope.studentsSearch.studentRecordsFound = result.count !== 0;
 				if ($scope.students.length > 0) {
 					if (id) {
-						$scope.loadFullStudent(id);
+						$scope.setSelected(id);
 					} else {
-						$scope.loadFullStudent($scope.students[0].id);
+						$scope.setSelected($scope.students[0].id);
 					}
 				} else {
 					$scope.studentSelected = false;
@@ -1197,6 +1244,7 @@ angular.module('edup.students')
 
 		$scope.setSelected = function (studentId) {
 			$scope.loadFullStudent(studentId);
+			$scope.reloadTransactions(studentId);
 		};
 
 		$scope.addToBalance = function (value) {
@@ -2194,6 +2242,11 @@ angular.module('edup')
   );
 
 
+  $templateCache.put('student-balance-history',
+    "<div><table ng-show=balanceHistory.show class=\"table table-hover\" style=table-layout:fixed><thead><tr><th class=text-center>Date</th><th class=text-center>Amount</th><th class=text-center>Description</th></tr></thead><tbody><tr ng-repeat=\"balanceHistory in balanceHistory.values\"><td class=text-center>{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td><td class=text-center>{{ balanceHistory.amount | number : 2}} EUR</td><td class=text-center>{{ balanceHistory.description }}</td></tr></tbody></table><div ng-show=!balanceHistory.show><div class=\"col-md-12 column\"><h4>No transactions found!</h4></div></div></div>"
+  );
+
+
   $templateCache.put('balance-modal',
     "<div app-modal id=addToBalanceModalView class=\"modal fade bs-example-modal-sm\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form><fieldset><legend>Add money to account</legend><div class=form-group><label for=amount>Enter a monetary amount:</label><div class=input-group><span class=input-group-addon>&euro;</span> <input required id=amount class=form-control money=\"\" ng-model=balance.amount autofocus precision=2></div></div><div class=form-group><label for=comments>Comments</label><textarea ng-model=balance.comment class=\"form-control fixedTextArea\" id=comments name=comments></textarea></div><div class=\"form-group col-md-12 column\"><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=true ng-model=balance.cash ng-checked=true> Cash</label></div><div class=\"col-md-6 column\"><label><input type=radio name=operationType value=false ng-model=balance.cash> Transfer</label></div></div><div ng-init=\"balanceUpdateInProgress = false\" class=\"form-group text-center\"><button ng-click=saving(balance) id=addToBalanceButton ng-disabled=balanceUpdateInProgress class=\"btn btn-success btn-sm\">Save</button> <button ng-click=resetValue() id=clearBalanceUpdate type=reset ng-disabled=balanceUpdateInProgress class=\"btn btn-primary btn-sm\">Reset</button> <button id=cancelBalanceUpdate class=\"btn btn-warning btn-sm\" data-dismiss=modal ng-disabled=balanceUpdateInProgress ng-click=\"balance = null\">Cancel</button></div></fieldset></form></div></div></div>"
   );
@@ -2235,7 +2288,7 @@ angular.module('edup')
 
 
   $templateCache.put('students',
-    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div ng-class=\"{'col-md-7 column' :  studentsSearch.studentRecordsFound, 'col-md-12 column' :  !studentsSearch.studentRecordsFound}\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Students</div><div class=\"panel-body panel-body-override\"><div class=row><students-list-header></students-list-header></div><div class=row><students-list></students-list></div></div></div></div><div ng-show=studentsSearch.studentRecordsFound class=\"col-md-5 column\"><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Identification card</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Transactions history</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Latest files</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div></div></div></div></div></div>"
+    "<div class=mainForm ng-controller=StudentsController><div class=\"row clearfix\"><div ng-class=\"{'col-md-7 column' :  studentsSearch.studentRecordsFound, 'col-md-12 column' :  !studentsSearch.studentRecordsFound}\"><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Students</div><div class=\"panel-body panel-body-override\"><div class=row><students-list-header></students-list-header></div><div class=row><students-list></students-list></div></div></div></div><div ng-show=studentsSearch.studentRecordsFound class=\"col-md-5 column\"><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Identification card</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><student-identification-card></student-identification-card></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Transactions history</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><student-balance-history></student-balance-history></div></div></div></div><div class=row><div class=\"panel panel-success\"><div class=\"panel-heading panel-success-override\">Latest files</div><div class=\"panel-body panel-body-override\" ng-show=studentSelected><div class=row><div class=col-md-12><h3>Under development</h3></div></div></div></div></div></div></div></div>"
   );
 
 

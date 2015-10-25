@@ -2,7 +2,6 @@
 
 DROP VIEW V_EVENT_ATTENDANCE;
 DROP VIEW V_SUBJECT_EVENTS;
-DROP VIEW V_SUBJECT_EVENTS_DETAILS;
 DROP TABLE SUBJECT_EVENT_ATTENDANCE;
 DROP TABLE SUBJECT_EVENTS;
 DROP TABLE SUBJECTS;
@@ -37,6 +36,7 @@ DROP FUNCTION public.update_current_student_version();
 
 DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE;
 DROP SEQUENCE public.FAKTURA_REPORT_ID_SEQUENCE;
+
 
 ------------------------------------------------------------------------------------------------------
 -------------------------------------- 0.0.2 ---------------------------------------------------------
@@ -251,3 +251,78 @@ CREATE OR REPLACE FUNCTION getFakturaId()
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
+
+
+-- Create sequence for subjects.
+CREATE SEQUENCE SUBJECTS_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+-- Create subjects table.
+CREATE TABLE SUBJECTS
+(
+  SUBJECT_ID   BIGINT                   NOT NULL             DEFAULT nextval('SUBJECTS_SEQUENCE'),
+  SUBJECT_NAME VARCHAR(256)             NOT NULL UNIQUE,
+  CREATED      TIMESTAMP WITH TIME ZONE NOT NULL             DEFAULT now(),
+  CONSTRAINT SUBJECTS_PKEY PRIMARY KEY (SUBJECT_ID)
+);
+
+-- Create sequence for subjects events.
+CREATE SEQUENCE SUBJECT_EVENTS_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+-- Create table for subject events
+CREATE TABLE SUBJECT_EVENTS
+(
+  SUBJECT_EVENT_ID BIGINT                   NOT NULL             DEFAULT nextval('SUBJECT_EVENTS_SEQUENCE'),
+  SUBJECT_FK       BIGINT                   NOT NULL REFERENCES SUBJECTS (SUBJECT_ID),
+  CREATED          TIMESTAMP WITH TIME ZONE NOT NULL             DEFAULT now(),
+  UPDATED          TIMESTAMP WITH TIME ZONE NOT NULL             DEFAULT now(),
+  EVENT_DATE       TIMESTAMP WITH TIME ZONE NOT NULL,
+  EVENT_TIME_FROM  TIMESTAMP WITH TIME ZONE NOT NULL,
+  EVENT_TIME_TO    TIMESTAMP WITH TIME ZONE NOT NULL,
+  EVENT_PRICE      INT                      NOT NULL,
+  STATUS           VARCHAR(64)              NOT NULL, -- PLANNED, ON_GOING, FINISHED, FINALIZED
+  CONSTRAINT SUBJECT_EVENTS_PKEY PRIMARY KEY (SUBJECT_EVENT_ID)
+);
+
+-- Create sequence for subject attendance.
+CREATE SEQUENCE SUBJECT_EVENT_ATTENDANCE_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
+-- Create table for subject attendance
+CREATE TABLE SUBJECT_EVENT_ATTENDANCE
+(
+  SUBJECT_EVENT_ATTENDANCE_ID BIGINT                   NOT NULL             DEFAULT nextval('SUBJECT_EVENT_ATTENDANCE_SEQUENCE'),
+  SUBJECT_EVENT_FK            BIGINT                   NOT NULL REFERENCES SUBJECT_EVENTS (SUBJECT_EVENT_ID),
+  STUDENT_FK                  BIGINT                   NOT NULL REFERENCES students_version_mapping (STUDENT_FK),
+  CREATED                     TIMESTAMP WITH TIME ZONE NOT NULL             DEFAULT now(),
+  UPDATED                     TIMESTAMP WITH TIME ZONE NOT NULL             DEFAULT now(),
+  PARTICIPATED                BOOLEAN                  NOT NULL             DEFAULT TRUE,
+  NOTIFIED_ABSENCE            BOOLEAN                  NOT NULL             DEFAULT FALSE,
+  BALANCE_ADJUSTED            BOOLEAN                  NOT NULL             DEFAULT FALSE,
+  CONSTRAINT SUBJECT_EVENT_ATTENDANCE_PKEY PRIMARY KEY (SUBJECT_EVENT_ATTENDANCE_ID)
+);
+
+CREATE OR REPLACE VIEW V_SUBJECT_EVENTS AS
+  SELECT
+    se.SUBJECT_EVENT_ID,
+    s.SUBJECT_ID,
+    s.SUBJECT_NAME,
+    se.EVENT_DATE,
+    se.EVENT_TIME_FROM,
+    se.EVENT_TIME_TO,
+    se.STATUS,
+    se.EVENT_PRICE
+  FROM SUBJECTS s, SUBJECT_EVENTS se
+  WHERE s.subject_id = se.subject_fk
+  ORDER BY SE.EVENT_DATE DESC;
+
+CREATE OR REPLACE VIEW V_EVENT_ATTENDANCE AS
+  SELECT
+    SEA.SUBJECT_EVENT_ATTENDANCE_ID,
+    SEA.SUBJECT_EVENT_FK,
+    SEA.STUDENT_FK,
+    STUDENTS.NAME,
+    STUDENTS.LAST_NAME,
+    SEA.PARTICIPATED,
+    SEA.CREATED,
+    SEA.UPDATED,
+    SEA.NOTIFIED_ABSENCE,
+    SEA.BALANCE_ADJUSTED
+  FROM SUBJECT_EVENT_ATTENDANCE SEA, V_STUDENTS STUDENTS
+  WHERE SEA.STUDENT_FK = STUDENTS.STUDENT_ID
+  ORDER BY SEA.CREATED DESC;

@@ -1,0 +1,29 @@
+<div>
+
+	<table ng-show="balanceHistory.show" class="table table-hover" style="table-layout:fixed;">
+		<thead>
+		<tr>
+			<th class="text-center">Date</th>
+			<th class="text-center">Amount</th>
+			<th class="text-center">Description</th>
+		</tr>
+		</thead>
+		<tbody>
+
+		<tr ng-repeat="balanceHistory in balanceHistory.values">
+			<td class="text-center">{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td>
+			<td class="text-center">{{ balanceHistory.amount | number : 2}} EUR</td>
+			<td class="text-center">{{ balanceHistory.description }}</td>
+		</tr>
+
+		</tbody>
+	</table>
+
+	<div ng-show="!balanceHistory.show">
+		<div class="col-md-12 column">
+			<h4>No transactions found!</h4>
+		</div>
+	</div>
+
+
+</div>

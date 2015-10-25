@@ -38,6 +38,7 @@ angular.module('edup.students')
 									scope.dismissModal();
 									NotificationService.Success(balance.amount + ' EUR was added to ' + scope.selectedStudent.name + ' ' + scope.selectedStudent.lastName + ' student!');
 									scope.balanceUpdateInProgress = false;
+									scope.reloadTransactions(scope.selectedStudent.id);
 								}
 							}, function (error) {
 								scope.balanceUpdateInProgress = false;
