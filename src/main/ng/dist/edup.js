@@ -9,6 +9,14 @@ angular.module('edup.common', [
 
 angular.module('edup.common')
 
+	.constant('PREFIX','https')
+	.constant('PORT', '8443')
+
+;
+'use strict';
+
+angular.module('edup.common')
+
     .directive('appModal', function () {
         return {
             restrict: 'A',
@@ -119,7 +127,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.config(['paginationTemplateProvider', function (paginationTemplateProvider) {
+	.config(['paginationTemplateProvider', 'PREFIX', 'PORT', function (paginationTemplateProvider, PREFIX, PORT) {
 
 		var location = window.location.hostname;
 
@@ -128,7 +136,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup/ng';
+			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -418,7 +426,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.service('UrlService', function () {
+	.service('UrlService', ['PREFIX', 'PORT', function (PREFIX, PORT) {
 
 		var location = window.location.hostname;
 
@@ -427,7 +435,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup';
 		}
 
 		return {
@@ -439,11 +447,11 @@ angular.module('edup.common')
 			},
 			Subjects: baseUrl + '/api/private/subjects',
 			Reports: {
-				Events : baseUrl + '/api/private/reports/subject'
+				Events: baseUrl + '/api/private/reports/subject'
 			}
 		};
 
-	}
+	}]
 );
 'use strict';
 

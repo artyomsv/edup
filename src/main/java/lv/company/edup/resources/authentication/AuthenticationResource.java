@@ -53,8 +53,6 @@ public class AuthenticationResource {
     }
 
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces({MediaType.TEXT_HTML, MediaType.APPLICATION_JSON})
     @Path("logout")
     public Response logout(@Context HttpServletRequest request,
                            @Context HttpServletResponse response) throws ServletException, IOException {

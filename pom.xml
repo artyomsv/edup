@@ -55,7 +55,7 @@
       </build>
     </profile>
     <profile>
-      <id>Configuratiom_Local</id>
+      <id>Configuration_Local</id>
       <build>
         <plugins>
           <plugin>

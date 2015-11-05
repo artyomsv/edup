@@ -2,7 +2,7 @@
 
 angular.module('edup.common')
 
-	.service('UrlService', function () {
+	.service('UrlService', function (PREFIX, PORT) {
 
 		var location = window.location.hostname;
 
@@ -11,7 +11,7 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = 'https://' + location + ':8443/edup';
+			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup';
 		}
 
 		return {
@@ -23,7 +23,7 @@ angular.module('edup.common')
 			},
 			Subjects: baseUrl + '/api/private/subjects',
 			Reports: {
-				Events : baseUrl + '/api/private/reports/subject'
+				Events: baseUrl + '/api/private/reports/subject'
 			}
 		};
 
