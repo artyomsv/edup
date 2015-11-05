@@ -53297,12 +53297,15 @@ angular.module('edup.common', [
 	'angularUtils.directives.dirPagination',
 	'angularMoment'
 ]);
-'use strict';
-
 angular.module('edup.common')
 
-	.constant('PREFIX','https')
-	.constant('PORT', '8443')
+.constant('APPLICATION', 'EDUP')
+
+.constant('PREFIX', 'http')
+
+.constant('PORT', '8484')
+
+.value('debug', true)
 
 ;
 'use strict';

@@ -19,8 +19,15 @@
 
   <properties>
     <version.major>0</version.major>
-    <version.minor>4</version.minor>
-    <version.tag>9</version.tag>
+    <version.minor>5</version.minor>
+    <version.tag>0</version.tag>
+
+    <webapp.location>src/environment/localhost/webapp</webapp.location>
+    <ng.environment>dist-localhost</ng.environment>
+    <server.hostname>${localhost.server.ip}</server.hostname>
+    <server.port>${localhost.server.port}</server.port>
+    <server.username>${localhost.server.user}</server.username>
+    <server.password>${localhost.server.password}</server.password>
   </properties>
 
   <dependencyManagement>
@@ -34,14 +41,70 @@
   </dependencyManagement>
 
   <profiles>
+
     <profile>
-      <id>Deployment_Localhost</id>
+      <id>localhost</id>
+      <properties>
+        <webapp.location>src/environment/localhost/webapp</webapp.location>
+        <server.hostname>${localhost.server.ip}</server.hostname>
+        <server.port>${localhost.server.port}</server.port>
+        <server.username>${localhost.server.user}</server.username>
+        <server.password>${localhost.server.password}</server.password>
+        <ng.environment>dist-localhost</ng.environment>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>eptron</id>
+      <properties>
+        <webapp.location>src/environment/eptron/webapp</webapp.location>
+        <server.hostname>${eptron.server.ip}</server.hostname>
+        <server.port>${eptron.server.port}</server.port>
+        <server.username>${eptron.server.user}</server.username>
+        <server.password>${eptron.server.password}</server.password>
+        <ng.environment>dist-eptron</ng.environment>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>amazon</id>
+      <properties>
+        <webapp.location>src/environment/amazon/webapp</webapp.location>
+        <server.hostname>${amazon.server.ip}</server.hostname>
+        <server.port>${amazon.server.port}</server.port>
+        <server.username>${amazon.server.user}</server.username>
+        <server.password>${amazon.server.password}</server.password>
+        <ng.environment>dist-amazon</ng.environment>
+      </properties>
+    </profile>
+
+
+    <profile>
+      <id>Deployment</id>
       <build>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+              <webResources>
+                <resource>
+                  <directory>${webapp.location}</directory>
+                </resource>
+              </webResources>
+            </configuration>
+          </plugin>
+
           <plugin>
             <groupId>org.wildfly.plugins</groupId>
             <artifactId>wildfly-maven-plugin</artifactId>
             <version>1.0.2.Final</version>
+            <configuration>
+              <hostname>${server.hostname}</hostname>
+              <port>${server.port}</port>
+              <username>${server.username}</username>
+              <password>${server.password}</password>
+            </configuration>
             <executions>
               <execution>
                 <phase>package</phase>
@@ -50,60 +113,6 @@
                 </goals>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>Configuration_Local</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <webResources>
-                <resource>
-                  <directory>src/environment/localhost/webapp</directory>
-                </resource>
-              </webResources>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>Configuration_Eptron</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <webResources>
-                <resource>
-                  <directory>src/environment/eptron/webapp</directory>
-                </resource>
-              </webResources>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>Configuration_Amazon</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <webResources>
-                <resource>
-                  <directory>src/environment/amazon/webapp</directory>
-                </resource>
-              </webResources>
-            </configuration>
           </plugin>
         </plugins>
       </build>
@@ -140,7 +149,7 @@
                 <configuration>
                   <executable>grunt</executable>
                   <arguments>
-                    <argument>dist</argument>
+                    <argument>${ng.environment}</argument>
                   </arguments>
                   <workingDirectory>${basedir}/src/main/ng</workingDirectory>
                 </configuration>

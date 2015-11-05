@@ -277,17 +277,29 @@ module.exports = function (grunt) {
 			}
 		},
 
-		env: {
+		ngconstant: {
 			options: {
-				//Shared Options Hash
+				name: 'edup.common',
+				dest: 'app/common/constants/env.constants.js',
+				deps: false,
+				constants: {
+					APPLICATION: 'EDUP'
+				},
+				values: {
+					debug: true
+				}
 			},
-			dev: {
-				PREFIX: 'https',
-				PORT: '8443'
+			localhost: {
+				constants: {
+					PREFIX: 'https',
+					PORT: '8443'
+				}
 			},
-			prod: {
-				PREFIX: 'http',
-				PORT: '8484'
+			eptron: {
+				constants: {
+					PREFIX: 'http',
+					PORT: '8484'
+				}
 			}
 		}
 
@@ -298,14 +310,12 @@ module.exports = function (grunt) {
 	grunt.registerTask('test:run', ['karma:run']);
 	grunt.registerTask('test:auto', ['karma:auto']);
 	grunt.registerTask('lint', ['jshint']);
-	grunt.registerTask('dev', [
-		'env:dev'
-	]);
 	grunt.registerTask('dist:js', ['concat:js', 'ngAnnotate:src', 'ngtemplates', 'uglify:js']);
 	grunt.registerTask('dist:style', ['less:bootstrap', 'less:edup', 'cssmin']);
-	grunt.registerTask('dist', ['lint', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
+	grunt.registerTask('dist-localhost', ['lint', 'clean', 'ngconstant:localhost', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
+	grunt.registerTask('dist-eptron', ['lint', 'clean', 'ngconstant:eptron', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
 	//grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
-	grunt.registerTask('standalone', ['clean', 'dist', 'connect', 'watch']);
+	grunt.registerTask('standalone', ['clean', 'dist-localhost', 'connect', 'watch']);
 	grunt.registerTask('e2e', ['protractor:suite']);
 
 };
