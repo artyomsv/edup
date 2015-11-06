@@ -1,4 +1,4 @@
-package lv.company.edup.services.students;
+package lv.company.edup.services.balance;
 
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
@@ -11,8 +11,8 @@ import lv.company.edup.persistence.balance.TransactionType;
 import lv.company.edup.persistence.subjects.AttendanceRepository;
 import lv.company.edup.persistence.subjects.domain.Attendance;
 import lv.company.edup.persistence.subjects.domain.Attendance_;
-import lv.company.edup.services.students.dto.CurrentBalanceDto;
-import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.balance.dto.CurrentBalanceDto;
+import lv.company.edup.services.balance.dto.StudentBalanceDto;
 import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
@@ -111,6 +111,7 @@ public class TransactionService {
                 StudentBalanceDto balanceDto = new StudentBalanceDto();
                 balanceDto.setAmount(dto.getPrice());
                 balanceDto.setStudentId(attendance.getStudentId());
+                balanceDto.setComments(dto.getSubject() != null ? dto.getSubject().getSubjectName() : null);
                 attendance.setBalanceAdjusted(true);
                 performTransaction(balanceDto, false, typeService.getType(AUTO));
             }

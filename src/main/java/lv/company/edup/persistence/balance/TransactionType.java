@@ -26,6 +26,9 @@ public class TransactionType {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "GLYPH_ICON")
+    private String icon;
+
     public Long getId() {
         return id;
     }
@@ -48,5 +51,13 @@ public class TransactionType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }

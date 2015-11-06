@@ -9,9 +9,9 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'http')
+.constant('PREFIX', 'https')
 
-.constant('PORT', '8484')
+.constant('PORT', '8443')
 
 .value('debug', true)
 
@@ -109,6 +109,30 @@ angular.module('edup.common')
 			return angular.toJson(input, pretty);
 		};
 	}
+);
+'use strict';
+
+angular.module('edup.common')
+
+	.service('GlobalVariables', ['RestService', function (RestService) {
+
+		var values = {};
+		RestService.Private.Balance.one('types').get().then(function (response) {
+			_.forEach(response.values, function (value) {
+				values[value.id] = value;
+			})
+		});
+
+		return {
+			Icons: function (key) {
+				if (values[key]) {
+					return values[key].icon;
+				}
+			}
+		}
+
+
+	}]
 );
 'use strict';
 
@@ -816,7 +840,7 @@ angular.module('edup.students')
 			restrict: 'E',
 			templateUrl: 'student-balance-history',
 
-			controller: ['$scope', 'RestService', 'QueryService', function ($scope, RestService, QueryService) {
+			controller: ['$scope', 'RestService', 'QueryService', 'GlobalVariables', function ($scope, RestService, QueryService, GlobalVariables) {
 
 				$scope.balanceHistory = {
 					count: 0,
@@ -826,7 +850,7 @@ angular.module('edup.students')
 				};
 
 				$scope.reloadTransactions = function (studentId) {
-					var query = QueryService.Query(3, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
+					var query = QueryService.Query(5, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
 					RestService.Private.Balance.get(query).then(function (response) {
 						$scope.balanceHistory.count = response.count;
 						if ($scope.balanceHistory.count > 0) {
@@ -836,7 +860,8 @@ angular.module('edup.students')
 								$scope.balanceHistory.values[index] = {
 									date: value.created,
 									amount: value.amount / 100,
-									description: value.comments
+									description: value.comments,
+									icon: GlobalVariables.Icons(value.type)
 								};
 							});
 						} else {
@@ -2254,7 +2279,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-balance-history',
-    "<div><table ng-show=balanceHistory.show class=\"table table-hover\" style=table-layout:fixed><thead><tr><th class=text-center>Date</th><th class=text-center>Amount</th><th class=text-center>Description</th></tr></thead><tbody><tr ng-repeat=\"balanceHistory in balanceHistory.values\"><td class=text-center>{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td><td class=text-center>{{ balanceHistory.amount | number : 2}} EUR</td><td class=text-center>{{ balanceHistory.description }}</td></tr></tbody></table><div ng-show=!balanceHistory.show><div class=\"col-md-12 column\"><h4>No transactions found!</h4></div></div></div>"
+    "<div><div class=\"col-md-12 column\" ng-show=balanceHistory.show><table class=\"table table-hover\" style=\"table-layout:fixed;margin-bottom: 0px!important\"><tbody><tr ng-repeat=\"balanceHistory in balanceHistory.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=\"padding: 2px\" class=text-center>{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td><td style=\"padding: 2px\" class=text-center ng-class=\"{'negative-amount': balanceHistory.amount < 0, 'positive-amount': balanceHistory.amount > 0}\">{{ balanceHistory.amount | number : 2}} EUR</td><td style=\"padding: 2px\" class=text-center>{{ balanceHistory.description }}</td><td style=\"padding: 2px\" class=text-center width=40px><span><i class={{balanceHistory.icon}}></i></span></td></tr></tbody></table></div><div ng-show=!balanceHistory.show><div class=\"col-md-12 column\"><h4>No transactions found!</h4></div></div></div>"
   );
 
 

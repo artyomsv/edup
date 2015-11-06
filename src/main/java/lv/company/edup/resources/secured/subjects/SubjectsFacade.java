@@ -5,7 +5,7 @@ import lv.company.edup.infrastructure.response.UriUtils;
 import lv.company.edup.infrastructure.validation.Validated;
 import lv.company.edup.persistence.subjects.EventStatus;
 import lv.company.edup.resources.ApplicationFacade;
-import lv.company.edup.services.students.TransactionService;
+import lv.company.edup.services.balance.TransactionService;
 import lv.company.edup.services.students.validation.UpdateCheck;
 import lv.company.edup.services.subjects.SubjectsService;
 import lv.company.edup.services.subjects.dto.AttendanceDto;

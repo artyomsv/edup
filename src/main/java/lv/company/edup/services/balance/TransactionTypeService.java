@@ -1,7 +1,9 @@
-package lv.company.edup.services.students;
+package lv.company.edup.services.balance;
 
+import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.balance.TransactionType;
+import lv.company.edup.services.balance.dto.TransactionTypeDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
@@ -18,6 +20,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +33,7 @@ public class TransactionTypeService {
     Map<String, TransactionType> map = new HashMap<>();
 
     @Inject @JPA ODataSearchService searchService;
+    @Inject ObjectMapper mapper;
 
     @PostConstruct
     public void init() {
@@ -55,6 +59,12 @@ public class TransactionTypeService {
                 })
                 .map(result.getValues());
 
+    }
+
+    public Collection<TransactionTypeDto> getTransactionTypes() {
+        ODataCriteria criteria = new ODataCriteria().getAllValues();
+        ODataResult<TransactionType> search = searchService.search(criteria, TransactionType.class);
+        return mapper.map(search.getValues(), TransactionTypeDto.class);
     }
 
 

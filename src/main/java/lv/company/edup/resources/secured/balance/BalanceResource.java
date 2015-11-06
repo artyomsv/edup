@@ -1,6 +1,6 @@
 package lv.company.edup.resources.secured.balance;
 
-import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.balance.dto.StudentBalanceDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -22,6 +22,12 @@ public class BalanceResource {
     @GET
     public Response search() {
         return facade.search();
+    }
+
+    @GET
+    @Path("types")
+    public Response getTransactionTypes() {
+        return facade.getTransactionTypes();
     }
 
     @POST

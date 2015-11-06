@@ -1,23 +1,37 @@
 <div>
 
-	<table ng-show="balanceHistory.show" class="table table-hover" style="table-layout:fixed;">
-		<thead>
-		<tr>
-			<th class="text-center">Date</th>
-			<th class="text-center">Amount</th>
-			<th class="text-center">Description</th>
-		</tr>
-		</thead>
-		<tbody>
+	<div class="col-md-12 column" ng-show="balanceHistory.show">
+		<table class="table table-hover" style="table-layout:fixed;margin-bottom: 0px!important;">
 
-		<tr ng-repeat="balanceHistory in balanceHistory.values">
-			<td class="text-center">{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td>
-			<td class="text-center">{{ balanceHistory.amount | number : 2}} EUR</td>
-			<td class="text-center">{{ balanceHistory.description }}</td>
-		</tr>
+			<!--<thead>-->
+			<!--<tr>-->
+				<!--<th class="text-center">Date</th>-->
+				<!--<th class="text-center">Amount</th>-->
+				<!--<th class="text-center">Description</th>-->
+				<!--<th width="40px"></th>-->
+			<!--</tr>-->
+			<!--</thead>-->
+			<tbody>
 
-		</tbody>
-	</table>
+			<tr ng-repeat="balanceHistory in balanceHistory.values"
+			    ng-class-odd="'success'"
+			    ng-class-even="'active'"
+					>
+				<td style="padding: 2px" class="text-center">{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td>
+				<td style="padding: 2px" class="text-center" ng-class="{'negative-amount': balanceHistory.amount < 0, 'positive-amount': balanceHistory.amount > 0}">
+					{{ balanceHistory.amount | number : 2}} EUR
+				</td>
+				<td style="padding: 2px" class="text-center">{{ balanceHistory.description }}</td>
+				<td style="padding: 2px" class="text-center" width="40px">
+					<span>
+							<i class="{{balanceHistory.icon}}"></i>
+						</span>
+				</td>
+			</tr>
+
+			</tbody>
+		</table>
+	</div>
 
 	<div ng-show="!balanceHistory.show">
 		<div class="col-md-12 column">

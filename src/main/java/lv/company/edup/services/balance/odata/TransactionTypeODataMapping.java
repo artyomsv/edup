@@ -1,4 +1,4 @@
-package lv.company.edup.services.students;
+package lv.company.edup.services.balance.odata;
 
 import lv.company.edup.persistence.balance.TransactionType;
 import lv.company.edup.persistence.balance.TransactionType_;

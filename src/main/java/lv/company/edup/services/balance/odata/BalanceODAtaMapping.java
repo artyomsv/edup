@@ -1,4 +1,4 @@
-package lv.company.edup.services.students;
+package lv.company.edup.services.balance.odata;
 
 import lv.company.edup.persistence.balance.Transaction;
 import lv.company.edup.persistence.balance.Transaction_;
@@ -6,16 +6,16 @@ import lv.company.odata.impl.jpa.AbstractODataJPAMapping;
 
 import javax.persistence.metamodel.SingularAttribute;
 
-public class TransactionODataMapping extends AbstractODataJPAMapping<Transaction> {
+public class BalanceODAtaMapping extends AbstractODataJPAMapping<Transaction> {
 
-    public TransactionODataMapping() {
+    public BalanceODAtaMapping() {
         mapAttribute("Id").to(Transaction_.id);
         mapAttribute("Debit").to(Transaction_.debit);
         mapAttribute("Credit").to(Transaction_.credit);
         mapAttribute("Created").to(Transaction_.created);
-        mapAttribute("Description").to(Transaction_.description);
-        mapAttribute("StudentId").to(Transaction_.studentId);
         mapAttribute("Type").to(Transaction_.type);
+        mapAttribute("StudentId").to(Transaction_.studentId);
+        mapAttribute("Description").to(Transaction_.description);
     }
 
     @Override

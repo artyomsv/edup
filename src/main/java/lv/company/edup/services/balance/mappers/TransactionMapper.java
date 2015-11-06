@@ -1,8 +1,8 @@
-package lv.company.edup.services.students.mappers;
+package lv.company.edup.services.balance.mappers;
 
 import lv.company.edup.infrastructure.mapping.CustomMapper;
 import lv.company.edup.persistence.balance.Transaction;
-import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.balance.dto.StudentBalanceDto;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.MappingContext;
 

@@ -7,7 +7,7 @@ angular.module('edup.students')
 			restrict: 'E',
 			templateUrl: 'student-balance-history',
 
-			controller: function ($scope, RestService, QueryService) {
+			controller: function ($scope, RestService, QueryService, GlobalVariables) {
 
 				$scope.balanceHistory = {
 					count: 0,
@@ -17,7 +17,7 @@ angular.module('edup.students')
 				};
 
 				$scope.reloadTransactions = function (studentId) {
-					var query = QueryService.Query(3, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
+					var query = QueryService.Query(5, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
 					RestService.Private.Balance.get(query).then(function (response) {
 						$scope.balanceHistory.count = response.count;
 						if ($scope.balanceHistory.count > 0) {
@@ -27,7 +27,8 @@ angular.module('edup.students')
 								$scope.balanceHistory.values[index] = {
 									date: value.created,
 									amount: value.amount / 100,
-									description: value.comments
+									description: value.comments,
+									icon: GlobalVariables.Icons(value.type)
 								};
 							});
 						} else {

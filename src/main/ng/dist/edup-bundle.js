@@ -53301,9 +53301,9 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'http')
+.constant('PREFIX', 'https')
 
-.constant('PORT', '8484')
+.constant('PORT', '8443')
 
 .value('debug', true)
 

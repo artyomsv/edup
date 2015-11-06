@@ -4,10 +4,11 @@ import lv.company.edup.infrastructure.exceptions.NotFoundException;
 import lv.company.edup.infrastructure.validation.Validated;
 import lv.company.edup.persistence.students.Student;
 import lv.company.edup.resources.ApplicationFacade;
+import lv.company.edup.services.balance.TransactionTypeService;
 import lv.company.edup.services.documents.DocumentsService;
 import lv.company.edup.services.students.StudentsService;
-import lv.company.edup.services.students.TransactionService;
-import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.balance.TransactionService;
+import lv.company.edup.services.balance.dto.StudentBalanceDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ import javax.ws.rs.core.Response;
 public class BalanceFacade extends ApplicationFacade {
 
     @Inject TransactionService transactionService;
+    @Inject TransactionTypeService transactionTypeService;
     @Inject StudentsService studentsService;
     @Inject DocumentsService documentsService;
 
@@ -40,4 +42,7 @@ public class BalanceFacade extends ApplicationFacade {
         return created(save);
     }
 
+    public Response getTransactionTypes() {
+        return ok(transactionTypeService.getTransactionTypes());
+    }
 }

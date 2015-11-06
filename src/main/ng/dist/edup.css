@@ -468,6 +468,12 @@ body {
 .missing-data-row {
   color: #a94442;
 }
+.negative-amount {
+  color: #a94442;
+}
+.positive-amount {
+  color: #0d7b00;
+}
 .panel-success-override {
   color: white !important;
   background-color: #5cb85c !important;

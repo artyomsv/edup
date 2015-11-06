@@ -1,4 +1,4 @@
-package lv.company.edup.services.students.dto;
+package lv.company.edup.services.balance.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -26,6 +26,7 @@ public class StudentBalanceDto {
     private String comments;
     private Date created;
     private Boolean cash;
+    private Long type;
 
     public Long getStudentId() {
         return studentId;
@@ -73,5 +74,13 @@ public class StudentBalanceDto {
 
     public void setCash(Boolean cash) {
         this.cash = cash;
+    }
+
+    public Long getType() {
+        return type;
+    }
+
+    public void setType(Long type) {
+        this.type = type;
     }
 }

@@ -2,7 +2,7 @@ package lv.company.edup.validation;
 
 import lv.company.edup.infrastructure.exceptions.EdupConstraintViolationException;
 import lv.company.edup.infrastructure.validation.ValidationService;
-import lv.company.edup.services.students.dto.StudentBalanceDto;
+import lv.company.edup.services.balance.dto.StudentBalanceDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 import org.apache.commons.lang3.StringUtils;
