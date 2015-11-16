@@ -8,7 +8,7 @@ angular.module('edup.common')
 		RestService.Private.Balance.one('types').get().then(function (response) {
 			_.forEach(response.values, function (value) {
 				values[value.id] = value;
-			})
+			});
 		});
 
 		return {
@@ -17,8 +17,7 @@ angular.module('edup.common')
 					return values[key].icon;
 				}
 			}
-		}
-
+		};
 
 	}
 );

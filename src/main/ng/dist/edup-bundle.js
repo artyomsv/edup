@@ -53301,13 +53301,22 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'https')
+.constant('PREFIX', 'http')
 
-.constant('PORT', '8443')
+.constant('PORT', null)
+
+.constant('CONTEXT_ROOT', '/edup')
 
 .value('debug', true)
 
 ;
+'use strict';
+
+angular.module('edup.common')
+
+	.controller('ConstantsController', ['$scope', 'CONTEXT_ROOT', function ($scope, CONTEXT_ROOT) {
+		$scope.contextRoot = CONTEXT_ROOT;
+	}]);
 'use strict';
 
 angular.module('edup.common')
@@ -53406,6 +53415,29 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
+	.service('GlobalVariables', ['RestService', function (RestService) {
+
+		var values = {};
+		RestService.Private.Balance.one('types').get().then(function (response) {
+			_.forEach(response.values, function (value) {
+				values[value.id] = value;
+			});
+		});
+
+		return {
+			Icons: function (key) {
+				if (values[key]) {
+					return values[key].icon;
+				}
+			}
+		};
+
+	}]
+);
+'use strict';
+
+angular.module('edup.common')
+
 	.run(['amMoment', 'moment', function (amMoment, moment) {
 
 		amMoment.changeLocale('en');
@@ -53422,7 +53454,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.config(['paginationTemplateProvider', 'PREFIX', 'PORT', function (paginationTemplateProvider, PREFIX, PORT) {
+	.config(['paginationTemplateProvider', 'PREFIX', 'PORT', 'CONTEXT_ROOT', function (paginationTemplateProvider, PREFIX, PORT, CONTEXT_ROOT) {
 
 		var location = window.location.hostname;
 
@@ -53431,7 +53463,8 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup/ng';
+			var portValue = PORT ? ':' + PORT : '';
+			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT + '/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -53721,7 +53754,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.service('UrlService', ['PREFIX', 'PORT', function (PREFIX, PORT) {
+	.service('UrlService', ['PREFIX', 'PORT', 'CONTEXT_ROOT', function (PREFIX, PORT, CONTEXT_ROOT) {
 
 		var location = window.location.hostname;
 
@@ -53730,7 +53763,8 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup';
+			var portValue = PORT ? ':' + PORT : '';
+			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT;
 		}
 
 		return {
@@ -54108,7 +54142,7 @@ angular.module('edup.students')
 			restrict: 'E',
 			templateUrl: 'student-balance-history',
 
-			controller: ['$scope', 'RestService', 'QueryService', function ($scope, RestService, QueryService) {
+			controller: ['$scope', 'RestService', 'QueryService', 'GlobalVariables', function ($scope, RestService, QueryService, GlobalVariables) {
 
 				$scope.balanceHistory = {
 					count: 0,
@@ -54118,7 +54152,7 @@ angular.module('edup.students')
 				};
 
 				$scope.reloadTransactions = function (studentId) {
-					var query = QueryService.Query(3, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
+					var query = QueryService.Query(5, 0, null, 'Created desc', 'StudentId eq ' + studentId, true);
 					RestService.Private.Balance.get(query).then(function (response) {
 						$scope.balanceHistory.count = response.count;
 						if ($scope.balanceHistory.count > 0) {
@@ -54128,7 +54162,8 @@ angular.module('edup.students')
 								$scope.balanceHistory.values[index] = {
 									date: value.created,
 									amount: value.amount / 100,
-									description: value.comments
+									description: value.comments,
+									icon: GlobalVariables.Icons(value.type)
 								};
 							});
 						} else {
@@ -55546,7 +55581,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-balance-history',
-    "<div><table ng-show=balanceHistory.show class=\"table table-hover\" style=table-layout:fixed><thead><tr><th class=text-center>Date</th><th class=text-center>Amount</th><th class=text-center>Description</th></tr></thead><tbody><tr ng-repeat=\"balanceHistory in balanceHistory.values\"><td class=text-center>{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td><td class=text-center>{{ balanceHistory.amount | number : 2}} EUR</td><td class=text-center>{{ balanceHistory.description }}</td></tr></tbody></table><div ng-show=!balanceHistory.show><div class=\"col-md-12 column\"><h4>No transactions found!</h4></div></div></div>"
+    "<div><div class=\"col-md-12 column\" ng-show=balanceHistory.show><table class=\"table table-hover\" style=\"table-layout:fixed;margin-bottom: 0px!important\"><tbody><tr ng-repeat=\"balanceHistory in balanceHistory.values\" ng-class-odd=\"'success'\" ng-class-even=\"'active'\"><td style=\"padding: 2px\" class=text-center>{{ balanceHistory.date | date:'yyyy/MM/dd HH:mm'}}</td><td style=\"padding: 2px\" class=text-center ng-class=\"{'negative-amount': balanceHistory.amount < 0, 'positive-amount': balanceHistory.amount > 0}\">{{ balanceHistory.amount | number : 2}} EUR</td><td style=\"padding: 2px\" class=text-center>{{ balanceHistory.description }}</td><td style=\"padding: 2px\" class=text-center width=40px><span><i class={{balanceHistory.icon}}></i></span></td></tr></tbody></table></div><div ng-show=!balanceHistory.show><div class=\"col-md-12 column\"><h4>No transactions found!</h4></div></div></div>"
   );
 
 

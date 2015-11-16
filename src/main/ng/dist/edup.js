@@ -9,13 +9,22 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'https')
+.constant('PREFIX', 'http')
 
-.constant('PORT', '8443')
+.constant('PORT', null)
+
+.constant('CONTEXT_ROOT', '/edup')
 
 .value('debug', true)
 
 ;
+'use strict';
+
+angular.module('edup.common')
+
+	.controller('ConstantsController', ['$scope', 'CONTEXT_ROOT', function ($scope, CONTEXT_ROOT) {
+		$scope.contextRoot = CONTEXT_ROOT;
+	}]);
 'use strict';
 
 angular.module('edup.common')
@@ -120,7 +129,7 @@ angular.module('edup.common')
 		RestService.Private.Balance.one('types').get().then(function (response) {
 			_.forEach(response.values, function (value) {
 				values[value.id] = value;
-			})
+			});
 		});
 
 		return {
@@ -129,8 +138,7 @@ angular.module('edup.common')
 					return values[key].icon;
 				}
 			}
-		}
-
+		};
 
 	}]
 );
@@ -154,7 +162,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.config(['paginationTemplateProvider', 'PREFIX', 'PORT', function (paginationTemplateProvider, PREFIX, PORT) {
+	.config(['paginationTemplateProvider', 'PREFIX', 'PORT', 'CONTEXT_ROOT', function (paginationTemplateProvider, PREFIX, PORT, CONTEXT_ROOT) {
 
 		var location = window.location.hostname;
 
@@ -163,7 +171,8 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'http://127.0.0.1:8088/';
 		} else {
-			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup/ng';
+			var portValue = PORT ? ':' + PORT : '';
+			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT + '/ng';
 		}
 
 		paginationTemplateProvider.setPath(baseUrl + '/vendor/bower_components/angular-utils-pagination/dirPagination.tpl.html');
@@ -453,7 +462,7 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.service('UrlService', ['PREFIX', 'PORT', function (PREFIX, PORT) {
+	.service('UrlService', ['PREFIX', 'PORT', 'CONTEXT_ROOT', function (PREFIX, PORT, CONTEXT_ROOT) {
 
 		var location = window.location.hostname;
 
@@ -462,7 +471,8 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup';
+			var portValue = PORT ? ':' + PORT : '';
+			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT;
 		}
 
 		return {

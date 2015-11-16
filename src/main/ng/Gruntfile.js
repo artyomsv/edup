@@ -292,13 +292,22 @@ module.exports = function (grunt) {
 			localhost: {
 				constants: {
 					PREFIX: 'https',
-					PORT: '8443'
+					PORT: '8443',
+					CONTEXT_ROOT: '/edup'
 				}
 			},
 			eptron: {
 				constants: {
 					PREFIX: 'http',
-					PORT: '8484'
+					PORT: '8484',
+					CONTEXT_ROOT: '/edup'
+				}
+			},
+			openshift: {
+				constants: {
+					PREFIX: 'http',
+					PORT: null,
+					CONTEXT_ROOT: '/edup'
 				}
 			}
 		}
@@ -314,6 +323,7 @@ module.exports = function (grunt) {
 	grunt.registerTask('dist:style', ['less:bootstrap', 'less:edup', 'cssmin']);
 	grunt.registerTask('dist-localhost', ['lint', 'clean', 'ngconstant:localhost', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
 	grunt.registerTask('dist-eptron', ['lint', 'clean', 'ngconstant:eptron', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
+	grunt.registerTask('dist-openshift', ['lint', 'clean', 'ngconstant:openshift', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
 	//grunt.registerTask('dist', ['lint', 'complexity', 'clean', 'dist:js', 'dist:style', 'concat:bundle', 'uglify:bundle', 'copy']);
 	grunt.registerTask('standalone', ['clean', 'dist-localhost', 'connect', 'watch']);
 	grunt.registerTask('e2e', ['protractor:suite']);

@@ -30,16 +30,6 @@
     <server.password>${localhost.server.password}</server.password>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <profiles>
 
     <profile>
@@ -78,23 +68,23 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>openshift</id>
+      <properties>
+        <webapp.location>src/environment/openshift/webapp</webapp.location>
+        <server.hostname>${edup.openshift.server.ip}</server.hostname>
+        <server.port>${edup.openshift.server.port}</server.port>
+        <server.username>${edup.openshift.server.user}</server.username>
+        <server.password>${edup.openshift.server.password}</server.password>
+        <ng.environment>dist-openshift</ng.environment>
+      </properties>
+    </profile>
+
 
     <profile>
       <id>Deployment</id>
       <build>
         <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <webResources>
-                <resource>
-                  <directory>${webapp.location}</directory>
-                </resource>
-              </webResources>
-            </configuration>
-          </plugin>
-
           <plugin>
             <groupId>org.wildfly.plugins</groupId>
             <artifactId>wildfly-maven-plugin</artifactId>
@@ -176,6 +166,19 @@
     </resources>
 
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${webapp.location}</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -272,7 +275,7 @@
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
-      <version>9.4-1200-jdbc41</version>
+      <version>9.4-1201-jdbc41</version>
       <scope>provided</scope>
     </dependency>
 

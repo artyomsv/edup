@@ -2,7 +2,7 @@
 
 angular.module('edup.common')
 
-	.service('UrlService', function (PREFIX, PORT) {
+	.service('UrlService', function (PREFIX, PORT, CONTEXT_ROOT) {
 
 		var location = window.location.hostname;
 
@@ -11,7 +11,8 @@ angular.module('edup.common')
 		if (location.indexOf('127.0.0.1') > -1) {
 			baseUrl = 'https://localhost:8443/edup';
 		} else {
-			baseUrl = PREFIX + '://' + location + ':' + PORT + '/edup';
+			var portValue = PORT ? ':' + PORT : '';
+			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT;
 		}
 
 		return {
