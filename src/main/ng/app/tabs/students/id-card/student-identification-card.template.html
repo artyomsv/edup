@@ -47,7 +47,7 @@
 				</tr>
 				<tr>
 					<td>Current balance:</td>
-					<td>{{ selectedStudent.balance | number : 2}} EUR</td>
+					<td ng-class="{'negative-amount': selectedStudent.balance < 0, 'positive-amount': selectedStudent.balance > 0}">{{ selectedStudent.balance | number : 2}} EUR</td>
 					<td>
 						<button type="button"
 						        class="btn btn-success btn-sm pull-right"

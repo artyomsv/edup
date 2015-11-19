@@ -35,7 +35,9 @@ angular.module('edup.students')
 
 					if (student && student.name && student.lastName) {
 						$scope.studentProcessingInProgress = true;
-						student.birthDate = new Date(student.birthDateString);
+						if (student.birthDateString) {
+							student.birthDate = new Date(student.birthDateString);
+						}
 						RestService.Private.Students.customPOST(student).then(function (response) {
 							NotificationService.Success('Student ' + student.name + ' ' + student.lastName + ' created!');
 							$scope.loadStudents(response.payload, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);

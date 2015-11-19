@@ -65,7 +65,7 @@ angular.module('edup.subjects')
 				};
 
 				var calculateTime = function (date, time) {
-					return $filter('date')(date, 'yyyy-MM-dd') + ' ' + $filter('date')(time, 'HH:mm');
+					return $filter('date')(date, 'yyyy/MM/dd') + ' ' + $filter('date')(time, 'HH:mm');
 				};
 
 				$scope.renderDatePicker = function ($view, $dates, $leftDate, $upDate, $rightDate) {

@@ -23,7 +23,7 @@ angular.module('edup.students')
 					if ($scope.selectedStudent) {
 						$scope.studentEdit = _.cloneDeep($scope.selectedStudent);
 						if ($scope.studentEdit.birthDate) {
-							$scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy-MM-dd');
+							$scope.studentEdit.birthDateString = $filter('date')(new Date($scope.studentEdit.birthDate), 'yyyy/MM/dd');
 						}
 
 						$scope.selectedStudent.balance = (response.payload.balance / 100);
@@ -72,7 +72,9 @@ angular.module('edup.students')
 
 		$scope.setSelected = function (studentId) {
 			$scope.loadFullStudent(studentId);
-			$scope.reloadTransactions(studentId);
+			if ($scope.reloadTransactions) {
+				$scope.reloadTransactions(studentId);
+			}
 		};
 
 		$scope.addToBalance = function (value) {
