@@ -9,9 +9,9 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'https')
+.constant('PREFIX', 'http')
 
-.constant('PORT', '8443')
+.constant('PORT', null)
 
 .constant('CONTEXT_ROOT', '/edup')
 

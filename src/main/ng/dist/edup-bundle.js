@@ -53301,9 +53301,9 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'https')
+.constant('PREFIX', 'http')
 
-.constant('PORT', '8443')
+.constant('PORT', null)
 
 .constant('CONTEXT_ROOT', '/edup')
 
@@ -54676,7 +54676,9 @@ angular.module('edup.students')
 
 					if (student && student.name && student.lastName) {
 						$scope.studentProcessingInProgress = true;
-						student.birthDate = new Date(student.birthDateString);
+						if (student.birthDateString) {
+							student.birthDate = new Date(student.birthDateString);
+						}
 						RestService.Private.Students.customPOST(student).then(function (response) {
 							NotificationService.Success('Student ' + student.name + ' ' + student.lastName + ' created!');
 							$scope.loadStudents(response.payload, PaginationService.Top($scope.studentPaging), PaginationService.Skip($scope.studentPaging), null);
@@ -55613,7 +55615,7 @@ angular.module('edup')
 
 
   $templateCache.put('student-identification-card',
-    "<div><div class=form-horizontal><div><div class=\"col-md-6 column\"><div tooltip=\"{{selectedStudent.name }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.name.length > 25\"><h4><b>{{ selectedStudent.name | limitTo: 25}}{{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4></div><div tooltip=\"{{selectedStudent.lastName }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.lastName.length > 25\"><h4><b>{{ selectedStudent.lastName | limitTo: 25}}{{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4></div><div><h4>{{ selectedStudent.personId }}</h4></div></div><div class=\"col-md-6 column\"><img alt=140x140 width=140 height=140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></div></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td>{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div ng-show=false class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
+    "<div><div class=form-horizontal><div><div class=\"col-md-6 column\"><div tooltip=\"{{selectedStudent.name }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.name.length > 25\"><h4><b>{{ selectedStudent.name | limitTo: 25}}{{selectedStudent.name.length > 25 ? '...' : ''}}</b></h4></div><div tooltip=\"{{selectedStudent.lastName }}\" class=tooltip-300max tooltip-enable=\"selectedStudent.lastName.length > 25\"><h4><b>{{ selectedStudent.lastName | limitTo: 25}}{{selectedStudent.lastName.length > 25 ? '...' : ''}}</b></h4></div><div><h4>{{ selectedStudent.personId }}</h4></div></div><div class=\"col-md-6 column\"><img alt=140x140 width=140 height=140 src={{selectedStudent.photoUrl}} class=\"img-rounded pull-right\"></div></div><div class=\"col-md-12 column\" style=\"padding-top: 20px\"><table class=identification-card width=100%><tr><td>Phone number:</td><td>{{ selectedStudent.mobile }}</td></tr><tr><td>Current balance:</td><td ng-class=\"{'negative-amount': selectedStudent.balance < 0, 'positive-amount': selectedStudent.balance > 0}\">{{ selectedStudent.balance | number : 2}} EUR</td><td><button type=button class=\"btn btn-success btn-sm pull-right\" data-toggle=modal data-target=#addToBalanceModalView>Add to balance</button></td></tr></table></div><div ng-show=false class=\"col-md-12 column\" style=\"padding-top: 10px\"><button type=button class=\"btn btn-success btn-sm\" style=\"width: 100%\">Attendance history</button></div></div><balance-modal></balance-modal></div>"
   );
 
 
