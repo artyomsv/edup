@@ -53301,9 +53301,9 @@ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'http')
+.constant('PREFIX', 'https')
 
-.constant('PORT', null)
+.constant('PORT', '8443')
 
 .constant('CONTEXT_ROOT', '/edup')
 
@@ -54348,7 +54348,9 @@ angular.module('edup.students')
 
 					student.id = $scope.selectedStudent.id;
 					student.versionId = $scope.selectedStudent.versionId;
-					student.birthDate = new Date(student.birthDateString);
+					if (student.birthDateString) {
+						student.birthDate = new Date(student.birthDateString);
+					}
 					console.log(angular.toJson(student));
 					if (student && student.name && student.lastName && student.id && student.versionId) {
 						RestService.Private.Students.one(student.id.toString())
@@ -55399,12 +55401,6 @@ angular.module('edup.reports')
 			templateUrl: 'event-attendance-modal',
 			controller: ['$scope', '$timeout', 'RestService', 'TypeAheadService', function ($scope, $timeout, RestService, TypeAheadService) {
 
-				$scope.plannedEventDetails = {
-					selectedSubject: null,
-					dateFromPicker: null,
-					dateToPicker: null
-				};
-
 				var selectSubject = function (selectedSubjectName) {
 					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
@@ -55453,8 +55449,26 @@ angular.module('edup.reports')
 				};
 
 
+				$scope.setUpReportScope = function () {
+					$scope.plannedEventDetails = {
+						selectedSubject: null,
+						dateFromPicker: null,
+						dateToPicker: null
+					};
+					typeAhead.clear();
+					var field = $('#subject-event-name-text-field');
+					if (!field) {
+						console.log('Value:' + field.value);
+						field.value = '';
+					}
+				};
+
+				$scope.setUpReportScope();
+
 			}],
 			link: function (scope) {
+
+				scope.setUpReportScope();
 
 				scope.renderDatePickerForReport = function ($view, $dates, $leftDate, $upDate, $rightDate) {
 
@@ -55468,6 +55482,7 @@ angular.module('edup.reports')
 							attendance: scope.plannedEventDetails.showAttendance
 						};
 						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
+						scope.setUpReportScope();
 						window.open(url);
 						scope.dismissModal();
 					}
@@ -55570,7 +55585,7 @@ angular.module('edup')
 
 
   $templateCache.put('event-attendance-modal',
-    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy/MM/dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy/MM/dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div></div>"
+    "<div app-modal id=eventAttendanceModalView class=\"modal fade\" tabindex=-1 role=dialog aria-labelledby=mySmallModalLabel aria-hidden=true><div class=\"modal-dialog modal-sm\"><div class=\"modal-content modalViewPadding\"><form role=form name=EventAttendanceForm><div class=row><div class=form-group id=subject-event-typeahead-modal><div class=input-group id=subjectTypeAheadInput><span class=input-group-addon id=basic-addon2 ng-class=\"{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}\"></span><div id=scrollable-dropdown-menu><input id=subject-event-name-text-field required class=\"form-control typeahead tt-query\" placeholder=Subject ng-model=plannedEventDetails.subjectName ng-keyup=updateSelectedSubject()></div></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDatefromIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy/MM/dd class=form-control data-ng-model=plannedEventDetails.dateFromPicker placeholder=From> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateFromPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDatefromIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><div class=form-group><div class=dropdown><a class=dropdown-toggle id=subjectEventDateToIdModal role=button data-toggle=dropdown data-target=# href=#><div class=input-group><input required datepicker-popup=yyyy/MM/dd class=form-control data-ng-model=plannedEventDetails.dateToPicker placeholder=To> <span class=input-group-addon><i class=\"glyphicon glyphicon-calendar\"></i></span></div></a><ul class=dropdown-menu role=menu aria-labelledby=dLabel><datetimepicker data-ng-model=plannedEventDetails.dateToPicker data-before-render=\"renderDatePickerForReport($view, $dates, $leftDate, $upDate, $rightDate)\" data-datetimepicker-config=\"{ dropdownSelector: '#subjectEventDateToIdModal' , startView:'day', minView:'day'}\"></datetimepicker></ul></div></div></div><div class=row><button style=\"margin-top: 10px\" class=\"btn btn-success btn-sm pull-right\" type=button ng-click=performReportDownload(plannedEventDetails)>Submit</button></div></form></div></div></div>"
   );
 
 

@@ -29,6 +29,14 @@ public class ApplicationFacade {
         return Response.ok().build();
     }
 
+    public Response ok(String o) {
+        if (o != null) {
+            return prepare(Response.Status.OK, o);
+        } else {
+            return notFound();
+        }
+    }
+
     public Response ok(Object o) {
         if (o != null) {
             return prepare(Response.Status.OK, o);
@@ -110,6 +118,10 @@ public class ApplicationFacade {
 
     private Response prepare(Response.Status status) {
         return Response.status(status).build();
+    }
+
+    private <T> Response prepare(Response.Status status, String response) {
+        return Response.status(status).entity(response).build();
     }
 
     private <T> Response prepare(Response.Status status, T o) {

@@ -9,6 +9,7 @@ import lv.company.edup.infrastructure.templates.api.TemplateName;
 import lv.company.edup.infrastructure.templates.api.Type;
 import lv.company.edup.infrastructure.templates.impl.TemplateCache;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.FakturaData;
+import lv.company.edup.infrastructure.time.AppTimeZone;
 import lv.company.edup.infrastructure.utils.ApplicationUtils;
 import lv.company.edup.persistence.documents.StudentDocument;
 import lv.company.edup.persistence.documents.StudentDocumentDetails;
@@ -100,7 +101,7 @@ public class DocumentsService {
                 .append("_")
                 .append(student.getLastName())
                 .append("_")
-                .append(DateFormatUtils.format(new Date(), "yyyy_MM_dd"))
+                .append(DateFormatUtils.format(new Date(), "yyyy_MM_dd", AppTimeZone.TIME_ZONE))
                 .append("[NR")
                 .append(paymentId)
                 .append("][")

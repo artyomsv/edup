@@ -77,10 +77,10 @@
             <http-method>DELETE</http-method>
         </web-resource-collection>
 
-        <!--<auth-constraint>-->
-            <!--<role-name>ADMIN</role-name>-->
-            <!--<role-name>USER</role-name>-->
-        <!--</auth-constraint>-->
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+            <role-name>USER</role-name>
+        </auth-constraint>
 
         <user-data-constraint>
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
@@ -176,4 +176,16 @@
         <filter-name>noCache</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <filter>
+        <filter-name>HttpInboundFilter</filter-name>
+        <filter-class>lv.company.edup.infrastructure.filters.HttpInboundFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>HttpInboundFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
 </web-app>

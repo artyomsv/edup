@@ -2,6 +2,7 @@ package lv.company.edup.infrastructure.templates.impl.templates;
 
 import lv.company.edup.infrastructure.templates.api.ContextCreator;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.FakturaData;
+import lv.company.edup.infrastructure.time.AppTimeZone;
 import lv.company.edup.infrastructure.utils.ApplicationUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -17,7 +18,7 @@ public class FakturaContextCreator implements ContextCreator<FakturaData> {
     public Map<String, Object> create(FakturaData from) {
         Map<String, Object> map = new HashMap<>();
 
-        map.put("PaymentDate", DateFormatUtils.format(new Date(), "yyyy/dd/MM"));
+        map.put("PaymentDate", DateFormatUtils.format(new Date(), "yyyy/dd/MM", AppTimeZone.TIME_ZONE));
         map.put("PaymentDescription", ApplicationUtils.getValue(from.getPaymentDescription()));
 
         Long paymentVat = Math.round(from.getPaymentTotal() * 0.21);

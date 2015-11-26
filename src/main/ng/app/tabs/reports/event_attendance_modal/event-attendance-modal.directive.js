@@ -8,12 +8,6 @@ angular.module('edup.reports')
 			templateUrl: 'event-attendance-modal',
 			controller: function ($scope, $timeout, RestService, TypeAheadService) {
 
-				$scope.plannedEventDetails = {
-					selectedSubject: null,
-					dateFromPicker: null,
-					dateToPicker: null
-				};
-
 				var selectSubject = function (selectedSubjectName) {
 					$scope.plannedEventDetails.selectedSubject = _.find(TypeAheadService.DataSet(), function (subject) {
 						return subject.subjectName === selectedSubjectName;
@@ -62,8 +56,26 @@ angular.module('edup.reports')
 				};
 
 
+				$scope.setUpReportScope = function () {
+					$scope.plannedEventDetails = {
+						selectedSubject: null,
+						dateFromPicker: null,
+						dateToPicker: null
+					};
+					typeAhead.clear();
+					var field = $('#subject-event-name-text-field');
+					if (!field) {
+						console.log('Value:' + field.value);
+						field.value = '';
+					}
+				};
+
+				$scope.setUpReportScope();
+
 			},
 			link: function (scope) {
+
+				scope.setUpReportScope();
 
 				scope.renderDatePickerForReport = function ($view, $dates, $leftDate, $upDate, $rightDate) {
 
@@ -77,6 +89,7 @@ angular.module('edup.reports')
 							attendance: scope.plannedEventDetails.showAttendance
 						};
 						var url = UrlService.Reports.Events + '/' + details.selectedSubject.subjectId + '?from=' + query.from + '&to=' + query.to + '&attendance=' + query.attendance;
+						scope.setUpReportScope();
 						window.open(url);
 						scope.dismissModal();
 					}

@@ -11,6 +11,7 @@ import lv.company.edup.infrastructure.templates.impl.templates.dto.EventData;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.EventPlanningJournal;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentData;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.TimeData;
+import lv.company.edup.infrastructure.time.AppTimeZone;
 import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
 import lv.company.edup.persistence.subjects.view.AttendanceView;
 import lv.company.edup.persistence.subjects.view.AttendanceView_;
@@ -112,7 +113,7 @@ public class ReportsService {
                 .key(new Transformer<SubjectEvents, String>() {
                     @Override
                     public String transform(SubjectEvents input) {
-                        return DateFormatUtils.format(input.getEventDate(), "dd/MM/yyyy");
+                        return DateFormatUtils.format(input.getEventDate(), "dd/MM/yyyy", AppTimeZone.TIME_ZONE);
                     }
                 })
                 .indexForCollections(new Factory<Map<String, Collection<SubjectEvents>>>() {
@@ -167,7 +168,7 @@ public class ReportsService {
     }
 
     private String formatTime(Date from, Date to) {
-        return DateFormatUtils.format(from, "HH:mm") + " - " + DateFormatUtils.format(to, "HH:mm");
+        return DateFormatUtils.format(from, "HH:mm", AppTimeZone.TIME_ZONE) + " - " + DateFormatUtils.format(to, "HH:mm", AppTimeZone.TIME_ZONE);
     }
 
 }

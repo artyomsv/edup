@@ -3,26 +3,23 @@ package lv.company.edup.infrastructure.validation;
 import lv.company.edup.infrastructure.exceptions.EdupConstraintViolationException;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import javax.validation.groups.Default;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationScoped
+@Singleton
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+@Startup
 public class ValidationService {
 
-    private ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private Validator validator;
-
-    @PostConstruct
-    public void init() {
-        validator = factory.getValidator();
-    }
 
     public void validate(Object... objects) {
         validate(new Class<?>[]{Default.class}, objects);
@@ -58,4 +55,8 @@ public class ValidationService {
         return result;
     }
 
+    @Inject
+    public void setValidator(Validator validator) {
+        this.validator = validator;
+    }
 }

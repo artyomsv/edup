@@ -1,6 +1,7 @@
 package lv.company.edup.infrastructure.lucene.impl;
 
 import lv.company.edup.infrastructure.lucene.api.indexer.IndexAttribute;
+import lv.company.edup.infrastructure.time.AppTimeZone;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrBuilder;
@@ -44,7 +45,7 @@ public class LuceneDocumentBuilder {
             document.add(new SortedNumericDocValuesField(getSortableField(field.getValue()), time));
             document.add(new NumericDocValuesField(getRangeField(field.getValue()), time));
 
-            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd"), false);
+            add(field.getValue() + field.getPostFix(), DateFormatUtils.format(value, "yyyyMMdd", AppTimeZone.TIME_ZONE), false);
         }
         return this;
     }

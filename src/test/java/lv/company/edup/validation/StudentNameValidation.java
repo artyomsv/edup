@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
 
 public class StudentNameValidation {
 
@@ -16,7 +17,7 @@ public class StudentNameValidation {
     @Before
     public void setUp() throws Exception {
         validationService = new ValidationService();
-        validationService.init();
+        validationService.setValidator(Validation.buildDefaultValidatorFactory().getValidator());
     }
 
     @After

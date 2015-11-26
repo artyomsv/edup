@@ -10,7 +10,7 @@
 							<span class="input-group-addon" id="basic-addon2" ng-class="{'glyphicon glyphicon-ok searchTextInput': !selectedSubject , 'glyphicon glyphicon-pencil searchTextInput': !!selectedSubject}"></span>
 
 							<div id="scrollable-dropdown-menu">
-								<input required type="text" class="form-control typeahead tt-query" placeholder="Subject" ng-model="plannedEventDetails.subjectName" ng-keyup="updateSelectedSubject()">
+								<input id="subject-event-name-text-field" required type="text" class="form-control typeahead tt-query" placeholder="Subject" ng-model="plannedEventDetails.subjectName" ng-keyup="updateSelectedSubject()">
 							</div>
 						</div>
 					</div>
