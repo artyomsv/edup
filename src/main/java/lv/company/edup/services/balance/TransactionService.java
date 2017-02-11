@@ -2,12 +2,7 @@ package lv.company.edup.services.balance;
 
 import lv.company.edup.infrastructure.mapping.ObjectMapper;
 import lv.company.edup.infrastructure.response.UriUtils;
-import lv.company.edup.persistence.balance.CurrentBalance;
-import lv.company.edup.persistence.balance.CurrentBalanceRepository;
-import lv.company.edup.persistence.balance.CurrentBalance_;
-import lv.company.edup.persistence.balance.Transaction;
-import lv.company.edup.persistence.balance.TransactionRepository;
-import lv.company.edup.persistence.balance.TransactionType;
+import lv.company.edup.persistence.balance.*;
 import lv.company.edup.persistence.subjects.AttendanceRepository;
 import lv.company.edup.persistence.subjects.domain.Attendance;
 import lv.company.edup.persistence.subjects.domain.Attendance_;
@@ -17,7 +12,6 @@ import lv.company.edup.services.subjects.dto.EventDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.ejb.Stateless;
@@ -25,11 +19,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -38,7 +28,7 @@ public class TransactionService {
     public static final String CASH = "D1";
     public static final String BANK = "D2";
     public static final String AUTO = "K1";
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
     @Inject UriUtils utils;
     @Inject CurrentBalanceRepository currentRepository;
     @Inject TransactionRepository repository;

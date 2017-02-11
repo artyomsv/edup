@@ -28,7 +28,6 @@ import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
 import lv.company.odata.api.SearchOperator;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.ejb.Stateless;
@@ -36,11 +35,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -56,7 +51,7 @@ public class SubjectsService {
     @Inject AttendanceRepository attendanceRepository;
     @Inject SubjectEventRepository subjetEventRepository;
 
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
 
     public SubjectDto find(Long id) {
         return mapper.map(subjectRepository.find(id), SubjectDto.class);

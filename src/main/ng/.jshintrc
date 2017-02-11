@@ -80,5 +80,6 @@
     "Restangular",
     "gwtAngularBridge"
   ],
-  "indent"        : 4         // Specify indentation spacing
+  "indent": 2
+  // Specify indentation spacing
 } 

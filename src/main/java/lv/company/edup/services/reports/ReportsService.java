@@ -1,10 +1,6 @@
 package lv.company.edup.services.reports;
 
-import lv.company.edup.infrastructure.templates.api.JasperEngine;
-import lv.company.edup.infrastructure.templates.api.TemplateEngine;
-import lv.company.edup.infrastructure.templates.api.TemplateName;
-import lv.company.edup.infrastructure.templates.api.Type;
-import lv.company.edup.infrastructure.templates.api.VelocityEngine;
+import lv.company.edup.infrastructure.templates.api.*;
 import lv.company.edup.infrastructure.templates.impl.TemplateCache;
 import lv.company.edup.infrastructure.templates.impl.templates.EventPlanningJournalContextCreator;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.EventData;
@@ -13,14 +9,9 @@ import lv.company.edup.infrastructure.templates.impl.templates.dto.StudentData;
 import lv.company.edup.infrastructure.templates.impl.templates.dto.TimeData;
 import lv.company.edup.infrastructure.time.AppTimeZone;
 import lv.company.edup.infrastructure.utils.builder.IndexBuilder;
-import lv.company.edup.persistence.subjects.view.AttendanceView;
-import lv.company.edup.persistence.subjects.view.AttendanceView_;
-import lv.company.edup.persistence.subjects.view.EventAttendanceRepository;
-import lv.company.edup.persistence.subjects.view.SubjectEventRepository;
-import lv.company.edup.persistence.subjects.view.SubjectEvents;
+import lv.company.edup.persistence.subjects.view.*;
 import lv.company.edup.services.subjects.dto.SubjectDto;
 import lv.company.odata.api.ODataSearchService;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Factory;
 import org.apache.commons.collections4.Transformer;
@@ -28,23 +19,14 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @ApplicationScoped
 public class ReportsService {
 
     @Inject SubjectEventRepository eventRepository;
     @Inject EventAttendanceRepository attendanceRepository;
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
     @Inject @VelocityEngine TemplateEngine velocityEngine;
     @Inject @JasperEngine TemplateEngine jasperEngine;
     @Inject TemplateCache cache;

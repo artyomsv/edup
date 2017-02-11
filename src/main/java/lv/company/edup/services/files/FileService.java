@@ -9,7 +9,6 @@ import lv.company.edup.persistence.files.FileType;
 import lv.company.edup.services.files.dto.FileDto;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
@@ -32,7 +31,7 @@ public class FileService {
 
     @Inject FileRepository repository;
     @Inject ObjectMapper mapper;
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public ODataResult<FileDto> search() {

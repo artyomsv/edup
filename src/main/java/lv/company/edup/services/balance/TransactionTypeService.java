@@ -7,18 +7,10 @@ import lv.company.edup.services.balance.dto.TransactionTypeDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Transformer;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +24,7 @@ public class TransactionTypeService {
 
     Map<String, TransactionType> map = new HashMap<>();
 
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
     @Inject ObjectMapper mapper;
 
     @PostConstruct

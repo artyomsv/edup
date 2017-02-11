@@ -1,42 +1,41 @@
 -- CREATE DATABASE edup OWNER postgres;
 
-DROP VIEW V_EVENT_ATTENDANCE;
-DROP VIEW V_SUBJECT_EVENTS;
-DROP TABLE SUBJECT_EVENT_ATTENDANCE;
-DROP TABLE SUBJECT_EVENTS;
-DROP TABLE SUBJECTS;
+DROP VIEW IF EXISTS V_EVENT_ATTENDANCE;
+DROP VIEW IF EXISTS V_SUBJECT_EVENTS;
+DROP TABLE IF EXISTS SUBJECT_EVENT_ATTENDANCE;
+DROP TABLE IF EXISTS SUBJECT_EVENTS;
+DROP TABLE IF EXISTS SUBJECTS;
 
-DROP SEQUENCE public.SUBJECT_EVENT_ATTENDANCE_SEQUENCE;
-DROP SEQUENCE public.SUBJECT_EVENTS_SEQUENCE;
-DROP SEQUENCE public.SUBJECTS_SEQUENCE;
+DROP SEQUENCE IF EXISTS public.SUBJECT_EVENT_ATTENDANCE_SEQUENCE;
+DROP SEQUENCE IF EXISTS public.SUBJECT_EVENTS_SEQUENCE;
+DROP SEQUENCE IF EXISTS public.SUBJECTS_SEQUENCE;
 
-DROP VIEW public.V_STUDENT_DOCUMENTS;
-DROP TABLE public.STUDENT_DOCUMENTS;
+DROP VIEW IF EXISTS public.V_STUDENT_DOCUMENTS;
+DROP TABLE IF EXISTS public.STUDENT_DOCUMENTS;
 
-DROP TABLE public.files;
-DROP SEQUENCE public.FILES_SEQUENCE;
+DROP TABLE IF EXISTS public.files;
+DROP SEQUENCE IF EXISTS public.FILES_SEQUENCE;
 
-DROP VIEW public.V_STUDENT_BALANCE;
-DROP TABLE public.STUDENT_TRANSACTIONS;
-DROP TABLE public.TRANSACTION_TYPE;
-DROP SEQUENCE public.STUDENT_TRANSACTIONS_SEQUENCE;
-DROP SEQUENCE public.TRANSACTIONS_TYPE_SEQUENCE;
+DROP VIEW IF EXISTS public.V_STUDENT_BALANCE;
+DROP TABLE IF EXISTS public.STUDENT_TRANSACTIONS;
+DROP TABLE IF EXISTS public.TRANSACTION_TYPE;
+DROP SEQUENCE IF EXISTS public.STUDENT_TRANSACTIONS_SEQUENCE;
+DROP SEQUENCE IF EXISTS public.TRANSACTIONS_TYPE_SEQUENCE;
 
-DROP VIEW public.v_students;
-DROP TABLE public.student_properties;
-DROP TABLE public.students_version_mapping;
-DROP TABLE public.students;
+DROP VIEW IF EXISTS public.v_students;
+DROP TABLE IF EXISTS public.student_properties;
+DROP TABLE IF EXISTS public.students_version_mapping;
+DROP TABLE IF EXISTS public.students;
 
-DROP SEQUENCE public.student_id_sequence;
-DROP SEQUENCE public.student_property_sequence;
-DROP SEQUENCE public.student_version_sequence;
-DROP FUNCTION public.getstudentid();
-DROP FUNCTION public.update_current_student_version();
+DROP SEQUENCE IF EXISTS public.student_id_sequence;
+DROP SEQUENCE IF EXISTS public.student_property_sequence;
+DROP SEQUENCE IF EXISTS public.student_version_sequence;
+DROP FUNCTION IF EXISTS public.getstudentid();
+DROP FUNCTION IF EXISTS public.update_current_student_version();
 
 
-DROP SEQUENCE public.STUDENT_DOCUMENTS_SEQUENCE;
-DROP SEQUENCE public.FAKTURA_REPORT_ID_SEQUENCE;
-
+DROP SEQUENCE IF EXISTS public.STUDENT_DOCUMENTS_SEQUENCE;
+DROP SEQUENCE IF EXISTS public.FAKTURA_REPORT_ID_SEQUENCE;
 
 ------------------------------------------------------------------------------------------------------
 -------------------------------------- 0.0.2 ---------------------------------------------------------
@@ -59,8 +58,6 @@ CREATE TABLE FILES
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
-
-
 
 
 ------------------------------------------------------------------------------------------------------
@@ -127,7 +124,8 @@ BEGIN
     SET STUDENT_VERSION_FK = NEW.STUDENT_VERSION_ID, UPDATED = NEW.CREATED
     WHERE STUDENT_FK = NEW.STUDENT_ID;
   ELSE
-    INSERT INTO STUDENTS_VERSION_MAPPING (STUDENT_FK, STUDENT_VERSION_FK, CREATED, UPDATED) VALUES (NEW.STUDENT_ID, NEW.STUDENT_VERSION_ID, NEW.CREATED, NEW.CREATED);
+    INSERT INTO STUDENTS_VERSION_MAPPING (STUDENT_FK, STUDENT_VERSION_FK, CREATED, UPDATED)
+    VALUES (NEW.STUDENT_ID, NEW.STUDENT_VERSION_ID, NEW.CREATED, NEW.CREATED);
   END IF;
 
   RETURN NEW;
@@ -143,16 +141,14 @@ EXECUTE PROCEDURE update_current_student_version();
 -- Generate student id --
 CREATE OR REPLACE FUNCTION getStudentId()
   RETURNS BIGINT AS
-  $$
-  BEGIN
-    RETURN nextval('student_id_sequence');
-  END;
-  $$ LANGUAGE plpgsql;
+$$
+BEGIN
+  RETURN nextval('student_id_sequence');
+END;
+$$ LANGUAGE plpgsql;
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
-
-
 
 
 ------------------------------------------------------------------------------------------------------
@@ -164,13 +160,15 @@ CREATE TABLE TRANSACTION_TYPE
   TRANSACTION_TYPE_ID BIGINT DEFAULT nextval('TRANSACTIONS_TYPE_SEQUENCE')   NOT NULL,
   TYPE_CODE           VARCHAR(64)                                            NOT NULL,
   DESCRIPTION         VARCHAR(256),
-  GLYPH_ICON          VARCHAR(128),
   CONSTRAINT TRANSACTION_TYPE_PKEY PRIMARY KEY (TRANSACTION_TYPE_ID)
 );
 
-INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION, GLYPH_ICON) VALUES (DEFAULT, 'D1', 'Cash payment to increase student balance ', 'glyphicon glyphicon-euro');
-INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION, GLYPH_ICON) VALUES (DEFAULT, 'D2', 'Bank payment to increase student balance', 'glyphicon glyphicon-credit-card');
-INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION, GLYPH_ICON) VALUES (DEFAULT, 'K1', 'Automatic payment for participation in subject event', 'glyphicon glyphicon-education');
+INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION)
+VALUES (DEFAULT, 'D1', 'Cash payment to increase student balance ');
+INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION)
+VALUES (DEFAULT, 'D2', 'Bank payment to increase student balance');
+INSERT INTO TRANSACTION_TYPE (TRANSACTION_TYPE_ID, TYPE_CODE, DESCRIPTION)
+VALUES (DEFAULT, 'K1', 'Automatic payment for participation in subject event');
 
 CREATE SEQUENCE STUDENT_TRANSACTIONS_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 CREATE TABLE STUDENT_TRANSACTIONS
@@ -195,8 +193,6 @@ CREATE OR REPLACE VIEW V_STUDENT_BALANCE (STUDENT_FK, SUM) AS
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
-
-
 
 
 ------------------------------------------------------------------------------------------------------
@@ -234,7 +230,6 @@ CREATE OR REPLACE VIEW V_STUDENT_DOCUMENTS AS
 ------------------------------------------------------------------------------------------------------
 
 
-
 ------------------------------------------------------------------------------------------------------
 -------------------------------------- 0.3.0 ---------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
@@ -243,14 +238,14 @@ CREATE SEQUENCE FAKTURA_REPORT_ID_SEQUENCE START WITH 1 INCREMENT BY 1 NO MINVAL
 
 CREATE OR REPLACE FUNCTION getFakturaId()
   RETURNS BIGINT AS
-  $$
-  BEGIN
-    RETURN nextval('FAKTURA_REPORT_ID_SEQUENCE');
-  END;
-  $$ LANGUAGE plpgsql;
+$$
+BEGIN
+  RETURN nextval('FAKTURA_REPORT_ID_SEQUENCE');
+END;
+$$ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.4.0 ---------------------------------------------------------
 ------------------------------------------------------------------------------------------------------
 
 
@@ -327,3 +322,20 @@ CREATE OR REPLACE VIEW V_EVENT_ATTENDANCE AS
   FROM SUBJECT_EVENT_ATTENDANCE SEA, V_STUDENTS STUDENTS
   WHERE SEA.STUDENT_FK = STUDENTS.STUDENT_ID
   ORDER BY SEA.CREATED DESC;
+
+------------------------------------------------------------------------------------------------------
+-------------------------------------- 0.5.0 ---------------------------------------------------------
+------------------------------------------------------------------------------------------------------
+
+ALTER TABLE public.transaction_type
+  ADD glyph_icon VARCHAR(128) NULL;
+
+UPDATE public.transaction_type
+SET glyph_icon = 'glyphicon glyphicon-euro'
+WHERE transaction_type_id = 1;
+UPDATE public.transaction_type
+SET glyph_icon = 'glyphicon glyphicon-education'
+WHERE transaction_type_id = 3;
+UPDATE public.transaction_type
+SET glyph_icon = 'glyphicon glyphicon-credit-card'
+WHERE transaction_type_id = 2;

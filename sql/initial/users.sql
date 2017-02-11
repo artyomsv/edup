@@ -7,6 +7,7 @@
 
 -- Generate 'admin' SH256 password hash
 -- java -cp $WILDFLY_HOME/modules/system/layers/base/org/picketbox/main/picketbox-4.0.21.Final.jar org.jboss.security.Base64Encoder admin SHA-256
+-- java -cp /Users/artyom/Documents/Tools/wildfly-10.1.0.Final//modules/system/layers/base/org/picketbox/main/picketbox-4.9.6.Final.jar org.jboss.security.Base64Encoder admin SHA-256
 
 INSERT INTO ACCOUNT (ID, USERNAME, STATUS, CREATED) VALUES (DEFAULT, '***', 'APPROVED', CURRENT_TIMESTAMP);
 INSERT INTO ACCOUNT_VERSION (ID, ACCOUNT_FK, NAME, LAST_NAME, MAIL, CREATED) VALUES (DEFAULT, 1, '***', '***', '***', CURRENT_TIMESTAMP);

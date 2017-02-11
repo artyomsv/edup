@@ -24,7 +24,6 @@ import lv.company.edup.services.students.dto.StudentDto;
 import lv.company.odata.api.ODataCriteria;
 import lv.company.odata.api.ODataResult;
 import lv.company.odata.api.ODataSearchService;
-import lv.company.odata.impl.JPA;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Transformer;
@@ -35,13 +34,7 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.inject.Inject;
 import javax.persistence.metamodel.SingularAttribute;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -56,7 +49,7 @@ public class StudentsService {
     @Inject StudentPropertyRepository propertyRepository;
     @Inject StudentVersionRepository versionRepository;
     @Inject ObjectMapper mapper;
-    @Inject @JPA ODataSearchService searchService;
+    @Inject ODataSearchService searchService;
     @Inject UriUtils utils;
 
     public ODataResult<LeanStudentDto> search() {
