@@ -15,14 +15,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @MappedSuperclass
 public abstract class Student implements Serializable {
@@ -42,8 +35,6 @@ public abstract class Student implements Serializable {
     @Column(name = "CREATED")
     protected Date created;
 
-    @Transient
-    private String rootUrl;
     @Transient
     private boolean indexed = false;
     @Transient
@@ -195,14 +186,6 @@ public abstract class Student implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
-    }
-
-    public String getRootUrl() {
-        return rootUrl;
-    }
-
-    public void setRootUrl(String rootUrl) {
-        this.rootUrl = rootUrl;
     }
 
     public abstract Long getId();

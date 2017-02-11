@@ -47,7 +47,6 @@ public class StudentMappersTest extends AbstractMappersTest {
         entity.addProperty(PropertyName.PARENT_INFORMATION, PARENTS_INFO);
         entity.addProperty(PropertyName.CHARACTERISTICS, CHARACTERISTICS);
         entity.addProperty(PropertyName.MAIL, MAIL);
-        entity.setRootUrl(HTTPS_LOCALHOST_8443_EDUP);
 
         StudentDto dto = mapper.map(entity, StudentDto.class);
 
@@ -65,7 +64,7 @@ public class StudentMappersTest extends AbstractMappersTest {
         assertThat(dto.getParentsInfo(), is(PARENTS_INFO));
         assertThat(dto.getCharacteristics(), is(CHARACTERISTICS));
         assertThat(dto.getMail(), is(MAIL));
-        assertThat(dto.getPhotoUrl(), is(HTTPS_LOCALHOST_8443_EDUP + "/" + PHOTO_ID));
+//        assertThat(dto.getPhotoUrl(), is(HTTPS_LOCALHOST_8443_EDUP + "/" + PHOTO_ID));
         assertTrue(DateUtils.isSameInstant(dto.getCreated(), entity.getCreated()));
         assertTrue(DateUtils.isSameInstant(dto.getUpdated(), entity.getUpdated()));
 

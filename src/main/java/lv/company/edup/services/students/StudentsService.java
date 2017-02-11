@@ -40,8 +40,6 @@ import java.util.*;
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class StudentsService {
 
-    private static final String SECURED_FILES_DOWNLOAD = "/private/files";
-
     @Inject @StudentReader StudentsSearcher searcher;
     @Inject @StudentWriter StudentsIndexWriter indexer;
 
@@ -173,7 +171,6 @@ public class StudentsService {
                 if (version == null) {
                     continue;
                 }
-                version.setRootUrl(utils.getRootUrl() + SECURED_FILES_DOWNLOAD);
                 if (map.containsKey(version.getVersionId())) {
                     CollectionUtils.addAll(version.getProperties(), map.get(version.getVersionId()));
                 }
@@ -204,7 +201,6 @@ public class StudentsService {
             throw new NotFoundException("Student with ID:" + id + " not found!");
         }
 
-        student.setRootUrl(utils.getRootUrl() + SECURED_FILES_DOWNLOAD);
         return student;
     }
 }

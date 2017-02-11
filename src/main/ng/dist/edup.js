@@ -3,15 +3,18 @@
 angular.module('edup.common', [
 	'restangular',
 	'angularUtils.directives.dirPagination',
-	'angularMoment'
+    'angularMoment',
+    'ngAlertify'
 ]);
+'use strict';
+
 angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-.constant('PREFIX', 'https')
+    .constant('PREFIX', 'http')
 
-.constant('PORT', '8443')
+    .constant('PORT', '8080')
 
 .constant('CONTEXT_ROOT', '/edup')
 
@@ -215,29 +218,31 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-    .service('NotificationService', function () {
+    .service('NotificationService', ['alertify', function (alertify) {
 
-        /* jshint ignore:start */
+            /* jshint ignore:start */
 
-        alertify.set('notifier', 'position', 'bottom-right');
+            // alertify.set('notifier', 'position', 'bottom-right');
 
-        return {
-            Success: function (msg, title) {
-                alertify.success(msg);
-            },
-            Info: function (msg, title) {
-                alertify.message(msg);
-            },
-            Error: function (msg, title) {
-                alertify.error(msg);
-            }
+            alertify.logPosition("bottom right");
 
-        };
+            return {
+                Success: function (msg, title) {
+                    alertify.success(msg);
+                },
+                Info: function (msg, title) {
+                    alertify.message(msg);
+                },
+                Error: function (msg, title) {
+                    alertify.error(msg);
+                }
 
-        /* jshint ignore:end */
+            };
 
-    }
-);
+            /* jshint ignore:end */
+
+        }]
+    );
 'use strict';
 
 angular.module('edup.common')
@@ -462,34 +467,34 @@ angular.module('edup.common')
 
 angular.module('edup.common')
 
-	.service('UrlService', ['PREFIX', 'PORT', 'CONTEXT_ROOT', function (PREFIX, PORT, CONTEXT_ROOT) {
+    .service('UrlService', ['PREFIX', 'PORT', 'CONTEXT_ROOT', function (PREFIX, PORT, CONTEXT_ROOT) {
 
-		var location = window.location.hostname;
+            var location = window.location.hostname;
 
-		var baseUrl;
+            var baseUrl;
 
-		if (location.indexOf('127.0.0.1') > -1) {
-			baseUrl = 'https://localhost:8443/edup';
-		} else {
-			var portValue = PORT ? ':' + PORT : '';
-			baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT;
-		}
+            if (location.indexOf('127.0.0.1') > -1) {
+                baseUrl = PREFIX + '://localhost:' + PORT + CONTEXT_ROOT;
+            } else {
+                var portValue = PORT ? ':' + PORT : '';
+                baseUrl = PREFIX + '://' + location + portValue + CONTEXT_ROOT;
+            }
 
-		return {
-			BaseUrl: baseUrl,
-			Files: {
-				Info: baseUrl + '/api/private/files',
-				Upload: baseUrl + '/api/private/files',
-				Download: baseUrl + '/api/private/files'
-			},
-			Subjects: baseUrl + '/api/private/subjects',
-			Reports: {
-				Events: baseUrl + '/api/private/reports/subject'
-			}
-		};
+            return {
+                BaseUrl: baseUrl,
+                Files: {
+                    Info: baseUrl + '/api/private/files',
+                    Upload: baseUrl + '/api/private/files',
+                    Download: baseUrl + '/api/private/files'
+                },
+                Subjects: baseUrl + '/api/private/subjects',
+                Reports: {
+                    Events: baseUrl + '/api/private/reports/subject'
+                }
+            };
 
-	}]
-);
+        }]
+    );
 'use strict';
 
 angular.module('edup.login', []);

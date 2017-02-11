@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 class ResetableHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
@@ -38,10 +39,10 @@ class ResetableHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public BufferedReader getReader() throws IOException {
         if (rawData == null) {
-            rawData = IOUtils.toByteArray(request.getReader());
+            rawData = IOUtils.toByteArray(request.getInputStream());
             servletStream = new ResetableServletInputStream(rawData);
         }
-        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawData)));
+        return new BufferedReader(new InputStreamReader(new ByteArrayInputStream(rawData), StandardCharsets.UTF_8));
     }
 
     public class ResetableServletInputStream extends ServletInputStream {
@@ -66,11 +67,11 @@ class ResetableHttpServletRequestWrapper extends HttpServletRequestWrapper {
         public boolean isReady() {
             return true;
         }
+
         public void setReadListener(ReadListener readListener) {
         }
 
     }
-
 
 
 }
