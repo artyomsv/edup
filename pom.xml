@@ -20,7 +20,7 @@
     <properties>
         <version.major>0</version.major>
         <version.minor>5</version.minor>
-        <version.tag>1</version.tag>
+        <version.tag>2</version.tag>
 
         <webapp.location>src/environment/localhost/webapp</webapp.location>
         <ng.environment>dist-localhost</ng.environment>
