@@ -8,13 +8,13 @@ angular.module('edup.common', [
 ]);
 'use strict';
 
-angular.module('edup.common')
+ angular.module('edup.common')
 
 .constant('APPLICATION', 'EDUP')
 
-    .constant('PREFIX', 'http')
+.constant('PREFIX', 'http')
 
-    .constant('PORT', '8080')
+.constant('PORT', null)
 
 .constant('CONTEXT_ROOT', '/edup')
 
@@ -241,7 +241,7 @@ angular.module('edup.common')
 
             /* jshint ignore:end */
 
-        }]
+    }]
     );
 'use strict';
 

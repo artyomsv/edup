@@ -8,11 +8,7 @@ import lv.company.edup.infrastructure.lucene.impl.indexer.SubjectsIndexAttribute
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexCommit;
-import org.apache.lucene.index.IndexDeletionPolicy;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.*;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.SearcherManager;
@@ -21,6 +17,7 @@ import org.apache.lucene.search.spell.LuceneDictionary;
 import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
+import org.apache.lucene.store.RAMDirectory;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -28,11 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -49,6 +42,8 @@ public class IndexConfigProvider {
     private Map<IndexType, IndexSearcher> searcherMap = new ConcurrentHashMap<IndexType, IndexSearcher>();
 
     private Map<IndexType, SearcherManager> managerMap = new ConcurrentHashMap<>();
+
+    private boolean inMemory = false;
 
     @PostConstruct
     public void init() {
@@ -108,13 +103,17 @@ public class IndexConfigProvider {
     }
 
     private void prepareDirectory(IndexType type) throws IOException {
-        Path path = FileSystems.getDefault().getPath("index", StringUtils.lowerCase(type.name()));
-        File indexDirectory = path.toFile();
-        if (!indexDirectory.exists()) {
-            FileUtils.forceMkdir(indexDirectory);
+        if (inMemory) {
+            directoryMap.put(type, new RAMDirectory());
+        } else {
+            Path path = FileSystems.getDefault().getPath("index", StringUtils.lowerCase(type.name()));
+            File indexDirectory = path.toFile();
+            if (!indexDirectory.exists()) {
+                FileUtils.forceMkdir(indexDirectory);
+            }
+            Directory directory = new MMapDirectory(path);
+            directoryMap.put(type, directory);
         }
-        MMapDirectory directory = new MMapDirectory(path);
-        directoryMap.put(type, directory);
     }
 
     private IndexSearcher buildSearcher(IndexType type) throws IOException {
@@ -154,5 +153,9 @@ public class IndexConfigProvider {
             }
         });
         return config;
+    }
+
+    public void setInMemory() {
+        inMemory = true;
     }
 }

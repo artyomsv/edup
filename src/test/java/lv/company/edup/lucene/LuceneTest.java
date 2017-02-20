@@ -20,13 +20,8 @@ import lv.company.odata.impl.parse.QueryParserImpl;
 import ma.glasnost.orika.CustomConverter;
 import ma.glasnost.orika.converter.BidirectionalConverter;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -38,15 +33,7 @@ import org.mockito.stubbing.Answer;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
-import java.io.File;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
@@ -84,6 +71,7 @@ public class LuceneTest {
         mapper.setProvider(provider);
         mapper.init();
 
+        configProvider.setInMemory();
         configProvider.init();
 
         when(repository.findByAttribute(anyCollectionOf(Long.class),
@@ -110,9 +98,12 @@ public class LuceneTest {
 
     @After
     public void tearDown() throws Exception {
-        Path path = FileSystems.getDefault().getPath("index");
-        File indexDirectory = path.toFile();
-        FileUtils.forceDelete(indexDirectory);
+//        Path path = FileSystems.getDefault().getPath("index");
+//        File indexDirectory = path.toFile();
+//        if (!indexDirectory.exists()) {
+//            throw new RuntimeException("ola");
+//        }
+//        FileUtils.forceDelete(indexDirectory);
     }
 
     @Test
